@@ -845,6 +845,7 @@
         <svg id="themeIconMoon" class="theme-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         <svg id="themeIconSun" class="theme-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
       </button>
+      <button class="btn btn-log" onclick="openAdminPanel()" title="管理员后台（需口令验证）">管理员后台</button>
       <button class="btn btn-log" onclick="openLogModal()">版本日志</button>
       <button type="button" id="backupDataBtn" class="btn btn-backup" onclick="backupAllData()" title="备份全部本地数据为 JSON 文件">备份数据</button>
       <button class="btn btn-log" onclick="restoreAllData()" title="从备份 JSON 恢复本地数据">恢复数据</button>
@@ -2413,7 +2414,12 @@ const VERSION_LOG = [
       '工单服务工单号改为可点击超链接，点击直接打开对应提单记录的提单弹窗',
       '修复商业化活动提单打开时特权库内置截图未自动带入的问题',
       '新增图片长期备份库：工单图片保存时双写备份，备份导入图片失败时自动从备份库补回',
-      '同一账户同一问题再次提单直接覆盖旧记录，不同问题才新建工单服务记录'
+      '同一账户同一问题再次提单直接覆盖旧记录，不同问题才新建工单服务记录',
+      '提单记录与草稿迁移至 IndexedDB 存储，突破浏览器 localStorage 5MB 配额限制',
+      '旧图与粘贴图片兜底自动归类，避免图片已上传却未进入任何分类框',
+      '修复重开新单时「新增操作二」按钮未还原显示的问题',
+      '接入后端埋点统计，自动上报页面访问、操作事件与提单流水',
+      '新增管理员后台入口，口令验证后可查看访问量、操作事件与提单流水'
     ]
   },
   {
@@ -2427,8 +2433,7 @@ const VERSION_LOG = [
     ver: 'v1.62 正式版',
     items: [
       '商业化活动提单进行了一些优化',
-      '商业化活动图片分类扩展至7个，新增活动信息与企微项目群确认截图',
-      '修复图片放大预览时回到顶部按钮残留问题'
+      '商业化活动图片分类扩展至7个，新增活动信息与企微项目群确认截图'
     ]
   },
   {
@@ -2761,6 +2766,9 @@ const VERSION_LOG = [
     ]
   }
 ];
+function openAdminPanel() {
+  location.href = 'admin.html';
+}
 function openLogModal() {
   var html = '';
   VERSION_LOG.forEach(function (v) {

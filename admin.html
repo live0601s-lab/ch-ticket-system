@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%230052D9'/%3E%3Crect x='8' y='8' width='16' height='4.5' rx='2.2' fill='%23fff'/%3E%3Crect x='13.75' y='8' width='4.5' height='16' rx='2.2' fill='%23fff'/%3E%3C/svg%3E">
+<title>管理员后台 · 超核一站式服务系统</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #ffffff;
+    --text: #1e293b;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --primary: #0052D9;
+    --primary-dark: #00379A;
+    --danger: #ef4444;
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --radius: 12px;
+    --shadow: 0 10px 30px rgba(15, 23, 42, .12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", -apple-system, sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    background: linear-gradient(135deg, #00102e 0%, #0a2540 50%, #00102e 100%);
+    padding: 24px 16px 48px;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+
+  /* 顶部 */
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 22px; }
+  .topbar h1 { color: #f8fafc; font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+  .topbar h1 .logo { width: 30px; height: 30px; border-radius: 8px; background: var(--primary); display: inline-flex; align-items: center; justify-content: center; }
+  .topbar h1 .logo svg { width: 18px; height: 18px; }
+  .top-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .btn {
+    border: 1px solid transparent; border-radius: 10px; padding: 9px 15px;
+    font-size: 14px; cursor: pointer; font-family: inherit; transition: all .15s ease;
+    display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+  }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-dark); }
+  .btn-ghost { background: rgba(255,255,255,.1); color: #e2e8f0; border-color: rgba(255,255,255,.18); }
+  .btn-ghost:hover { background: rgba(255,255,255,.18); }
+  .btn-light { background: #fff; color: var(--primary); border-color: #fff; }
+  .btn-light:hover { background: #eaf1ff; }
+  .btn-danger-ghost { background: rgba(239,68,68,.12); color: #fca5a5; border-color: rgba(239,68,68,.3); }
+  .btn-danger-ghost:hover { background: rgba(239,68,68,.22); }
+
+  /* 登录卡片 */
+  .login-card {
+    max-width: 420px; margin: 8vh auto 0; background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 32px 28px;
+  }
+  .login-card h2 { font-size: 18px; margin-bottom: 6px; }
+  .login-card p.sub { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+  .field input {
+    width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 10px;
+    font-size: 14px; font-family: inherit; background: #f8fafc; outline: none;
+  }
+  .field input:focus { border-color: var(--primary); background: #fff; }
+  .login-error { color: var(--danger); font-size: 13px; min-height: 18px; margin-bottom: 10px; }
+  .login-card .btn-primary { width: 100%; justify-content: center; padding: 11px; }
+
+  /* 统计卡片 */
+  .stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 22px; }
+  .stat-card {
+    background: var(--card); border-radius: var(--radius); padding: 18px 16px; box-shadow: var(--shadow);
+  }
+  .stat-card .label { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+  .stat-card .value { font-size: 26px; font-weight: 700; color: var(--text); }
+  .stat-card .value.primary { color: var(--primary); }
+  .stat-card .value.success { color: var(--success); }
+  .stat-card .value.warning { color: var(--warning); }
+
+  /* 区块卡片 */
+  .panel {
+    background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+    margin-bottom: 22px; overflow: hidden;
+  }
+  .panel-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 16px 20px; border-bottom: 1px solid var(--border);
+  }
+  .panel-head h3 { font-size: 15px; font-weight: 700; }
+  .panel-head .hint { font-size: 12px; color: var(--text-muted); }
+  .table-scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    background: #e2e8f0; color: var(--text); text-align: left; padding: 10px 14px;
+    font-weight: 600; white-space: nowrap;
+  }
+  tbody td { padding: 10px 14px; border-top: 1px solid var(--border); vertical-align: top; }
+  tbody tr:hover { background: #f1f5f9; }
+  .muted { color: var(--text-muted); }
+  .tag {
+    display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px;
+    background: #f1f5f9; color: var(--text);
+  }
+  .tag.blue { background: #eaf1ff; color: var(--primary); }
+  .tag.green { background: #e7f7ee; color: var(--success); }
+  .tag.amber { background: #fdf3e3; color: var(--warning); }
+  .detail-cell { max-width: 320px; word-break: break-all; color: var(--text-muted); font-size: 12px; }
+  .empty { padding: 28px; text-align: center; color: var(--text-muted); font-size: 13px; }
+  .refresh-line { display: flex; align-items: center; gap: 10px; }
+  .status-line { font-size: 12px; color: #94a3b8; }
+
+  @media (max-width: 980px) {
+    .stats { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 620px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .topbar h1 { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <h1>
+      <span class="logo"><svg viewBox="0 0 32 32" fill="none"><rect x="8" y="8" width="16" height="4.5" rx="2.2" fill="#fff"/><rect x="13.75" y="8" width="4.5" height="16" rx="2.2" fill="#fff"/></svg></span>
+      管理员后台
+    </h1>
+    <div class="top-actions" id="topActions" style="display:none">
+      <button class="btn btn-light" onclick="loadData()">刷新数据</button>
+      <a class="btn btn-ghost" href="index.html">返回主系统</a>
+      <button class="btn btn-danger-ghost" onclick="logout()">退出登录</button>
+    </div>
+  </div>
+
+  <!-- 登录态 -->
+  <div class="login-card" id="loginView">
+    <h2>超级管理员验证</h2>
+    <p class="sub">请输入管理员口令以查看访问统计与操作流水</p>
+    <div class="field">
+      <label for="tokenInput">管理员口令</label>
+      <input type="password" id="tokenInput" placeholder="请输入口令" autocomplete="off">
+    </div>
+    <div class="login-error" id="loginError"></div>
+    <button class="btn btn-primary" onclick="login()">登 录</button>
+  </div>
+
+  <!-- 仪表盘 -->
+  <div id="dashboard" style="display:none">
+    <div class="stats" id="statsGrid"></div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h3>近 30 天访问趋势</h3>
+        <span class="hint">PV 浏览量 / UV 独立访客</span>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>日期</th><th>PV</th><th>UV</th></tr></thead>
+          <tbody id="dailyBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h3>最近操作事件</h3>
+        <span class="hint">最近 50 条</span>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>时间</th><th>事件</th><th>业务类型</th><th>详情</th></tr></thead>
+          <tbody id="eventsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h3>最近提单流水</h3>
+        <span class="hint">最近 50 条</span>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>时间</th><th>动作</th><th>业务类型</th><th>提单引用</th><th>详情</th></tr></thead>
+          <tbody id="ticketsBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var ADMIN_API = 'https://br-floral-fire-ao5mpj63-admin.compute.c-2.ap-southeast-1.aws.neon.tech/admin';
+  var TOKEN_KEY = 'ch_admin_token';
+
+  function getToken() { return sessionStorage.getItem(TOKEN_KEY) || ''; }
+  function setToken(t) { sessionStorage.setItem(TOKEN_KEY, t); }
+  function clearToken() { sessionStorage.removeItem(TOKEN_KEY); }
+
+  function fmtTime(s) {
+    if (!s) return '-';
+    if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(s)) return s;
+    var d = new Date(s);
+    if (isNaN(d.getTime())) return s;
+    var p = function (n) { return String(n).padStart(2, '0'); };
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' +
+      p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+  }
+
+  function fmtDetail(d) {
+    if (d === null || d === undefined || d === '') return '-';
+    if (typeof d === 'object') {
+      var s = JSON.stringify(d);
+      return s.length > 160 ? s.slice(0, 160) + '…' : s;
+    }
+    return String(d);
+  }
+
+  function esc(v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function statCard(label, value, cls) {
+    return '<div class="stat-card"><div class="label">' + esc(label) + '</div>' +
+      '<div class="value ' + (cls || '') + '">' + esc(value) + '</div></div>';
+  }
+
+  function renderOverview(o) {
+    o = o || {};
+    var html =
+      statCard('总 PV', o.totalPv || 0, 'primary') +
+      statCard('总 UV', o.totalUv || 0, '') +
+      statCard('今日 PV', o.todayPv || 0, 'success') +
+      statCard('今日 UV', o.todayUv || 0, 'success') +
+      statCard('操作事件', o.eventCount || 0, 'warning') +
+      statCard('提单流水', o.ticketCount || 0, '');
+    document.getElementById('statsGrid').innerHTML = html;
+  }
+
+  function renderDaily(daily) {
+    var body = document.getElementById('dailyBody');
+    if (!daily || !daily.length) { body.innerHTML = '<tr><td colspan="3" class="empty">暂无访问数据</td></tr>'; return; }
+    body.innerHTML = daily.map(function (r) {
+      return '<tr><td>' + esc(r.day) + '</td><td>' + esc(r.pv) + '</td><td>' + esc(r.uv) + '</td></tr>';
+    }).join('');
+  }
+
+  function eventTag(name) {
+    var map = { switch_tab: 'blue', open_modal: 'amber', click_save: 'green', submit: 'green' };
+    return '<span class="tag ' + (map[name] || 'blue') + '">' + esc(name || '-') + '</span>';
+  }
+
+  function renderEvents(events) {
+    var body = document.getElementById('eventsBody');
+    if (!events || !events.length) { body.innerHTML = '<tr><td colspan="4" class="empty">暂无操作事件</td></tr>'; return; }
+    body.innerHTML = events.map(function (r) {
+      return '<tr><td>' + esc(fmtTime(r.createdAt)) + '</td><td>' + eventTag(r.eventName) +
+        '</td><td>' + esc(r.ticketType || '-') + '</td><td class="detail-cell">' + esc(fmtDetail(r.detail)) + '</td></tr>';
+    }).join('');
+  }
+
+  function actionTag(a) {
+    var cls = a === 'create' ? 'green' : (a === 'update' ? 'blue' : 'amber');
+    return '<span class="tag ' + cls + '">' + esc(a || '-') + '</span>';
+  }
+
+  function renderTickets(tickets) {
+    var body = document.getElementById('ticketsBody');
+    if (!tickets || !tickets.length) { body.innerHTML = '<tr><td colspan="5" class="empty">暂无提单流水</td></tr>'; return; }
+    body.innerHTML = tickets.map(function (r) {
+      return '<tr><td>' + esc(fmtTime(r.createdAt)) + '</td><td>' + actionTag(r.action) +
+        '</td><td>' + esc(r.ticketType || '-') + '</td><td>' + esc(r.ticketRef || '-') +
+        '</td><td class="detail-cell">' + esc(fmtDetail(r.detail)) + '</td></tr>';
+    }).join('');
+  }
+
+  function showDashboard() {
+    document.getElementById('loginView').style.display = 'none';
+    document.getElementById('dashboard').style.display = '';
+    document.getElementById('topActions').style.display = '';
+  }
+
+  function showLogin() {
+    document.getElementById('loginView').style.display = '';
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('topActions').style.display = 'none';
+  }
+
+  window.login = function () {
+    var input = document.getElementById('tokenInput');
+    var err = document.getElementById('loginError');
+    var t = (input.value || '').trim();
+    if (!t) { err.textContent = '请输入管理员口令'; return; }
+    fetchData(t).then(function (ok) {
+      if (ok) { setToken(t); showDashboard(); loadData(); }
+      else { err.textContent = '口令错误或无访问权限'; }
+    }).catch(function () { err.textContent = '网络异常，请稍后重试'; });
+  };
+
+  window.logout = function () { clearToken(); showLogin(); document.getElementById('tokenInput').value = ''; };
+
+  function fetchData(token) {
+    return fetch(ADMIN_API, {
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + token },
+      credentials: 'omit'
+    }).then(function (r) {
+      if (r.status === 401) return { ok: false, status: 401 };
+      if (!r.ok) return { ok: false, status: r.status };
+      return r.json().then(function (data) { return { ok: true, data: data }; });
+    });
+  }
+
+  window.loadData = function () {
+    var token = getToken();
+    if (!token) { showLogin(); return; }
+    fetchData(token).then(function (res) {
+      if (!res.ok) {
+        if (res.status === 401) { clearToken(); showLogin(); }
+        return;
+      }
+      var d = res.data || {};
+      renderOverview(d.overview);
+      renderDaily(d.daily);
+      renderEvents(d.events);
+      renderTickets(d.tickets);
+    }).catch(function () {});
+  };
+
+  // 回车登录
+  document.getElementById('tokenInput').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') window.login();
+  });
+
+  // 已登录则直接进入
+  if (getToken()) { showDashboard(); loadData(); }
+})();
+</script>
+</body>
+</html>
