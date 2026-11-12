@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%230052D9'/%3E%3Crect x='8' y='8' width='16' height='4.5' rx='2.2' fill='%23fff'/%3E%3Crect x='13.75' y='8' width='4.5' height='16' rx='2.2' fill='%23fff'/%3E%3C/svg%3E">
-<title>超核一站式服务系统 v1.68 正式版</title>
+<title>超核一站式服务系统 v1.69 正式版</title>
 <style>
   :root {
     --bg: #0f172a;
@@ -171,7 +171,13 @@
   }
   .apec-pill:hover { color: #fff; background: rgba(139,92,246,.32); border-color: var(--apec-purple); box-shadow: 0 0 16px rgba(139,92,246,.5); }
   .apec-title-row { position: relative; margin-top: 12px; display: flex; align-items: center; }
-  .apec-skyline { position: absolute; left: 0; right: 0; bottom: 6px; width: 100%; height: 78px; opacity: .5; pointer-events: none; }
+  .apec-skyline { position: absolute; left: 0; right: 0; bottom: 6px; width: 100%; height: 78px; opacity: .6; pointer-events: none; }
+  .apec-skyline .sk-line {
+    stroke-dasharray: 170; stroke-dashoffset: 170;
+    animation: skyDraw .8s cubic-bezier(.4,0,.2,1) forwards;
+    animation-delay: calc(.3s + var(--i) * 80ms);
+  }
+  @keyframes skyDraw { to { stroke-dashoffset: 0; } }
   .apec-title {
     position: relative; z-index: 2; color: #fff; font-size: 32px; font-weight: 800; letter-spacing: 2px;
     text-shadow: 0 2px 20px rgba(61,123,255,.45), 0 1px 4px rgba(0,0,0,.8); margin: 0;
@@ -852,7 +858,7 @@
 /* ===== 版本自检 + 埋点统计（v1.64） ===== */
 (function () {
   // 当前版本号：与页面右上角版本标签保持一致，发版时同步更新
-  var APP_VERSION = 'v1.68';
+  var APP_VERSION = 'v1.69';
 
   // 埋点配置：endpoint 留空且 enabled=false 时不上报；已接入 Neon collect 接口
   window.__TRACK__ = window.__TRACK__ || {
@@ -945,27 +951,26 @@
         <div class="apec-title-row">
           <svg class="apec-skyline" viewBox="0 0 600 78" preserveAspectRatio="none" aria-hidden="true">
             <g fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-linejoin="round">
-              <path d="M20 62 L34 50 L48 62 Z"/>
-              <rect x="58" y="34" width="16" height="28"/>
-              <path d="M82 62 L82 26 L92 18 L102 26 L102 62 Z"/>
-              <rect x="112" y="30" width="14" height="32"/>
-              <path d="M134 62 L134 22 L146 12 L158 22 L158 62 Z"/>
-              <rect x="170" y="36" width="16" height="26"/>
-              <rect x="196" y="28" width="12" height="34"/>
-              <path d="M216 62 L216 34 L226 26 L236 34 L236 62 Z"/>
-              <rect x="248" y="32" width="15" height="30"/>
-              <path d="M270 62 L270 24 L282 16 L294 24 L294 62 Z"/>
-              <rect x="306" y="38" width="16" height="24"/>
-              <path d="M330 62 L330 30 L340 22 L350 30 L350 62 Z"/>
-              <rect x="362" y="28" width="13" height="34"/>
-              <path d="M382 62 L382 20 L394 10 L406 20 L406 62 Z"/>
-              <rect x="418" y="34" width="16" height="28"/>
-              <path d="M442 62 L442 32 L452 24 L462 32 L462 62 Z"/>
-              <rect x="474" y="30" width="14" height="32"/>
-              <path d="M496 62 Q520 30 544 62 Z"/>
+              <rect class="sk-line" style="--i:0" x="14" y="46" width="13" height="16"/>
+              <path class="sk-line" style="--i:1" d="M36 57 Q64 46 92 57"/>
+              <path class="sk-line" style="--i:1" d="M42 57 L42 62"/>
+              <path class="sk-line" style="--i:1" d="M86 57 L86 62"/>
+              <rect class="sk-line" style="--i:2" x="104" y="38" width="15" height="24"/>
+              <path class="sk-line" style="--i:3" d="M128 62 L128 32 L136 26 L144 32 L144 62"/>
+              <path class="sk-line" style="--i:3" d="M150 62 L150 36 L157 31 L164 36 L164 62"/>
+              <path class="sk-line" style="--i:4" d="M178 62 L178 36 Q193 24 208 36 L208 62"/>
+              <path class="sk-line" style="--i:5" d="M226 62 L226 20 L233 13 L251 13 L258 20 L258 62"/>
+              <path class="sk-line" style="--i:6" d="M276 62 Q285 34 292 22 Q299 34 308 62 Z"/>
+              <path class="sk-line" style="--i:7" d="M322 62 L322 30 L331 25 L340 30 L340 62"/>
+              <rect class="sk-line" style="--i:8" x="352" y="40" width="15" height="22"/>
+              <rect class="sk-line" style="--i:9" x="374" y="36" width="16" height="26"/>
+              <rect class="sk-line" style="--i:10" x="398" y="42" width="14" height="20"/>
+              <path class="sk-line" style="--i:11" d="M422 62 L422 34 L430 28 L438 34 L438 62"/>
+              <rect class="sk-line" style="--i:12" x="448" y="38" width="16" height="24"/>
+              <path class="sk-line" style="--i:13" d="M474 62 Q502 40 530 62 Z"/>
             </g>
           </svg>
-          <h1 class="apec-title">超核一站式服务系统 <span class="ver-tag">v1.68 正式版</span></h1>
+          <h1 class="apec-title">超核一站式服务系统 <span class="ver-tag">v1.69 正式版</span></h1>
         </div>
         <svg class="apec-arc" viewBox="0 0 600 14" preserveAspectRatio="none" aria-hidden="true">
           <defs>
@@ -2547,6 +2552,13 @@ function toggleTheme() {
 }
 /* ================= 版本日志 ================= */
 const VERSION_LOG = [
+  {
+    ver: 'v1.69 正式版',
+    items: [
+      '头图天际线重绘为深圳地标简笔线稿：平安金融中心、京基100、地王大厦、春笋等地标高低错落',
+      '天际线建筑随开场逐个描边画出，与标题、弧线动画节奏统一'
+    ]
+  },
   {
     ver: 'v1.68 正式版',
     items: [
