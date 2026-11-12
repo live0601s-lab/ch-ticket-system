@@ -59,6 +59,7 @@ export default async function handler(req: Request): Promise<Response> {
 
   const sessionId = clip(body.sessionId, 100);
   const type = clip(body.type, 20);
+  const userName = clip(body.userName, 60);
   const ua = clip(req.headers.get("user-agent") || body.ua, CLIP_TEXT);
   const detailRaw = body.detail;
   const detail =
@@ -75,19 +76,20 @@ export default async function handler(req: Request): Promise<Response> {
       );
     } else if (type === "event") {
       await pool.query(
-        `INSERT INTO event_logs (visitor_id, session_id, event_name, ticket_type, detail)
-         VALUES ($1, $2, $3, $4, $5::jsonb)`,
-        [visitorId, sessionId, clip(body.eventName, 100), clip(body.ticketType, 30), detail]
+        `INSERT INTO event_logs (visitor_id, session_id, event_name, ticket_type, user_name, detail)
+         VALUES ($1, $2, $3, $4, $5, $6::jsonb)`,
+        [visitorId, sessionId, clip(body.eventName, 100), clip(body.ticketType, 30), userName, detail]
       );
     } else if (type === "ticket") {
       await pool.query(
-        `INSERT INTO ticket_events (visitor_id, action, ticket_type, ticket_ref, detail)
-         VALUES ($1, $2, $3, $4, $5::jsonb)`,
+        `INSERT INTO ticket_events (visitor_id, action, ticket_type, ticket_ref, user_name, detail)
+         VALUES ($1, $2, $3, $4, $5, $6::jsonb)`,
         [
           visitorId,
           clip(body.action, 30),
           clip(body.ticketType, 30),
           clip(body.ticketRef, 100),
+          userName,
           detail,
         ]
       );

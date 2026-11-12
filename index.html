@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%230052D9'/%3E%3Crect x='8' y='8' width='16' height='4.5' rx='2.2' fill='%23fff'/%3E%3Crect x='13.75' y='8' width='4.5' height='16' rx='2.2' fill='%23fff'/%3E%3C/svg%3E">
-<title>超核一站式服务系统 v1.69 正式版</title>
+<title>超核一站式服务系统 v1.70 正式版</title>
 <style>
   :root {
     --bg: #0f172a;
@@ -858,7 +858,7 @@
 /* ===== 版本自检 + 埋点统计（v1.64） ===== */
 (function () {
   // 当前版本号：与页面右上角版本标签保持一致，发版时同步更新
-  var APP_VERSION = 'v1.69';
+  var APP_VERSION = 'v1.70';
 
   // 埋点配置：endpoint 留空且 enabled=false 时不上报；已接入 Neon collect 接口
   window.__TRACK__ = window.__TRACK__ || {
@@ -887,10 +887,13 @@
   var sessionId = sessionStorage.getItem(SID_KEY);
   if (!sessionId) { sessionId = uid(); sessionStorage.setItem(SID_KEY, sessionId); }
 
+  function currentUserName() {
+    try { var u = (typeof getCurrentUser === 'function') ? getCurrentUser() : null; return (u && u.name) || ''; } catch (e) { return ''; }
+  }
   function post(payload) {
     var cfg = window.__TRACK__;
     if (!cfg || !cfg.enabled || !cfg.endpoint) return;
-    var body = Object.assign({ visitorId: visitorId, sessionId: sessionId }, payload);
+    var body = Object.assign({ visitorId: visitorId, sessionId: sessionId, userName: currentUserName() }, payload);
     try {
       if (navigator.sendBeacon) {
         navigator.sendBeacon(cfg.endpoint, new Blob([JSON.stringify(body)], { type: 'application/json' }));
@@ -970,7 +973,7 @@
               <path class="sk-line" style="--i:13" d="M474 62 Q502 40 530 62 Z"/>
             </g>
           </svg>
-          <h1 class="apec-title">超核一站式服务系统 <span class="ver-tag">v1.69 正式版</span></h1>
+          <h1 class="apec-title">超核一站式服务系统 <span class="ver-tag">v1.70 正式版</span></h1>
         </div>
         <svg class="apec-arc" viewBox="0 0 600 14" preserveAspectRatio="none" aria-hidden="true">
           <defs>
@@ -2552,6 +2555,13 @@ function toggleTheme() {
 }
 /* ================= 版本日志 ================= */
 const VERSION_LOG = [
+  {
+    ver: 'v1.70 正式版',
+    items: [
+      '管理员后台「操作事件」表格调整为：时间、名字、使用的业务、详情四列',
+      '埋点上报与后端落库补充操作人名字，事件与提单流水均可追溯到成员'
+    ]
+  },
   {
     ver: 'v1.69 正式版',
     items: [

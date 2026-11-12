@@ -89,7 +89,7 @@ export default async function handler(req: Request): Promise<Response> {
     }));
 
     // 最近操作事件
-    const eventRows = await sql`SELECT to_char(created_at AT TIME ZONE 'Asia/Shanghai', 'YYYY-MM-DD HH24:MI:SS') AS created_at, event_name, ticket_type, detail
+    const eventRows = await sql`SELECT to_char(created_at AT TIME ZONE 'Asia/Shanghai', 'YYYY-MM-DD HH24:MI:SS') AS created_at, event_name, ticket_type, user_name, detail
        FROM event_logs
        ORDER BY created_at DESC
        LIMIT 50`;
@@ -97,11 +97,12 @@ export default async function handler(req: Request): Promise<Response> {
       createdAt: r.created_at ? String(r.created_at) : null,
       eventName: r.event_name,
       ticketType: r.ticket_type,
+      userName: r.user_name,
       detail: r.detail,
     }));
 
     // 最近提单流水
-    const ticketRows = await sql`SELECT to_char(created_at AT TIME ZONE 'Asia/Shanghai', 'YYYY-MM-DD HH24:MI:SS') AS created_at, action, ticket_type, ticket_ref, detail
+    const ticketRows = await sql`SELECT to_char(created_at AT TIME ZONE 'Asia/Shanghai', 'YYYY-MM-DD HH24:MI:SS') AS created_at, action, ticket_type, ticket_ref, user_name, detail
        FROM ticket_events
        ORDER BY created_at DESC
        LIMIT 50`;
@@ -110,6 +111,7 @@ export default async function handler(req: Request): Promise<Response> {
       action: r.action,
       ticketType: r.ticket_type,
       ticketRef: r.ticket_ref,
+      userName: r.user_name,
       detail: r.detail,
     }));
 

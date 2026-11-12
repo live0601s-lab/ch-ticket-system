@@ -157,7 +157,7 @@
           <div class="panel-head"><h3>操作事件</h3><span class="hint">最近 50 条</span></div>
           <div class="table-scroll">
             <table>
-              <thead><tr><th>时间</th><th>事件</th><th>业务类型</th><th>详情</th></tr></thead>
+              <thead><tr><th>时间</th><th>名字</th><th>使用的业务</th><th>详情</th></tr></thead>
               <tbody id="eventsBody"></tbody>
             </table>
           </div>
@@ -259,15 +259,11 @@
     svg.innerHTML = lines + path('pv', '#2B6CFF') + path('uv', '#22c55e') + xl;
   }
 
-  function eventTag(name) {
-    var map = { switch_tab: 'blue', open_modal: 'amber', click_save: 'green', submit: 'green' };
-    return '<span class="tag ' + (map[name] || 'blue') + '">' + esc(name || '-') + '</span>';
-  }
   function renderEvents(events) {
     var body = document.getElementById('eventsBody');
     if (!events || !events.length) { body.innerHTML = '<tr><td colspan="4" class="empty">暂无操作事件</td></tr>'; return; }
     body.innerHTML = events.map(function (r) {
-      return '<tr><td>' + esc(fmtTime(r.createdAt)) + '</td><td>' + eventTag(r.eventName) +
+      return '<tr><td>' + esc(fmtTime(r.createdAt)) + '</td><td>' + esc(r.userName || '-') +
         '</td><td>' + esc(r.ticketType || '-') + '</td><td class="detail-cell">' + esc(fmtDetail(r.detail)) + '</td></tr>';
     }).join('');
   }

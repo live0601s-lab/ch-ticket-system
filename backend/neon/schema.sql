@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS event_logs (
   session_id  TEXT,
   event_name  TEXT NOT NULL,                -- 如 switch_tab / open_biz_modal / click_save
   ticket_type TEXT,                         -- deposit_del / biz，非事件相关可为空
+  user_name   TEXT,                         -- 操作人企微名（脱敏显示名）
   detail      JSONB,                        -- 脱敏后的附加参数
   created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -41,6 +42,7 @@ CREATE TABLE IF NOT EXISTS ticket_events (
   action      TEXT NOT NULL,                -- create / update / close 等
   ticket_type TEXT,                         -- deposit_del / biz
   ticket_ref  TEXT,                         -- 内部提单记录 id（非玩家账号）
+  user_name   TEXT,                         -- 操作人企微名（脱敏显示名）
   detail      JSONB,
   created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
