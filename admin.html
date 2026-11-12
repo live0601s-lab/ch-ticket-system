@@ -3,120 +3,101 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%230052D9'/%3E%3Crect x='8' y='8' width='16' height='4.5' rx='2.2' fill='%23fff'/%3E%3Crect x='13.75' y='8' width='4.5' height='16' rx='2.2' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%232B6CFF'/%3E%3Crect x='8' y='8' width='16' height='4.5' rx='2.2' fill='%23fff'/%3E%3Crect x='13.75' y='8' width='4.5' height='16' rx='2.2' fill='%23fff'/%3E%3C/svg%3E">
 <title>管理员后台 · 超核一站式服务系统</title>
 <style>
   :root {
-    --bg: #0f172a;
+    --bg: #0b1020;
     --card: #ffffff;
     --text: #1e293b;
     --text-muted: #64748b;
-    --border: #e2e8f0;
-    --primary: #0052D9;
-    --primary-dark: #00379A;
+    --border: #e8edf3;
+    --primary: #2B6CFF;
+    --primary-dark: #1A4FD1;
     --danger: #ef4444;
     --success: #22c55e;
     --warning: #f59e0b;
-    --radius: 12px;
+    --radius: 14px;
     --shadow: 0 10px 30px rgba(15, 23, 42, .12);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: "Microsoft YaHei", "PingFang SC", -apple-system, sans-serif;
-    color: var(--text);
-    min-height: 100vh;
-    background: linear-gradient(135deg, #00102e 0%, #0a2540 50%, #00102e 100%);
-    padding: 24px 16px 48px;
+    color: var(--text); min-height: 100vh;
+    background: linear-gradient(135deg, #0a0f1e 0%, #131d33 50%, #0a0f1e 100%);
+    padding: 22px 16px 48px;
   }
   .wrap { max-width: 1180px; margin: 0 auto; }
 
   /* 顶部 */
-  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 22px; }
-  .topbar h1 { color: #f8fafc; font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-  .topbar h1 .logo { width: 30px; height: 30px; border-radius: 8px; background: var(--primary); display: inline-flex; align-items: center; justify-content: center; }
-  .topbar h1 .logo svg { width: 18px; height: 18px; }
-  .top-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+  .brand { display: flex; align-items: center; gap: 10px; color: #f8fafc; font-size: 18px; font-weight: 700; }
+  .brand .logo { width: 32px; height: 32px; border-radius: 9px; background: var(--primary); display: inline-flex; align-items: center; justify-content: center; }
+  .brand .logo svg { width: 18px; height: 18px; }
+  .top-actions { display: flex; align-items: center; gap: 10px; }
+  .user-chip { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px 5px 5px; border-radius: 999px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); color: #e2e8f0; }
+  .user-chip .avatar { width: 30px; height: 30px; border-radius: 50%; background: #8B5CF6; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+  .user-chip .uname { font-size: 14px; font-weight: 600; }
 
-  .btn {
-    border: 1px solid transparent; border-radius: 10px; padding: 9px 15px;
-    font-size: 14px; cursor: pointer; font-family: inherit; transition: all .15s ease;
-    display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
-  }
-  .btn-primary { background: var(--primary); color: #fff; }
-  .btn-primary:hover { background: var(--primary-dark); }
-  .btn-ghost { background: rgba(255,255,255,.1); color: #e2e8f0; border-color: rgba(255,255,255,.18); }
-  .btn-ghost:hover { background: rgba(255,255,255,.18); }
+  .btn { border: 1px solid transparent; border-radius: 10px; padding: 9px 15px; font-size: 14px; cursor: pointer; font-family: inherit; transition: all .15s ease; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
   .btn-light { background: #fff; color: var(--primary); border-color: #fff; }
   .btn-light:hover { background: #eaf1ff; }
-  .btn-danger-ghost { background: rgba(239,68,68,.12); color: #fca5a5; border-color: rgba(239,68,68,.3); }
-  .btn-danger-ghost:hover { background: rgba(239,68,68,.22); }
+  .btn-ghost { background: rgba(255,255,255,.1); color: #e2e8f0; border-color: rgba(255,255,255,.18); }
+  .btn-ghost:hover { background: rgba(255,255,255,.18); }
+
+  /* 后台卡片容器 */
+  .panel { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .tabs { display: flex; align-items: center; gap: 4px; padding: 14px 20px 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .tab { padding: 10px 14px; font-size: 14px; font-weight: 600; color: var(--text-muted); background: transparent; border: none; border-bottom: 2px solid transparent; cursor: pointer; font-family: inherit; }
+  .tab.active { color: var(--text); border-bottom-color: var(--primary); }
+  .tab:hover { color: var(--text); }
+  .panel-body { padding: 20px; }
+  .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+  .panel-head h3 { font-size: 16px; font-weight: 700; }
+  .panel-head .hint { font-size: 12px; color: var(--text-muted); }
+
+  /* 概览卡片 */
+  .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px; }
+  .stat-card { background: #f5f6f8; border-radius: 12px; padding: 20px; }
+  .stat-card .label { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; }
+  .stat-card .value { font-size: 30px; font-weight: 800; color: var(--text); }
+  .stat-card .meta { font-size: 12px; color: var(--text-muted); margin-top: 8px; display: flex; justify-content: space-between; }
+
+  .chart-box { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+  .chart-box .chart-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .chart-box .chart-legend { font-size: 12px; color: var(--text-muted); display: flex; gap: 16px; justify-content: flex-end; }
+  .chart-legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
+  #trendChart { width: 100%; height: 260px; display: block; }
+
+  /* 表格 */
+  .table-scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th { background: #f5f6f8; color: var(--text); text-align: left; padding: 11px 14px; font-weight: 600; white-space: nowrap; }
+  tbody td { padding: 11px 14px; border-top: 1px solid var(--border); vertical-align: top; }
+  tbody tr:hover { background: #f8fafc; }
+  .muted { color: var(--text-muted); }
+  .tag { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; background: #f1f5f9; color: var(--text); }
+  .tag.blue { background: #eaf1ff; color: var(--primary); }
+  .tag.green { background: #e7f7ee; color: var(--success); }
+  .tag.amber { background: #fdf3e3; color: var(--warning); }
+  .detail-cell { max-width: 340px; word-break: break-all; color: var(--text-muted); font-size: 12px; }
+  .empty { padding: 30px; text-align: center; color: var(--text-muted); font-size: 13px; }
 
   /* 登录卡片 */
-  .login-card {
-    max-width: 420px; margin: 8vh auto 0; background: var(--card); border-radius: var(--radius);
-    box-shadow: var(--shadow); padding: 32px 28px;
-  }
+  .login-card { max-width: 420px; margin: 10vh auto 0; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 32px 28px; }
   .login-card h2 { font-size: 18px; margin-bottom: 6px; }
   .login-card p.sub { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; }
   .field { margin-bottom: 16px; }
   .field label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
-  .field input {
-    width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 10px;
-    font-size: 14px; font-family: inherit; background: #f8fafc; outline: none;
-  }
+  .field input { width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-family: inherit; background: #f8fafc; outline: none; }
   .field input:focus { border-color: var(--primary); background: #fff; }
   .login-error { color: var(--danger); font-size: 13px; min-height: 18px; margin-bottom: 10px; }
-  .login-card .btn-primary { width: 100%; justify-content: center; padding: 11px; }
+  .login-card .btn-primary { width: 100%; justify-content: center; padding: 11px; background: var(--primary); color: #fff; border: none; }
+  .login-card .btn-primary:hover { background: var(--primary-dark); }
 
-  /* 统计卡片 */
-  .stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 22px; }
-  .stat-card {
-    background: var(--card); border-radius: var(--radius); padding: 18px 16px; box-shadow: var(--shadow);
-  }
-  .stat-card .label { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
-  .stat-card .value { font-size: 26px; font-weight: 700; color: var(--text); }
-  .stat-card .value.primary { color: var(--primary); }
-  .stat-card .value.success { color: var(--success); }
-  .stat-card .value.warning { color: var(--warning); }
-
-  /* 区块卡片 */
-  .panel {
-    background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
-    margin-bottom: 22px; overflow: hidden;
-  }
-  .panel-head {
-    display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    padding: 16px 20px; border-bottom: 1px solid var(--border);
-  }
-  .panel-head h3 { font-size: 15px; font-weight: 700; }
-  .panel-head .hint { font-size: 12px; color: var(--text-muted); }
-  .table-scroll { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  thead th {
-    background: #e2e8f0; color: var(--text); text-align: left; padding: 10px 14px;
-    font-weight: 600; white-space: nowrap;
-  }
-  tbody td { padding: 10px 14px; border-top: 1px solid var(--border); vertical-align: top; }
-  tbody tr:hover { background: #f1f5f9; }
-  .muted { color: var(--text-muted); }
-  .tag {
-    display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px;
-    background: #f1f5f9; color: var(--text);
-  }
-  .tag.blue { background: #eaf1ff; color: var(--primary); }
-  .tag.green { background: #e7f7ee; color: var(--success); }
-  .tag.amber { background: #fdf3e3; color: var(--warning); }
-  .detail-cell { max-width: 320px; word-break: break-all; color: var(--text-muted); font-size: 12px; }
-  .empty { padding: 28px; text-align: center; color: var(--text-muted); font-size: 13px; }
-  .refresh-line { display: flex; align-items: center; gap: 10px; }
-  .status-line { font-size: 12px; color: #94a3b8; }
-
-  @media (max-width: 980px) {
-    .stats { grid-template-columns: repeat(3, 1fr); }
-  }
   @media (max-width: 620px) {
-    .stats { grid-template-columns: repeat(2, 1fr); }
-    .topbar h1 { font-size: 18px; }
+    .stats { grid-template-columns: 1fr; }
+    .brand { font-size: 16px; }
   }
 </style>
 </head>
@@ -124,14 +105,13 @@
 <div class="wrap">
 
   <div class="topbar">
-    <h1>
+    <div class="brand">
       <span class="logo"><svg viewBox="0 0 32 32" fill="none"><rect x="8" y="8" width="16" height="4.5" rx="2.2" fill="#fff"/><rect x="13.75" y="8" width="4.5" height="16" rx="2.2" fill="#fff"/></svg></span>
-      管理员后台
-    </h1>
+      超核后台管理
+    </div>
     <div class="top-actions" id="topActions" style="display:none">
-      <button class="btn btn-light" onclick="loadData()">刷新数据</button>
-      <a class="btn btn-ghost" href="index.html">返回主系统</a>
-      <button class="btn btn-danger-ghost" onclick="logout()">退出登录</button>
+      <a class="btn btn-light" href="index.html">返回主站</a>
+      <span class="user-chip"><span class="avatar">A</span><span class="uname">管理员</span></span>
     </div>
   </div>
 
@@ -149,44 +129,50 @@
 
   <!-- 仪表盘 -->
   <div id="dashboard" style="display:none">
-    <div class="stats" id="statsGrid"></div>
-
     <div class="panel">
-      <div class="panel-head">
-        <h3>近 30 天访问趋势</h3>
-        <span class="hint">PV 浏览量 / UV 独立访客</span>
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-tab="overview">访问信息</button>
+        <button class="tab" data-tab="events">操作事件</button>
+        <button class="tab" data-tab="tickets">提单流水</button>
       </div>
-      <div class="table-scroll">
-        <table>
-          <thead><tr><th>日期</th><th>PV</th><th>UV</th></tr></thead>
-          <tbody id="dailyBody"></tbody>
-        </table>
-      </div>
-    </div>
+      <div class="panel-body">
+        <!-- 访问信息 -->
+        <div id="tab-overview">
+          <div class="panel-head">
+            <h3>主站访问概览</h3>
+            <span class="hint" id="overviewMeta">北京时间 · 仅统计登录用户的主站访问</span>
+          </div>
+          <div class="stats" id="statsGrid"></div>
+          <div class="chart-box">
+            <div class="panel-head" style="margin-bottom:8px">
+              <div class="chart-title">最近 7 日 PV / UV</div>
+              <div class="chart-legend"><span><i style="background:#2B6CFF"></i>PV 浏览次数</span><span><i style="background:#22c55e"></i>UV 访问人数</span></div>
+            </div>
+            <svg id="trendChart" viewBox="0 0 720 260" preserveAspectRatio="none"></svg>
+          </div>
+        </div>
 
-    <div class="panel">
-      <div class="panel-head">
-        <h3>最近操作事件</h3>
-        <span class="hint">最近 50 条</span>
-      </div>
-      <div class="table-scroll">
-        <table>
-          <thead><tr><th>时间</th><th>事件</th><th>业务类型</th><th>详情</th></tr></thead>
-          <tbody id="eventsBody"></tbody>
-        </table>
-      </div>
-    </div>
+        <!-- 操作事件 -->
+        <div id="tab-events" style="display:none">
+          <div class="panel-head"><h3>操作事件</h3><span class="hint">最近 50 条</span></div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>时间</th><th>事件</th><th>业务类型</th><th>详情</th></tr></thead>
+              <tbody id="eventsBody"></tbody>
+            </table>
+          </div>
+        </div>
 
-    <div class="panel">
-      <div class="panel-head">
-        <h3>最近提单流水</h3>
-        <span class="hint">最近 50 条</span>
-      </div>
-      <div class="table-scroll">
-        <table>
-          <thead><tr><th>时间</th><th>动作</th><th>业务类型</th><th>提单引用</th><th>详情</th></tr></thead>
-          <tbody id="ticketsBody"></tbody>
-        </table>
+        <!-- 提单流水 -->
+        <div id="tab-tickets" style="display:none">
+          <div class="panel-head"><h3>提单流水</h3><span class="hint">最近 50 条</span></div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>时间</th><th>动作</th><th>业务类型</th><th>提单引用</th><th>详情</th></tr></thead>
+              <tbody id="ticketsBody"></tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -211,52 +197,72 @@
     return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' +
       p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
   }
-
   function fmtDetail(d) {
     if (d === null || d === undefined || d === '') return '-';
-    if (typeof d === 'object') {
-      var s = JSON.stringify(d);
-      return s.length > 160 ? s.slice(0, 160) + '…' : s;
-    }
+    if (typeof d === 'object') { var s = JSON.stringify(d); return s.length > 160 ? s.slice(0, 160) + '…' : s; }
     return String(d);
   }
-
   function esc(v) {
     return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
 
-  function statCard(label, value, cls) {
+  function statCard(label, value, meta) {
     return '<div class="stat-card"><div class="label">' + esc(label) + '</div>' +
-      '<div class="value ' + (cls || '') + '">' + esc(value) + '</div></div>';
+      '<div class="value">' + esc(value) + '</div>' +
+      '<div class="meta"><span>' + esc(meta || '') + '</span></div></div>';
   }
-
   function renderOverview(o) {
     o = o || {};
-    var html =
-      statCard('总 PV', o.totalPv || 0, 'primary') +
-      statCard('总 UV', o.totalUv || 0, '') +
-      statCard('今日 PV', o.todayPv || 0, 'success') +
-      statCard('今日 UV', o.todayUv || 0, 'success') +
-      statCard('操作事件', o.eventCount || 0, 'warning') +
-      statCard('提单流水', o.ticketCount || 0, '');
-    document.getElementById('statsGrid').innerHTML = html;
+    var today = new Date();
+    var ds = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+    document.getElementById('statsGrid').innerHTML =
+      statCard('今日 PV', o.todayPv || 0, '主站浏览次数 · ' + ds) +
+      statCard('今日 UV', o.todayUv || 0, '去重访问人数 · ' + ds) +
+      statCard('累计 PV', o.totalPv || 0, '历史浏览总量') +
+      statCard('累计 UV', o.totalUv || 0, '历史去重访客');
   }
 
-  function renderDaily(daily) {
-    var body = document.getElementById('dailyBody');
-    if (!daily || !daily.length) { body.innerHTML = '<tr><td colspan="3" class="empty">暂无访问数据</td></tr>'; return; }
-    body.innerHTML = daily.map(function (r) {
-      return '<tr><td>' + esc(r.day) + '</td><td>' + esc(r.pv) + '</td><td>' + esc(r.uv) + '</td></tr>';
-    }).join('');
+  /* 近 7 日 PV/UV 双折线图（SVG） */
+  function renderChart(daily) {
+    var svg = document.getElementById('trendChart');
+    if (!daily || !daily.length) { svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#94a3b8" font-size="13">暂无访问数据</text>'; return; }
+    var data = daily.slice().reverse().slice(-7);
+    var W = 720, H = 260, padL = 40, padR = 16, padT = 18, padB = 30;
+    var maxV = 0;
+    data.forEach(function (r) { maxV = Math.max(maxV, Number(r.pv) || 0, Number(r.uv) || 0); });
+    maxV = maxV || 1;
+    var iw = W - padL - padR, ih = H - padT - padB;
+    var x = function (i) { return padL + (data.length === 1 ? iw / 2 : i * iw / (data.length - 1)); };
+    var y = function (v) { return padT + ih - (Number(v) || 0) / maxV * ih; };
+    var lines = '';
+    // Y 轴网格
+    for (var g = 0; g <= 4; g++) {
+      var gy = padT + ih - g * ih / 4;
+      lines += '<line x1="' + padL + '" y1="' + gy + '" x2="' + (W - padR) + '" y2="' + gy + '" stroke="#eef2f7" stroke-width="1"/>';
+      lines += '<text x="' + (padL - 6) + '" y="' + (gy + 4) + '" text-anchor="end" font-size="11" fill="#94a3b8">' + Math.round(maxV * g / 4) + '</text>';
+    }
+    function path(key, color) {
+      var d = '';
+      data.forEach(function (r, i) { d += (i ? ' L' : 'M') + x(i).toFixed(1) + ' ' + y(r[key]).toFixed(1); });
+      var dots = '';
+      data.forEach(function (r, i) { dots += '<circle cx="' + x(i).toFixed(1) + '" cy="' + y(r[key]).toFixed(1) + '" r="3.5" fill="' + color + '"/>'; });
+      return '<path d="' + d + '" fill="none" stroke="' + color + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' + dots;
+    }
+    // X 轴日期
+    var xl = '';
+    data.forEach(function (r, i) {
+      var label = String(r.day || '').slice(5);
+      xl += '<text x="' + x(i).toFixed(1) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="11" fill="#94a3b8">' + esc(label) + '</text>';
+    });
+    svg.innerHTML = lines + path('pv', '#2B6CFF') + path('uv', '#22c55e') + xl;
   }
 
   function eventTag(name) {
     var map = { switch_tab: 'blue', open_modal: 'amber', click_save: 'green', submit: 'green' };
     return '<span class="tag ' + (map[name] || 'blue') + '">' + esc(name || '-') + '</span>';
   }
-
   function renderEvents(events) {
     var body = document.getElementById('eventsBody');
     if (!events || !events.length) { body.innerHTML = '<tr><td colspan="4" class="empty">暂无操作事件</td></tr>'; return; }
@@ -265,12 +271,10 @@
         '</td><td>' + esc(r.ticketType || '-') + '</td><td class="detail-cell">' + esc(fmtDetail(r.detail)) + '</td></tr>';
     }).join('');
   }
-
   function actionTag(a) {
     var cls = a === 'create' ? 'green' : (a === 'update' ? 'blue' : 'amber');
     return '<span class="tag ' + cls + '">' + esc(a || '-') + '</span>';
   }
-
   function renderTickets(tickets) {
     var body = document.getElementById('ticketsBody');
     if (!tickets || !tickets.length) { body.innerHTML = '<tr><td colspan="5" class="empty">暂无提单流水</td></tr>'; return; }
@@ -286,7 +290,6 @@
     document.getElementById('dashboard').style.display = '';
     document.getElementById('topActions').style.display = '';
   }
-
   function showLogin() {
     document.getElementById('loginView').style.display = '';
     document.getElementById('dashboard').style.display = 'none';
@@ -304,8 +307,6 @@
     }).catch(function () { err.textContent = '网络异常，请稍后重试'; });
   };
 
-  window.logout = function () { clearToken(); showLogin(); document.getElementById('tokenInput').value = ''; };
-
   function fetchData(token) {
     return fetch(ADMIN_API, {
       method: 'GET',
@@ -322,24 +323,27 @@
     var token = getToken();
     if (!token) { showLogin(); return; }
     fetchData(token).then(function (res) {
-      if (!res.ok) {
-        if (res.status === 401) { clearToken(); showLogin(); }
-        return;
-      }
+      if (!res.ok) { if (res.status === 401) { clearToken(); showLogin(); } return; }
       var d = res.data || {};
       renderOverview(d.overview);
-      renderDaily(d.daily);
+      renderChart(d.daily);
       renderEvents(d.events);
       renderTickets(d.tickets);
     }).catch(function () {});
   };
 
-  // 回车登录
-  document.getElementById('tokenInput').addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') window.login();
+  // 标签页切换
+  document.getElementById('tabs').addEventListener('click', function (e) {
+    var btn = e.target.closest('.tab');
+    if (!btn) return;
+    document.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); });
+    btn.classList.add('active');
+    ['overview', 'events', 'tickets'].forEach(function (k) {
+      document.getElementById('tab-' + k).style.display = k === btn.dataset.tab ? '' : 'none';
+    });
   });
 
-  // 已登录则直接进入
+  document.getElementById('tokenInput').addEventListener('keydown', function (e) { if (e.key === 'Enter') window.login(); });
   if (getToken()) { showDashboard(); loadData(); }
 })();
 </script>

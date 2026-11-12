@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%230052D9'/%3E%3Crect x='8' y='8' width='16' height='4.5' rx='2.2' fill='%23fff'/%3E%3Crect x='13.75' y='8' width='4.5' height='16' rx='2.2' fill='%23fff'/%3E%3C/svg%3E">
-<title>超核一站式服务系统 v1.65 正式版</title>
+<title>超核一站式服务系统 v1.66 正式版</title>
 <style>
   :root {
     --bg: #0f172a;
@@ -13,15 +13,21 @@
     --text: #1e293b;
     --text-muted: #64748b;
     --border: #e2e8f0;
-    --primary: #0052D9;
-    --primary-dark: #00379A;
+    --primary: #2B6CFF;
+    --primary-dark: #1A4FD1;
     --danger: #ef4444;
     --success: #22c55e;
     --warning: #f59e0b;
     --radius: 12px;
     --shadow: 0 10px 30px rgba(15, 23, 42, .12);
-    /* 主题相关（腾讯蓝默认 / 月光白覆盖） */
-    --app-bg: linear-gradient(135deg, #00102e 0%, #0a2540 50%, #00102e 100%);
+    /* APEC 2026 弧线多彩色 */
+    --apec-orange: #FF8A3D;
+    --apec-red: #F04E45;
+    --apec-purple: #8B5CF6;
+    --apec-blue: #3D7BFF;
+    --apec-cyan: #22C7C7;
+    /* 主题相关（APEC 深色 / 月光白覆盖） */
+    --app-bg: linear-gradient(135deg, #0a0f1e 0%, #131d33 50%, #0a0f1e 100%);
     --header-title: #f8fafc;
     --header-sub: #94a3b8;
     --input-bg: #f8fafc;
@@ -36,12 +42,12 @@
     --panel-bg: #f8fafc;
     --code-bg: #f8fafc;
     --row-soft: #f1f5f9;
-    --nav-bg: rgba(2, 20, 44, .75);
+    --nav-bg: rgba(10, 20, 40, .75);
     --nav-btn-text: #cbd5e1;
     --nav-btn-hover: #fff;
     --log-btn-bg: #fff;
     --log-btn-border: #fff;
-    --log-btn-text: #0052D9;
+    --log-btn-text: #2B6CFF;
     --log-btn-hover-bg: #eaf1ff;
     --log-btn-hover-border: #eaf1ff;
   }
@@ -67,7 +73,7 @@
     --nav-btn-hover: #0f172a;
     --log-btn-bg: #ffffff;
     --log-btn-border: #cbd5e1;
-    --log-btn-text: #0052D9;
+    --log-btn-text: #2B6CFF;
     --log-btn-hover-bg: #eaf1ff;
     --log-btn-hover-border: #cbd5e1;
     --shadow: 0 10px 30px rgba(15, 23, 42, .08);
@@ -90,21 +96,62 @@
     color: var(--header-title); font-size: 26px; font-weight: 700; letter-spacing: .5px;
     display: flex; align-items: center; gap: 10px;
   }
-  header.app-header h1 .t-logo { width: 22px; height: 22px; vertical-align: middle; margin-right: 2px; filter: drop-shadow(0 0 6px rgba(0,82,217,.55)); animation: tLogoGlow 2.6s ease-in-out infinite; }
+  header.app-header h1 .t-logo { width: 22px; height: 22px; vertical-align: middle; margin-right: 2px; filter: drop-shadow(0 0 6px rgba(43,108,255,.55)); animation: tLogoGlow 2.6s ease-in-out infinite; }
   @keyframes tLogoGlow {
-    0%, 100% { filter: drop-shadow(0 0 5px rgba(0,82,217,.45)); }
+    0%, 100% { filter: drop-shadow(0 0 5px rgba(43,108,255,.45)); }
     50% { filter: drop-shadow(0 0 16px rgba(10,124,255,.95)); }
   }
-  .header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .header-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+  /* ===== 顶部用户头像下拉（参考图4/图5） ===== */
+  .user-menu { position: relative; }
+  .user-chip { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px 5px 5px; border-radius: 999px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); color: #e2e8f0; cursor: pointer; transition: background .15s; }
+  .user-chip:hover { background: rgba(255,255,255,.18); }
+  .user-chip .avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--apec-purple); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+  .user-chip .uname { font-size: 14px; font-weight: 600; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .user-chip .chev { width: 14px; height: 14px; opacity: .7; }
+  .user-drop { position: absolute; right: 0; top: calc(100% + 8px); min-width: 224px; background: #111827; border: 1px solid rgba(255,255,255,.12); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; z-index: 60; display: none; }
+  .user-drop.show { display: block; }
+  .user-drop .ud-head { display: flex; align-items: center; gap: 10px; padding: 14px 16px; }
+  .user-drop .ud-head .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--apec-blue); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+  .user-drop .ud-head .ud-name { color: #fff; font-weight: 700; font-size: 15px; }
+  .user-drop .ud-head .ud-sub { color: #94a3b8; font-size: 12px; margin-top: 2px; }
+  .user-drop .ud-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; color: #e2e8f0; font-size: 14px; cursor: pointer; }
+  .user-drop .ud-item:hover { background: rgba(255,255,255,.08); }
+  .user-drop .ud-item svg { width: 18px; height: 18px; flex-shrink: 0; }
   /* 主题切换按钮 */
   .theme-toggle-btn.btn { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; padding: 0; background: var(--log-btn-bg); border: 1.5px solid var(--log-btn-border); color: var(--log-btn-text); border-radius: 10px; cursor: pointer; transition: all .15s; }
-  .theme-toggle-btn:hover { background: var(--log-btn-hover-bg); border-color: var(--log-btn-hover-border); color: #00379A; }
+  .theme-toggle-btn:hover { background: var(--log-btn-hover-bg); border-color: var(--log-btn-hover-border); color: #1A4FD1; }
   .theme-toggle-btn .theme-icon { display: block; }
   body.theme-moon .theme-toggle-btn { background: var(--primary); border-color: var(--primary); color: #fff; }
   body.theme-moon .theme-toggle-btn:hover { background: var(--primary-dark); border-color: var(--primary-dark); color: #fff; }
   .app-title-block { display: flex; flex-direction: column; gap: 3px; }
-  .app-title-block .admin-line { color: var(--header-sub); font-size: 13px; letter-spacing: .3px; display: flex; align-items: center; gap: 6px; padding-left: 34px; }
-  .app-title-block .admin-line::before { content: ''; display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: #16a34a; }
+
+  /* ===== APEC 2026 头图（复刻参考图3） ===== */
+  .apec-hero {
+    position: relative; width: 100%; border-radius: 18px; overflow: hidden;
+    background: #000; padding: 22px 26px 16px; box-shadow: var(--shadow);
+  }
+  .apec-pill {
+    display: inline-flex; align-items: center; gap: 6px; align-self: flex-start;
+    padding: 5px 16px; border-radius: 999px; font-size: 13px; font-weight: 600;
+    color: #c7d2fe; background: rgba(139,92,246,.14); border: 1px solid rgba(139,92,246,.35);
+    text-decoration: none; letter-spacing: .5px; transition: all .18s ease;
+  }
+  .apec-pill:hover { color: #fff; background: rgba(139,92,246,.32); border-color: var(--apec-purple); box-shadow: 0 0 16px rgba(139,92,246,.5); }
+  .apec-title-row { position: relative; margin-top: 12px; display: flex; align-items: center; }
+  .apec-skyline { position: absolute; left: 0; right: 0; bottom: 6px; width: 100%; height: 78px; opacity: .5; pointer-events: none; }
+  .apec-title {
+    position: relative; z-index: 2; color: #fff; font-size: 30px; font-weight: 800; letter-spacing: 1px;
+    text-shadow: 0 2px 18px rgba(0,0,0,.6); margin: 0;
+  }
+  .apec-arc { display: block; width: 100%; height: 14px; margin-top: 4px; }
+  .apec-sub { position: relative; z-index: 2; margin: 8px 0 0; color: #94a3b8; font-size: 14px; letter-spacing: .3px; }
+  .apec-hero .ver-tag { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.25); color: #e2e8f0; margin-left: 10px; }
+  @media (max-width: 760px) {
+    .apec-title { font-size: 22px; }
+    .apec-hero { padding: 18px 18px 12px; }
+  }
 
   .card {
     background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
@@ -223,17 +270,17 @@
 
   /* 游戏名称三色方案：CF=红、CFHD=蓝、RM=金 */
   .game-cf    { color: #dc2626 !important; border-color: #dc2626 !important; }
-  .game-cfhd  { color: #0052D9 !important; border-color: #0052D9 !important; }
+  .game-cfhd  { color: #2B6CFF !important; border-color: #2B6CFF !important; }
   .game-rm    { color: #E6A23C !important; border-color: #E6A23C !important; }
   .badge {
     display: inline-block; padding: 3px 12px; border-radius: 999px;
     font-size: 12.5px; font-weight: 700; color: #fff; white-space: nowrap;
   }
   .badge-cf   { background: #dc2626; }
-  .badge-cfhd { background: #0052D9; }
+  .badge-cfhd { background: #2B6CFF; }
   .badge-rm   { background: #E6A23C; }
   .badge-done       { background: #16a34a; }
-  .badge-ticket     { background: #0052D9; }
+  .badge-ticket     { background: #2B6CFF; }
   .badge-urgent     { background: #f97316; }
   .badge-normal     { background: #ffffff; color: #374151; border: 1px solid #d1d5db; }
   .badge-overdue    { background: #dc2626; }
@@ -246,9 +293,9 @@
   }
   .btn:active { transform: scale(.97); }
   .btn-primary { background: var(--primary); }
-  .btn-primary:hover { background: var(--primary-dark); box-shadow: 0 4px 14px rgba(0,82,217,.4); }
-  .btn-success { background: #0A7CFF; }
-  .btn-success:hover { background: #0052D9; box-shadow: 0 4px 14px rgba(10,124,255,.4); }
+  .btn-primary:hover { background: var(--primary-dark); box-shadow: 0 4px 14px rgba(43,108,255,.4); }
+  .btn-success { background: #2B6CFF; }
+  .btn-success:hover { background: #2B6CFF; box-shadow: 0 4px 14px rgba(10,124,255,.4); }
   .btn-warning { background: #f59e0b; }
   .btn-warning:hover { background: #d97706; box-shadow: 0 4px 14px rgba(245,158,11,.4); }
   .btn-danger { background: #dc2626; }
@@ -263,7 +310,7 @@
   .btn-recycle:hover { background: #059669; box-shadow: 0 4px 14px rgba(16,185,129,.4); }
   .btn-restore { background: #64748b; color: #fff; }
   .btn-restore:hover { background: #475569; box-shadow: 0 4px 14px rgba(100,116,139,.45); }
-  .ver-tag { display: inline-block; vertical-align: middle; margin-left: 8px; padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; background: #0052D9; color: #fff; border: 1px solid #0052D9; }
+  .ver-tag { display: inline-block; vertical-align: middle; margin-left: 8px; padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; background: #2B6CFF; color: #fff; border: 1px solid #2B6CFF; }
   .ticket-info { display: grid; gap: 8px; margin: 6px 0 4px; max-height: 380px; overflow-y: auto; }
   .ticket-info .ti-row { display: flex; gap: 10px; font-size: 14px; line-height: 1.5; }
   .ticket-info .ti-label { color: var(--text-muted); width: 90px; flex-shrink: 0; font-weight: 600; }
@@ -273,10 +320,10 @@
   .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
   .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
   .btn-log { background: var(--log-btn-bg); border: 1.5px solid var(--log-btn-border); color: var(--log-btn-text); }
-  .btn-log:hover { background: var(--log-btn-hover-bg); border-color: var(--log-btn-hover-border); color: #00379A; box-shadow: 0 4px 14px rgba(255,255,255,.25); }
+  .btn-log:hover { background: var(--log-btn-hover-bg); border-color: var(--log-btn-hover-border); color: #1A4FD1; box-shadow: 0 4px 14px rgba(255,255,255,.25); }
   /* v1.51 可见性加固：备份按钮主色调高亮，任何浏览器/加载方式/主题下稳定可见 */
-  .btn-backup { background: #0A7CFF; border: 1.5px solid #0A7CFF; color: #fff; font-weight: 700; box-shadow: 0 2px 10px rgba(10,124,255,.35); }
-  .btn-backup:hover { background: #0052D9; border-color: #0052D9; color: #fff; box-shadow: 0 4px 14px rgba(10,124,255,.5); }
+  .btn-backup { background: #2B6CFF; border: 1.5px solid #2B6CFF; color: #fff; font-weight: 700; box-shadow: 0 2px 10px rgba(10,124,255,.35); }
+  .btn-backup:hover { background: #2B6CFF; border-color: #2B6CFF; color: #fff; box-shadow: 0 4px 14px rgba(10,124,255,.5); }
   #entryView { height: 1050px; display: flex; flex-direction: column; }
   #entryView > .card-title, #entryView > form, #entryView > .entry-type-switch { flex-shrink: 0; }
   #entryView form .section-title-sm { margin-top: 26px; }
@@ -326,7 +373,7 @@
   .tb-privilege-row { display: flex; gap: 8px; align-items: center; }
   .tb-privilege-row input { flex: 1; min-width: 0; }
   .tb-privilege-selected { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
-  .tp-chip { display: inline-flex; align-items: center; gap: 6px; background: #E8F0FE; border: 1px solid #0052D9; color: #0052D9; padding: 4px 10px; border-radius: 14px; font-size: 12px; }
+  .tp-chip { display: inline-flex; align-items: center; gap: 6px; background: #E8F0FE; border: 1px solid #2B6CFF; color: #2B6CFF; padding: 4px 10px; border-radius: 14px; font-size: 12px; }
   .tp-x { cursor: pointer; font-weight: 700; color: #dc2626; }
   .tp-empty { color: #9ca3af; font-size: 12px; }
   .tb-op-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; flex-wrap: wrap; }
@@ -361,16 +408,16 @@
   .tb-item-id-error.show { display: block; }
   .tb-op-row .tb-op-t1.invalid { border-color: #dc2626 !important; box-shadow: 0 0 0 3px rgba(220, 38, 38, .12) !important; }
   .tb-upload-box { border: 2px dashed var(--border); border-radius: 8px; padding: 18px; text-align: center; color: #6b7280; cursor: pointer; font-size: 12.5px; transition: all .15s; }
-  .tb-upload-box.drag-over { border-color: #0052D9; background: #E8F0FE; }
+  .tb-upload-box.drag-over { border-color: #2B6CFF; background: #E8F0FE; }
   .tb-upload-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
   .tb-file-item { position: relative; border: 1px solid var(--border); border-radius: 6px; padding: 4px; max-width: 120px; text-align: center; }
   .tb-file-item .btn { margin-top: 4px; }
   .tb-file-item.img-drag-item { cursor: grab; }
   .tb-file-item.img-drag-item:active { cursor: grabbing; }
   .tb-file-item.tb-dragging { opacity: .45; }
-  .tb-file-item.tb-drag-target { border-color: #0052D9; box-shadow: 0 0 0 1px #0052D9; background: #E8F0FE; }
+  .tb-file-item.tb-drag-target { border-color: #2B6CFF; box-shadow: 0 0 0 1px #2B6CFF; background: #E8F0FE; }
   .tb-thumb { width: 100%; height: 80px; object-fit: cover; border-radius: 4px; cursor: zoom-in; display: block; }
-  .tb-attach-name { display: block; max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; cursor: pointer; color: #0052D9; }
+  .tb-attach-name { display: block; max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; cursor: pointer; color: #2B6CFF; }
   .privilege-list { max-height: 40vh; overflow-y: auto; }
   .privilege-item { display: flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 6px; font-size: 12.5px; }
   .privilege-item > span:first-child { margin-right: auto; }
@@ -429,7 +476,7 @@
   .cheat-check.del .cheat-del:hover { color: #b91c1c; }
   .cheat-add-row { display: flex; gap: 8px; margin-top: 8px; }
   .cheat-add-row input { flex: 1; min-width: 0; border: 1.5px solid var(--border); border-radius: 8px; padding: 6px 10px; font-size: 13px; font-family: inherit; background: #fff; color: var(--text); }
-  .cheat-add-row input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,82,217,.15); }
+  .cheat-add-row input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(43,108,255,.15); }
   .cheat-filter-tag { font-size: 13px; color: var(--text-muted); font-weight: 600; }
   /* 导出状态徽章 */
   .badge-unexported { background: #16a34a; }
@@ -438,9 +485,9 @@
 .tb-filter-bar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin:0 0 12px; }
 .tb-filter-bar .tb-filters { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
 .tb-filter-bar select { padding:5px 10px; border:1.5px solid var(--border); border-radius:8px; font-size:13px; background:var(--input-bg); color:var(--text); outline:none; cursor:pointer; max-width:250px; }
-.tb-filter-bar select:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,82,217,.12); }
+.tb-filter-bar select:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(43,108,255,.12); }
 .tb-filter-bar .tb-kw-input { width:230px; padding:7px 10px; border:1.5px solid var(--border); border-radius:8px; font-size:13px; background:var(--input-bg); color:var(--text); outline:none; transition:border-color .15s; }
-.tb-filter-bar .tb-kw-input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,82,217,.12); }
+.tb-filter-bar .tb-kw-input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(43,108,255,.12); }
 .tb-filter-bar .tb-kw-input::placeholder { color: var(--placeholder); }
 .tb-filter-bar .tb-count { font-size:12.5px; color:var(--text-muted); white-space:nowrap; }
   .tb-record-card { border: 1.5px solid var(--border); border-radius: 10px; padding: 9px 11px; margin-bottom: 8px; background: var(--card-bg); }
@@ -450,10 +497,10 @@
   .tb-ticketno { display:inline-flex; align-items:center; gap:5px; margin-left:10px; vertical-align:middle; }
   .tb-ticketno-label { font-size:12px; font-weight:600; color:var(--text-muted); white-space:nowrap; }
   .tb-ticketno-input { width:168px; padding:2px 8px; border:1.5px solid var(--border); border-radius:6px; font-size:12px; font-weight:400; background:var(--input-bg); color:var(--text); outline:none; transition:border-color .15s; }
-  .tb-ticketno-input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,82,217,.12); }
+  .tb-ticketno-input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(43,108,255,.12); }
   .tb-ticketno-input::placeholder { color:var(--placeholder); }
   .tb-ticketno-colon { font-size:12px; font-weight:600; color:var(--text-muted); }
-  .tb-ticketno-val { font-size:13px; font-weight:700; color:var(--primary); cursor:pointer; border-bottom:1px dashed rgba(0,82,217,.45); padding:0 1px; }
+  .tb-ticketno-val { font-size:13px; font-weight:700; color:var(--primary); cursor:pointer; border-bottom:1px dashed rgba(43,108,255,.45); padding:0 1px; }
   .tb-ticketno-val:hover { color:#0a44b0; border-bottom-color:#0a44b0; }
   .new-flag { margin-left: 7px; color: #d4a017; font-size: 13px; font-weight: 700; letter-spacing: 0.5px; vertical-align: middle; animation: newFlagSoftGlow 1.6s ease-in-out infinite; }
   @keyframes newFlagSoftGlow { 0%, 100% { opacity: 1; text-shadow: 0 0 3px rgba(212, 160, 23, 0.0); } 50% { opacity: 0.55; text-shadow: 0 0 6px rgba(212, 160, 23, 0.55); } }
@@ -523,7 +570,7 @@
   .legend-item:hover { border-color: #93b5e1; }
   .bar-toolbar { display: flex; gap: 8px; margin-bottom: 8px; flex: 0 0 auto; }
   .bar-btn { border: 1px solid var(--border); background: #fff; border-radius: 6px; padding: 3px 12px; font-size: 12px; cursor: pointer; color: #475569; }
-  .bar-btn.active { background: #0052D9; border-color: #0052D9; color: #fff; }
+  .bar-btn.active { background: #2B6CFF; border-color: #2B6CFF; color: #fff; }
   .bar-seg { cursor: pointer; transition: opacity .15s; }
   .bar-seg:hover { opacity: .85; }
   #trendBar { flex: 1; min-height: 0; overflow: hidden; }
@@ -564,9 +611,9 @@
   .version-log-item { padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; background: var(--panel-bg); }
   .version-log-item:last-child { margin-bottom: 0; }
   .version-log-head { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; margin-bottom: 6px; }
-  .version-log-head .ver { color: #0052D9; }
+  .version-log-head .ver { color: #2B6CFF; }
   .version-log-item ul { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.8; color: var(--text); }
-  .version-log-item li::marker { color: #0052D9; }
+  .version-log-item li::marker { color: #2B6CFF; }
 
   @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
@@ -605,11 +652,11 @@
   .tb-item-account { font-weight: 700; font-size: 14px; color: var(--text); }
   .tb-item-time { font-size: 11.5px; color: var(--text-muted); white-space: nowrap; }
   .tb-item-row2 { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: space-between; margin-top: 2px; }
-  .tb-item-region { font-size: 12px; color: var(--primary); background: #e8f0fe; border: 1px solid rgba(0,82,217,.2); padding: 1px 8px; border-radius: 6px; }
+  .tb-item-region { font-size: 12px; color: var(--primary); background: #e8f0fe; border: 1px solid rgba(43,108,255,.2); padding: 1px 8px; border-radius: 6px; }
   .tb-item-ticketno { font-size: 12px; color: var(--text-muted); font-weight: 600; }
   .tb-item-ticketno.has { color: var(--text); font-weight: 700; }
-  .tb-ticketno-link { color:#0052D9; cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
-  .tb-ticketno-link:hover { color:#00379A; }
+  .tb-ticketno-link { color:#2B6CFF; cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
+  .tb-ticketno-link:hover { color:#1A4FD1; }
   .tb-detail-head { font-size: 15px; font-weight: 700; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
   .tb-detail-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; justify-content: space-between; }
   .tb-actions-left, .tb-actions-right { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -622,22 +669,22 @@
   .tb-detail-section { font-size: 12px; font-weight: 700; color: var(--primary); margin: 16px 0 8px; padding-left: 10px; border-left: 3px solid var(--primary); grid-column: 1 / -1; }
   .tb-detail-section:first-child { margin-top: 0; }
   .tb-detail-input { width: 100%; max-width: 320px; box-sizing: border-box; border: 1px solid #93b5e1; border-radius: 6px; padding: 7px 11px; font-size: 13.5px; font-family: inherit; background: #fff; }
-  .tb-detail-input:focus { outline: none; border-color: #0052D9; box-shadow: 0 0 0 2px rgba(0,82,217,.12); }
+  .tb-detail-input:focus { outline: none; border-color: #2B6CFF; box-shadow: 0 0 0 2px rgba(43,108,255,.12); }
   textarea.tb-detail-input { resize: vertical; min-height: 60px; line-height: 1.6; max-width: 100%; }
   .tb-detail-rows { background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: Consolas, Menlo, monospace; font-size: 12.5px; white-space: pre-wrap; word-break: break-all; line-height: 1.7; }
   .tb-detail-files { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; grid-column: 1 / -1; }
   .ticket-type-card { display:block; width:100%; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; text-align: left; cursor: pointer; transition: all .15s ease; box-sizing: border-box; }
   .tb-img-cat { text-align:center; }
   .tb-img-cat-box { position:relative; width:100%; aspect-ratio:4/3; border:2px dashed #cbd5e1; border-radius:8px; background:#f8fafc; cursor:pointer; overflow:hidden; display:flex; align-items:center; justify-content:center; transition:all .15s; }
-  .tb-img-cat-box:hover { border-color:#0052D9; background:#E8F0FE; }
+  .tb-img-cat-box:hover { border-color:#2B6CFF; background:#E8F0FE; }
   .tb-img-cat-box.has-img { border-style:solid; border-color:#059669; padding:0; }
   .tb-img-cat-box.has-img img { width:100%; height:100%; object-fit:cover; }
   .tb-img-cat-hint { font-size:11px; color:#94a3b8; }
   .tb-img-cat-label { font-size:12px; color:#dc2626; margin-top:6px; font-weight:600; }
   .tb-img-cat-label.ok { color:#059669; }
   .tb-extra-tip { font-size:12px; color:#64748b; line-height:1.6; text-align:left; }
-  .builtin-img-add { display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; margin-top:5px; border-radius:50%; background:#0052D9; color:#fff; font-size:13px; font-weight:700; line-height:1; cursor:pointer; transition:background .15s; }
-  .builtin-img-add:hover { background:#00379A; }
+  .builtin-img-add { display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; margin-top:5px; border-radius:50%; background:#2B6CFF; color:#fff; font-size:13px; font-weight:700; line-height:1; cursor:pointer; transition:background .15s; }
+  .builtin-img-add:hover { background:#1A4FD1; }
   .builtin-priv-list { display:flex; flex-direction:column; gap:8px; margin-top:10px; max-height:240px; overflow-y:auto; }
   .builtin-priv-item { display:flex; align-items:center; gap:10px; padding:8px; border:1px solid #e5e7eb; border-radius:8px; background:#f9fafb; }
   .builtin-priv-item img { width:46px; height:46px; object-fit:cover; border-radius:6px; border:1px solid #e5e7eb; cursor:zoom-in; flex-shrink:0; }
@@ -717,7 +764,7 @@
 .rm-pager .pager-left { display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-muted); }
 #tbPager .pager-left { justify-content: flex-start; }
 .rm-pager select { padding:5px 10px; border:1.5px solid var(--border); border-radius:8px; font-size:13px; background:#fff; color:var(--text); outline:none; cursor:pointer; }
-.rm-pager select:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,82,217,.12); }
+.rm-pager select:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(43,108,255,.12); }
 .pager-right { display:flex; gap:6px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
 #tbPager .pager-right { flex-direction: column; align-items: flex-start; gap: 8px; }
 #tbPager .pager-nums { display:flex; gap:6px; flex-wrap:wrap; align-items:center; justify-content:flex-start; }
@@ -755,13 +802,13 @@
   .ticket-biz-form .form-grid { row-gap: 18px; column-gap: 20px; }
   .ticket-biz-form .section-title-sm { margin: 18px 0 10px; }
   .tb-upload-box { transition: border-color .15s, background .15s; }
-  .tb-upload-box:hover { border-color: var(--primary); background: rgba(0,82,217,.04); }
+  .tb-upload-box:hover { border-color: var(--primary); background: rgba(43,108,255,.04); }
 </style>
 <script>
 /* ===== 版本自检 + 埋点统计（v1.64） ===== */
 (function () {
   // 当前版本号：与页面右上角版本标签保持一致，发版时同步更新
-  var APP_VERSION = 'v1.65';
+  var APP_VERSION = 'v1.66';
 
   // 埋点配置：endpoint 留空且 enabled=false 时不上报；已接入 Neon collect 接口
   window.__TRACK__ = window.__TRACK__ || {
@@ -837,19 +884,56 @@
 
   <header class="app-header">
     <div class="app-title-block">
-      <h1><svg class="t-logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="7" fill="#0052D9"/><rect x="8" y="8" width="16" height="4.5" rx="2.2" fill="#fff"/><rect x="13.75" y="8" width="4.5" height="16" rx="2.2" fill="#fff"/></svg>超核一站式服务系统 <span class="ver-tag">v1.65 正式版</span></h1>
-      <div class="admin-line">项目接口人：v_bwbnbu</div>
+      <div class="apec-hero">
+        <a class="apec-pill" href="https://www.apec2026.cn/node_106.html" target="_blank" rel="noopener">APEC 2026 · 中国深圳</a>
+        <div class="apec-title-row">
+          <svg class="apec-skyline" viewBox="0 0 600 78" preserveAspectRatio="none" aria-hidden="true">
+            <g fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-linejoin="round">
+              <path d="M20 62 L34 50 L48 62 Z"/>
+              <rect x="58" y="34" width="16" height="28"/>
+              <path d="M82 62 L82 26 L92 18 L102 26 L102 62 Z"/>
+              <rect x="112" y="30" width="14" height="32"/>
+              <path d="M134 62 L134 22 L146 12 L158 22 L158 62 Z"/>
+              <rect x="170" y="36" width="16" height="26"/>
+              <rect x="196" y="28" width="12" height="34"/>
+              <path d="M216 62 L216 34 L226 26 L236 34 L236 62 Z"/>
+              <rect x="248" y="32" width="15" height="30"/>
+              <path d="M270 62 L270 24 L282 16 L294 24 L294 62 Z"/>
+              <rect x="306" y="38" width="16" height="24"/>
+              <path d="M330 62 L330 30 L340 22 L350 30 L350 62 Z"/>
+              <rect x="362" y="28" width="13" height="34"/>
+              <path d="M382 62 L382 20 L394 10 L406 20 L406 62 Z"/>
+              <rect x="418" y="34" width="16" height="28"/>
+              <path d="M442 62 L442 32 L452 24 L462 32 L462 62 Z"/>
+              <rect x="474" y="30" width="14" height="32"/>
+              <path d="M496 62 Q520 30 544 62 Z"/>
+            </g>
+          </svg>
+          <h1 class="apec-title">超核一站式服务系统 <span class="ver-tag">v1.66 正式版</span></h1>
+        </div>
+        <svg class="apec-arc" viewBox="0 0 600 14" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="apecArcGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#FF8A3D"/><stop offset=".28" stop-color="#F04E45"/>
+              <stop offset=".52" stop-color="#8B5CF6"/><stop offset=".76" stop-color="#3D7BFF"/>
+              <stop offset="1" stop-color="#22C7C7"/>
+            </linearGradient>
+          </defs>
+          <path d="M0 10 Q150 2 300 7 T600 5" fill="none" stroke="url(#apecArcGrad)" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <p class="apec-sub">探索团队、项目与兴趣工单，让沟通与协作更简单</p>
+      </div>
     </div>
     <div class="header-actions">
       <button type="button" class="btn theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="切换主题" aria-label="切换主题">
         <svg id="themeIconMoon" class="theme-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         <svg id="themeIconSun" class="theme-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
       </button>
-      <button class="btn btn-log" onclick="openAdminPanel()" title="管理员后台（需口令验证）">管理员后台</button>
       <button class="btn btn-log" onclick="openLogModal()">版本日志</button>
       <button type="button" id="backupDataBtn" class="btn btn-backup" onclick="backupAllData()" title="备份全部本地数据为 JSON 文件">备份数据</button>
       <button class="btn btn-log" onclick="restoreAllData()" title="从备份 JSON 恢复本地数据">恢复数据</button>
       <button class="btn btn-primary" onclick="exportExcel()">导出 Excel</button>
+      <div class="user-menu" id="userMenu"></div>
       <input type="file" id="restoreFileInput" accept=".json,application/json" style="display:none" onchange="handleRestoreFile(event)">
     </div>
   </header>
@@ -1148,8 +1232,8 @@
         <div class="group-title">工单统计</div>
         <div class="group-cards">
           <div class="stat-item"><div class="num" id="statTodayNew" style="color:#16a34a;">0</div><div class="lbl">今日新增工单</div></div>
-          <div class="stat-item"><div class="num" id="statTotal" style="color:#0052D9;">0</div><div class="lbl">总工单</div></div>
-          <div class="stat-item"><div class="num" id="statDone" style="color:#0A7CFF;">0</div><div class="lbl">已完成</div></div>
+          <div class="stat-item"><div class="num" id="statTotal" style="color:#2B6CFF;">0</div><div class="lbl">总工单</div></div>
+          <div class="stat-item"><div class="num" id="statDone" style="color:#2B6CFF;">0</div><div class="lbl">已完成</div></div>
           <div class="stat-item"><div class="num" id="statOngoing" style="color:#f59e0b;">0</div><div class="lbl">跟进中</div></div>
           <div class="stat-item"><div class="num" id="statTicket" style="color:#10b981;">0</div><div class="lbl">已提单</div></div>
           <div class="stat-item"><div class="num" id="statUrgent" style="color:#f97316;">0</div><div class="lbl">紧急待处理</div></div>
@@ -1433,7 +1517,7 @@
   <div class="modal" style="max-width:520px;">
     <div class="modal-title" style="text-align:center;">请选择本次提单类型</div>
     <div id="ticketTypeStep1" style="margin-top:18px;">
-      <div class="ticket-type-card" onclick="chooseTicketType('deposit_del')" style="border-left:4px solid #0052D9;margin-bottom:12px;">
+      <div class="ticket-type-card" onclick="chooseTicketType('deposit_del')" style="border-left:4px solid #2B6CFF;margin-bottom:12px;">
         <div style="font-size:15px;font-weight:600;color:#1e293b;">仓库道具删除</div>
         <div style="font-size:12px;color:#64748b;margin-top:4px;">玩家反馈仓库道具过多，申请删除多余道具</div>
       </div>
@@ -2408,6 +2492,17 @@ function toggleTheme() {
 /* ================= 版本日志 ================= */
 const VERSION_LOG = [
   {
+    ver: 'v1.66 正式版',
+    items: [
+      '界面切换为 APEC 2026 深圳主题：深色头图、城市天际线线稿与多彩渐变弧线，APEC 标签可点击跳转官方站点',
+      '顶部新增用户头像下拉，含消息通知与后台管理入口，原顶部「管理员后台」按钮整合进下拉',
+      '管理员后台按访问概览 / 操作事件 / 提单流水标签页重排，新增今日 PV/UV 卡片与近 7 日趋势折线图',
+      '修复首次刷新后「新建问题」标题被误改为工单服务计数的问题',
+      '修复备份时工单服务提单记录在 IDB 为空数组/对象时被漏备的问题，回退内存与本地缓存兜底',
+      '移除首次进入强制弹出的企微名引导弹窗'
+    ]
+  },
+  {
     ver: 'v1.65 正式版',
     items: [
       '修复备份迁移丢数据：备份改为直接从 IndexedDB 读取提单记录与草稿（权威源），不再只取内存缓存，避免页面异步回填时漏备',
@@ -2778,6 +2873,40 @@ const VERSION_LOG = [
 function openAdminPanel() {
   location.href = 'admin.html';
 }
+/* ===== 顶部用户菜单（企微登录占位：当前取本地记住的企微名，预留 OAuth 接入位） ===== */
+function getCurrentUser() {
+  var name = '';
+  try { name = localStorage.getItem('ch_last_wecom') || ''; } catch (e) {}
+  if (!name) {
+    var names = getWecomNames();
+    if (names && names.length) name = names[0].name;
+  }
+  name = name || '未登录';
+  return { name: name, account: name === '未登录' ? 'guest' : name };
+}
+function renderUserMenu() {
+  var box = document.getElementById('userMenu');
+  if (!box) return;
+  var u = getCurrentUser();
+  var initial = (u.name || '?').trim().charAt(0).toUpperCase();
+  box.innerHTML =
+    '<div class="user-chip" id="userChip">' +
+      '<span class="avatar">' + escapeHtml(initial) + '</span>' +
+      '<span class="uname">' + escapeHtml(u.name) + '</span>' +
+      '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>' +
+    '</div>' +
+    '<div class="user-drop" id="userDrop">' +
+      '<div class="ud-head"><span class="avatar">' + escapeHtml(initial) + '</span><div><div class="ud-name">' + escapeHtml(u.name) + '</div><div class="ud-sub">' + escapeHtml(u.account) + '</div></div></div>' +
+      '<div class="ud-item" id="udNotify"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>消息通知</div>' +
+      '<div class="ud-item" id="udAdmin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.92 1 1.6 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>后台管理</div>' +
+    '</div>';
+  var chip = document.getElementById('userChip');
+  var drop = document.getElementById('userDrop');
+  chip.onclick = function (e) { e.stopPropagation(); drop.classList.toggle('show'); };
+  document.getElementById('udAdmin').onclick = function () { drop.classList.remove('show'); openAdminPanel(); };
+  document.getElementById('udNotify').onclick = function () { drop.classList.remove('show'); showToast('暂无新的消息通知', 'info'); };
+  document.addEventListener('click', function (e) { if (!box.contains(e.target)) drop.classList.remove('show'); });
+}
 function openLogModal() {
   var html = '';
   VERSION_LOG.forEach(function (v) {
@@ -2837,11 +2966,11 @@ function showEntryView() {
 const WECOM_KEY = 'wecom_names_v1';
 /* 企微名标签颜色：16 色（腾讯蓝/红/绿/金/紫/橙 + 青/洋红/棕/灰/深蓝/玫红/黄绿/天蓝/深绿/暗红） */
 const WECOM_COLORS = [
-  '#0052D9', '#dc2626', '#16a34a', '#E6A23C', '#7c3aed', '#f97316',
+  '#2B6CFF', '#dc2626', '#16a34a', '#E6A23C', '#7c3aed', '#f97316',
   '#06b6d4', '#ec4899', '#8B4513', '#64748b', '#1e3a8a', '#e11d48',
   '#84cc16', '#0ea5e9', '#166534', '#991b1b'
 ];
-const DEFAULT_WECOM = { name: '', color: '#0052D9' };
+const DEFAULT_WECOM = { name: '', color: '#2B6CFF' };
 /* v1.61：首次使用不再默认 v_bwbnbu，由用户自己输入并持久化 */
 function getWecomNames() {
   const raw = localStorage.getItem(WECOM_KEY);
@@ -2886,41 +3015,8 @@ function renderWecomSelect(selected) {
 function rememberWecom(name) {
   try { localStorage.setItem('ch_last_wecom', name || ''); } catch (e) {}
 }
-/* v1.61：首次使用引导——输入企微名（自制主题弹窗） */
-function showFirstWecomModal() {
-  let mask = document.getElementById('firstWecomMask');
-  if (!mask) {
-    mask = document.createElement('div');
-    mask.id = 'firstWecomMask';
-    mask.className = 'modal-mask';
-    mask.style.zIndex = '9999';
-    mask.innerHTML =
-      '<div class="modal" style="max-width:420px;">' +
-      '  <div class="modal-title">欢迎使用超核一站式服务系统</div>' +
-      '  <div style="margin-top:16px;color:#475569;font-size:13px;line-height:1.6;">请输入你的企微名，将用于工单归属人，后续可随时修改：</div>' +
-      '  <div class="form-group" style="margin-top:14px;">' +
-      '    <input type="text" id="firstWecomInput" placeholder="请输入企微名" autocomplete="off" style="width:100%;padding:10px 12px;border:1.5px solid #cbd5e1;border-radius:8px;font-size:14px;box-sizing:border-box;">' +
-      '  </div>' +
-      '  <div class="modal-actions" style="justify-content:center;margin-top:18px;">' +
-      '    <button type="button" class="btn btn-primary" id="firstWecomConfirm" style="min-width:120px;">确认</button>' +
-      '  </div>' +
-      '</div>';
-    document.body.appendChild(mask);
-    document.getElementById('firstWecomConfirm').onclick = function () {
-      const v = document.getElementById('firstWecomInput').value.trim();
-      if (!v) { showToast('请输入企微名', 'error'); return; }
-      saveWecomNames([{ name: v, color: '#0052D9' }]);
-      renderWecomSelect();
-      mask.remove();
-      showToast('企微名已保存：' + v, 'success');
-    };
-    document.getElementById('firstWecomInput').addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') document.getElementById('firstWecomConfirm').click();
-    });
-  }
-  mask.classList.add('show');
-  setTimeout(function () { const el = document.getElementById('firstWecomInput'); if (el) el.focus(); }, 50);
-}
+/* v1.66：首次进入不再强制弹出企微名引导弹窗；企微名在表单内按需选择/新增 */
+function showFirstWecomModal() { /* 已停用：保留空函数避免遗留引用报错 */ }
 /* 企微名新增弹窗 */
 function openWecomModal() {
   document.getElementById('newWecomName').value = '';
@@ -3894,7 +3990,7 @@ function renderBuiltinPrivImagePreview() {
     return;
   }
   if (preview) { preview.src = _builtinPrivImgRef.dataUrl; preview.style.display = ''; }
-  if (hint) { hint.textContent = _builtinPrivImgRef.mid ? '已加载当前特权图（可直接更换）' : '已选择新图片，保存后生效'; hint.style.color = '#0052D9'; }
+  if (hint) { hint.textContent = _builtinPrivImgRef.mid ? '已加载当前特权图（可直接更换）' : '已选择新图片，保存后生效'; hint.style.color = '#2B6CFF'; }
   if (removeBtn) removeBtn.style.display = '';
 }
 function selectBuiltinPrivImage(input) {
@@ -4983,7 +5079,7 @@ function privilegeLabel(p) { return p.id + ' ' + p.name; }
 /* 特权色块颜色：三个预设特权三种颜色，无匹配时默认灰色 */
 function privilegeColor(id) {
   const map = {
-    '26863': '#0052D9',  // 仓库道具删除：腾讯蓝
+    '26863': '#2B6CFF',  // 仓库道具删除：腾讯蓝
     '53430': '#dc2626',  // 商业化活动失误领取/分解/兑换（需项目组确认）：红
     '42847': '#16a34a'   // CF站内信：绿
   };
@@ -6249,9 +6345,9 @@ function renderTbPager(total, totalPages) {
   const btns = document.getElementById('tbPagerBtns');
   if (!pager || !btns) return;
   pager.style.display = 'flex';
-  // v1.60：把总数移到标题旁
+  // v1.66：把总数移到标题旁；仅工单服务视图才改写标题，避免刷新后覆盖「新建问题」标题
   const titleEl = document.getElementById('entryTitle');
-  if (titleEl) {
+  if (titleEl && currentBiz === 'TICKET_ONLY') {
     const tagEl = titleEl.querySelector('.tag');
     const baseText = titleEl.firstChild;
     if (baseText) baseText.textContent = '工单服务（共 ' + total + ' 条）';
@@ -7076,7 +7172,7 @@ function renderTbImageCategories() {
     const label = document.querySelector('.tb-img-cat-label[data-label="' + cat + '"]');
     if (!box || !label) return;
     // 事件绑定（无论空框还是有图都需要）
-    box.ondragover = function (e) { e.preventDefault(); box.style.borderColor = '#0052D9'; box.style.background = '#E8F0FE'; };
+    box.ondragover = function (e) { e.preventDefault(); box.style.borderColor = '#2B6CFF'; box.style.background = '#E8F0FE'; };
     box.ondragleave = function (e) { e.preventDefault(); box.style.borderColor = ''; box.style.background = ''; };
     box.ondrop = function (e) {
       e.preventDefault();
@@ -8106,10 +8202,17 @@ function doBackupAllData(textOnly, mediaMap, bizData) {
   });
   // v1.65：提单记录/草稿以 IDB bizdata 为权威源；IDB 为空再回退内存缓存 / localStorage，避免漏备
   function parseLs(key) { try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; } }
-  var records = (bizData && bizData.records != null) ? bizData.records
-    : (_bizRecordsCache || parseLs(TICKET_RECORDS_KEY));
-  var drafts = (bizData && bizData.drafts != null) ? bizData.drafts
-    : (_bizDraftsCache || parseLs(TICKET_DRAFTS_KEY));
+  function hasContent(x) {
+    if (x === null || x === undefined) return false;
+    if (Array.isArray(x)) return x.length > 0;
+    if (typeof x === 'object') return Object.keys(x).length > 0;
+    return true;
+  }
+  var idbRec = bizData ? bizData.records : null;
+  var idbDrf = bizData ? bizData.drafts : null;
+  // v1.66 修复：IDB 为空数组/空对象时不能覆盖内存/localStorage 的最新工单服务记录
+  var records = hasContent(idbRec) ? idbRec : (_bizRecordsCache || parseLs(TICKET_RECORDS_KEY));
+  var drafts = hasContent(idbDrf) ? idbDrf : (_bizDraftsCache || parseLs(TICKET_DRAFTS_KEY));
   var hasRecords = Array.isArray(records) ? records.length > 0 : !!records;
   var hasDrafts = Array.isArray(drafts) ? drafts.length > 0 : !!(drafts && Object.keys(drafts).length);
   if (hasRecords) data[TICKET_RECORDS_KEY] = JSON.stringify(records);
@@ -8538,12 +8641,8 @@ document.addEventListener('DOMContentLoaded', function () {
   } catch (e) {}
   migrateLegacyRM();
   renderWecomSelect();
-  // v1.61：首次使用引导——没有企微名时强制输入
-  if (!getWecomNames().length) {
-    setTimeout(function () {
-      showFirstWecomModal();
-    }, 300);
-  }
+  renderUserMenu();
+  // v1.66：移除首次进入强制企微名引导弹窗
   // v1.40 修复：页面加载即重建「选择特权」下拉，保证已保存的自定义特权模版在刷新/重开后立即可见
   renderCategoryPrivilegeOptions();
   // 问题筛：页面打开即按「已保存配置 + 当前联网状态」刷新状态提示；监听 online / offline 动态更新（关闭后重开、只要联网即自动接入）
@@ -8628,7 +8727,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 let trendDays = 7;
 function getStatusGroups() {
   return [
-    { key: '已完成', color: '#0A7CFF', test: function (r) { return r.status === '已完成'; } },
+    { key: '已完成', color: '#2B6CFF', test: function (r) { return r.status === '已完成'; } },
     { key: '已提单', color: '#10b981', test: function (r) { return r.status === '已提单'; } },
     { key: '紧急', color: '#f97316', test: function (r) { return r.status === '紧急'; } },
     { key: '已逾期', color: '#dc2626', test: function (r) { return r.status === '已逾期'; } },
@@ -8723,7 +8822,7 @@ function renderTrendBar(records) {
     const h = n / max * ih;
     const x = padL + slot * i + (slot - bw) / 2;
     const y = padT + ih - h;
-    svg += '<rect class="bar-seg" data-date="' + d + '" data-val="' + n + '" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + h.toFixed(1) + '" rx="3" fill="#0052D9"><title>' + d + ' 新增 ' + n + ' 条</title></rect>';
+    svg += '<rect class="bar-seg" data-date="' + d + '" data-val="' + n + '" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + h.toFixed(1) + '" rx="3" fill="#2B6CFF"><title>' + d + ' 新增 ' + n + ' 条</title></rect>';
     if (trendDays === 7 || i % 2 === 0) {
       svg += '<text x="' + (x + bw / 2).toFixed(1) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="8" fill="#64748b">' + d.slice(5) + '</text>';
     }
