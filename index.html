@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%230052D9'/%3E%3Crect x='8' y='8' width='16' height='4.5' rx='2.2' fill='%23fff'/%3E%3Crect x='13.75' y='8' width='4.5' height='16' rx='2.2' fill='%23fff'/%3E%3C/svg%3E">
-<title>超核一站式服务系统 v1.67 正式版</title>
+<title>超核一站式服务系统 v1.68 正式版</title>
 <style>
   :root {
     --bg: #0f172a;
@@ -26,8 +26,8 @@
     --apec-purple: #8B5CF6;
     --apec-blue: #3D7BFF;
     --apec-cyan: #22C7C7;
-    /* 主题相关（APEC 深色 / 月光白覆盖） */
-    --app-bg: linear-gradient(135deg, #0a0f1e 0%, #131d33 50%, #0a0f1e 100%);
+    /* 主题相关（APEC 纯黑 / 月光白覆盖） */
+    --app-bg: #000000;
     --header-title: #f8fafc;
     --header-sub: #94a3b8;
     --input-bg: #f8fafc;
@@ -173,10 +173,23 @@
   .apec-title-row { position: relative; margin-top: 12px; display: flex; align-items: center; }
   .apec-skyline { position: absolute; left: 0; right: 0; bottom: 6px; width: 100%; height: 78px; opacity: .5; pointer-events: none; }
   .apec-title {
-    position: relative; z-index: 2; color: #fff; font-size: 30px; font-weight: 800; letter-spacing: 1px;
-    text-shadow: 0 2px 18px rgba(0,0,0,.6); margin: 0;
+    position: relative; z-index: 2; color: #fff; font-size: 32px; font-weight: 800; letter-spacing: 2px;
+    text-shadow: 0 2px 20px rgba(61,123,255,.45), 0 1px 4px rgba(0,0,0,.8); margin: 0;
+  }
+  .apec-title .title-char {
+    display: inline-block; opacity: 0; transform: translateY(10px) scale(.94); filter: blur(5px);
+    animation: titleCharIn .55s cubic-bezier(.22,.61,.36,1) forwards;
+    animation-delay: calc(.18s + var(--i) * 70ms);
+  }
+  @keyframes titleCharIn {
+    to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
   }
   .apec-arc { display: block; width: 100%; height: 14px; margin-top: 4px; }
+  .apec-arc path {
+    stroke-dasharray: 620; stroke-dashoffset: 620;
+    animation: arcDraw 1.1s cubic-bezier(.4,0,.2,1) .35s forwards;
+  }
+  @keyframes arcDraw { to { stroke-dashoffset: 0; } }
   .apec-sub { position: relative; z-index: 2; margin: 8px 0 0; color: #94a3b8; font-size: 14px; letter-spacing: .3px; }
   .apec-hero .ver-tag { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.25); color: #e2e8f0; margin-left: 10px; }
   @media (max-width: 760px) {
@@ -839,7 +852,7 @@
 /* ===== 版本自检 + 埋点统计（v1.64） ===== */
 (function () {
   // 当前版本号：与页面右上角版本标签保持一致，发版时同步更新
-  var APP_VERSION = 'v1.67';
+  var APP_VERSION = 'v1.68';
 
   // 埋点配置：endpoint 留空且 enabled=false 时不上报；已接入 Neon collect 接口
   window.__TRACK__ = window.__TRACK__ || {
@@ -952,7 +965,7 @@
               <path d="M496 62 Q520 30 544 62 Z"/>
             </g>
           </svg>
-          <h1 class="apec-title">超核一站式服务系统 <span class="ver-tag">v1.67 正式版</span></h1>
+          <h1 class="apec-title">超核一站式服务系统 <span class="ver-tag">v1.68 正式版</span></h1>
         </div>
         <svg class="apec-arc" viewBox="0 0 600 14" preserveAspectRatio="none" aria-hidden="true">
           <defs>
@@ -2534,6 +2547,13 @@ function toggleTheme() {
 }
 /* ================= 版本日志 ================= */
 const VERSION_LOG = [
+  {
+    ver: 'v1.68 正式版',
+    items: [
+      '页面底色改为纯黑，头图标题字号、字距与发光质感优化',
+      '新增开场动画：标题逐字笔画落字显现，下方渐变弧线由左至右描边画出'
+    ]
+  },
   {
     ver: 'v1.67 正式版',
     items: [
@@ -8797,10 +8817,38 @@ function showToast(msg, type, fadeDelay, action) {
   }, delay);
 }
 
+/* 标题逐字拆分：仅包裹纯文本字符，版本标签等子节点保留，用于笔画落字动画 */
+function splitTitleChars() {
+  var h = document.querySelector('.apec-title');
+  if (!h || h.dataset.split) return;
+  h.dataset.split = '1';
+  var frag = document.createDocumentFragment();
+  var idx = 0;
+  Array.prototype.forEach.call(h.childNodes, function (node) {
+    if (node.nodeType === 3) {
+      var txt = node.textContent;
+      for (var i = 0; i < txt.length; i++) {
+        var ch = txt[i];
+        var s = document.createElement('span');
+        s.className = 'title-char';
+        s.style.setProperty('--i', idx++);
+        s.textContent = ch === ' ' ? '\u00A0' : ch;
+        frag.appendChild(s);
+      }
+    } else {
+      frag.appendChild(node.cloneNode(true));
+    }
+  });
+  h.innerHTML = '';
+  h.appendChild(frag);
+}
+
 /* ================= 初始化 ================= */
 document.addEventListener('DOMContentLoaded', function () {
   // 企微 OAuth 回跳换码：落地会话后再渲染登录墙与用户菜单
   handleOAuthCallback().then(function () { renderAuthGate(); renderUserMenu(); });
+  // 标题逐字拆分，触发笔画落字动画
+  splitTitleChars();
   document.getElementById('ticketForm').addEventListener('submit', handleSubmit);
   // v1.51 修复：页面加载即预读 IndexedDB 媒体到内存缓存，保证点击备份时同步组装立即下载（避免异步丢失用户激活被 Chrome 拦截）
   cacheMediaDb();
