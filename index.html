@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%230052D9'/%3E%3Crect x='8' y='8' width='16' height='4.5' rx='2.2' fill='%23fff'/%3E%3Crect x='13.75' y='8' width='4.5' height='16' rx='2.2' fill='%23fff'/%3E%3C/svg%3E">
-<title>超核一站式服务系统 v1.72 正式版</title>
+<title>超核一站式服务系统 v1.73 正式版</title>
 <style>
   :root {
     --bg: #0f172a;
     --bg-soft: #1e293b;
-    --card: #ffffff;
+    --card: #e9edf3;
     --text: #1e293b;
     --text-muted: #64748b;
     --border: #e2e8f0;
@@ -90,6 +90,48 @@
     --user-chip-text: #1e293b;
     --shadow: 0 10px 30px rgba(15, 23, 42, .08);
   }
+  /* 腾讯蓝主题（浅色商务蓝白） */
+  body.theme-blue {
+    --app-bg: linear-gradient(135deg, #eef4ff 0%, #f6f9ff 50%, #eef4ff 100%);
+    --card: #ffffff;
+    --text: #16233b;
+    --text-muted: #5b6b85;
+    --border: #d8e4f5;
+    --input-bg: #f6f9ff;
+    --readonly-bg: #eef3fb;
+    --readonly-text: #5b6b85;
+    --thead-bg: #eaf1fc;
+    --thead-text: #334663;
+    --row-border: #e6eef9;
+    --row-hover: #eef4ff;
+    --chip-bg: #f0f6ff;
+    --panel-bg: #f3f8ff;
+    --code-bg: #f3f8ff;
+    --row-soft: #eef4ff;
+    --nav-bg: #e3edfb;
+    --nav-btn-text: #41557a;
+    --nav-btn-hover: #16233b;
+    --hero-bg: linear-gradient(135deg, #ffffff 0%, #e7f0ff 100%);
+    --hero-title: #10294f;
+    --hero-sub: #5b6b85;
+    --user-chip-bg: #ffffff;
+    --user-chip-border: #d8e4f5;
+    --user-chip-text: #16233b;
+    --log-btn-bg: #ffffff;
+    --log-btn-border: #d8e4f5;
+    --log-btn-text: #1A4FD1;
+    --log-btn-hover-bg: #eaf1ff;
+    --log-btn-hover-border: #c7dbf7;
+    --shadow: 0 10px 30px rgba(26, 79, 209, .10);
+  }
+  /* APEC 限定主题：主要卡片容器由纯白改为中性灰，文字沿用深色保证对比 */
+  body:not(.theme-moon):not(.theme-blue) .modal,
+  body:not(.theme-moon):not(.theme-blue) .tb-item,
+  body:not(.theme-moon):not(.theme-blue) .ticket-type-card,
+  body:not(.theme-moon):not(.theme-blue) .mv-wrap,
+  body:not(.theme-moon):not(.theme-blue) .mv-modal-panel,
+  body:not(.theme-moon):not(.theme-blue) .region-dropdown,
+  body:not(.theme-moon):not(.theme-blue) .wecom-manage-list { background: var(--card); }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", system-ui, sans-serif;
@@ -148,11 +190,21 @@
   .user-drop .ud-item:hover { background: rgba(255,255,255,.08); }
   .user-drop .ud-item svg { width: 18px; height: 18px; flex-shrink: 0; }
   /* 主题切换按钮 */
-  .theme-toggle-btn.btn { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; padding: 0; background: var(--log-btn-bg); border: 1.5px solid var(--log-btn-border); color: var(--log-btn-text); border-radius: 10px; cursor: pointer; transition: all .15s; }
+  .theme-toggle-btn.btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 38px; padding: 0 13px; background: var(--log-btn-bg); border: 1.5px solid var(--log-btn-border); color: var(--log-btn-text); border-radius: 10px; cursor: pointer; transition: all .15s; }
   .theme-toggle-btn:hover { background: var(--log-btn-hover-bg); border-color: var(--log-btn-hover-border); color: #1A4FD1; }
   .theme-toggle-btn .theme-icon { display: block; }
+  .theme-toggle-btn #themeLabel { font-size: 13px; font-weight: 600; }
   body.theme-moon .theme-toggle-btn { background: var(--primary); border-color: var(--primary); color: #fff; }
   body.theme-moon .theme-toggle-btn:hover { background: var(--primary-dark); border-color: var(--primary-dark); color: #fff; }
+  .theme-menu { position: relative; }
+  .theme-drop { position: absolute; right: 0; top: calc(100% + 8px); min-width: 196px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; z-index: 60; display: none; }
+  .theme-drop.show { display: block; }
+  .theme-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; color: var(--text); cursor: pointer; font-size: 14px; }
+  .theme-item:hover { background: var(--row-hover); }
+  .theme-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; border: 1px solid rgba(15, 23, 42, .15); }
+  .dot-blue { background: #2B6CFF; }
+  .dot-moon { background: #e2e8f0; }
+  .dot-apec { background: #0f172a; }
   .app-title-block { display: flex; flex-direction: column; gap: 3px; }
 
   /* ===== 登录墙遮罩（未授权不可浏览） ===== */
@@ -207,8 +259,8 @@
   }
   @keyframes skyDraw { to { stroke-dashoffset: 0; } }
   .apec-title {
-    position: relative; z-index: 2; color: var(--hero-title); font-size: 32px; font-weight: 800; letter-spacing: 2px;
-    text-shadow: 0 2px 20px rgba(61,123,255,.45), 0 1px 4px rgba(0,0,0,.8); margin: 0;
+    position: relative; z-index: 2; color: var(--hero-title); font-size: 34px; font-weight: 800; letter-spacing: 3px;
+    text-shadow: 0 2px 22px rgba(61,123,255,.5), 0 1px 4px rgba(0,0,0,.8); margin: 0;
   }
   body.theme-moon .apec-title { text-shadow: 0 1px 2px rgba(15,23,42,.12); }
   .apec-title .title-char {
@@ -219,12 +271,19 @@
   @keyframes titleCharIn {
     to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
   }
-  .apec-arc { display: block; width: 100%; height: 14px; margin-top: 4px; }
-  .apec-arc path {
+  .apec-arc { display: block; width: 100%; height: 14px; margin-top: 4px; overflow: hidden; }
+  .apec-arc .arc-base {
     stroke-dasharray: 620; stroke-dashoffset: 620;
-    animation: arcDraw 1.1s cubic-bezier(.4,0,.2,1) .35s forwards;
+    animation: arcDraw 1.1s cubic-bezier(.4,0,.2,1) .35s forwards, arcBreathe 3.4s ease-in-out 1.6s infinite;
+  }
+  .apec-arc .arc-runner {
+    fill: none; stroke: #ffffff; stroke-width: 3; stroke-linecap: round;
+    stroke-dasharray: 70 530; stroke-dashoffset: 600; opacity: .55;
+    animation: arcMarquee 2.8s linear infinite;
   }
   @keyframes arcDraw { to { stroke-dashoffset: 0; } }
+  @keyframes arcBreathe { 0%, 100% { opacity: .72; } 50% { opacity: 1; } }
+  @keyframes arcMarquee { from { stroke-dashoffset: 600; } to { stroke-dashoffset: -600; } }
   .apec-sub { position: relative; z-index: 2; margin: 8px 0 0; color: var(--hero-sub); font-size: 14px; letter-spacing: .3px; }
   .apec-sub-row { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .apec-sub-row .ver-tag { margin-left: 0; }
@@ -890,7 +949,7 @@
 /* ===== 版本自检 + 埋点统计（v1.64） ===== */
 (function () {
   // 当前版本号：与页面右上角版本标签保持一致，发版时同步更新
-  var APP_VERSION = 'v1.72';
+  var APP_VERSION = 'v1.73';
 
   // 埋点配置：endpoint 留空且 enabled=false 时不上报；已接入 Neon collect 接口
   window.__TRACK__ = window.__TRACK__ || {
@@ -1021,7 +1080,7 @@
               <path class="sk-line" style="--i:4" d="M478 60 L478 64 M532 60 L532 64"/>
             </g>
           </svg>
-          <h1 class="apec-title">超核一站式服务系统 <span class="ver-tag">v1.72 正式版</span></h1>
+          <h1 class="apec-title">超核一站式服务系统 <span class="ver-tag">v1.73 正式版</span></h1>
         </div>
         <svg class="apec-arc" viewBox="0 0 600 14" preserveAspectRatio="none" aria-hidden="true">
           <defs>
@@ -1031,7 +1090,8 @@
               <stop offset="1" stop-color="#22C7C7"/>
             </linearGradient>
           </defs>
-          <path d="M0 10 Q150 2 300 7 T600 5" fill="none" stroke="url(#apecArcGrad)" stroke-width="3" stroke-linecap="round"/>
+          <path class="arc-base" d="M0 10 Q150 2 300 7 T600 5" fill="none" stroke="url(#apecArcGrad)" stroke-width="3" stroke-linecap="round"/>
+          <path class="arc-runner" d="M0 10 Q150 2 300 7 T600 5"/>
         </svg>
         <div class="apec-sub-row">
           <p class="apec-sub">以更轻松的方式解决工单，让工作更简单</p>
@@ -1039,10 +1099,17 @@
       </div>
     </div>
     <div class="header-actions">
-      <button type="button" class="btn theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="切换主题" aria-label="切换主题">
-        <svg id="themeIconMoon" class="theme-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        <svg id="themeIconSun" class="theme-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
-      </button>
+      <div class="theme-menu" id="themeMenu">
+        <button type="button" class="btn theme-toggle-btn" id="themeToggleBtn" onclick="toggleThemeMenu(event)" title="选择主题" aria-label="选择主题">
+          <svg class="theme-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="8.6" cy="10" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="7.6" r="1.3" fill="currentColor" stroke="none"/><circle cx="15.4" cy="10" r="1.3" fill="currentColor" stroke="none"/></svg>
+          <span id="themeLabel">APEC 限定</span>
+        </button>
+        <div class="theme-drop" id="themeDrop">
+          <div class="theme-item" data-theme="blue"><span class="theme-dot dot-blue"></span>腾讯蓝</div>
+          <div class="theme-item" data-theme="moon"><span class="theme-dot dot-moon"></span>月光白</div>
+          <div class="theme-item" data-theme="apec"><span class="theme-dot dot-apec"></span>APEC 2026 限定</div>
+        </div>
+      </div>
       <button class="btn btn-log" onclick="openLogModal()">版本日志</button>
       <div class="mig-menu" id="migMenu">
         <button type="button" class="btn btn-primary" id="migBtn" onclick="toggleMigMenu(event)">
@@ -2600,41 +2667,61 @@ function onGameSelectChange() {
   const tag = document.getElementById('entryTag');
   if (tag && currentBiz !== 'RM' && currentBiz !== 'TICKET_ONLY' && currentBiz !== 'MARVIS') tag.textContent = document.getElementById('gameSelect').value;
 }
-/* ================= 主题切换（腾讯蓝 / 月光白） ================= */
+/* ================= 主题：腾讯蓝 / 月光白 / APEC 2026 限定 ================= */
 var THEME_KEY = 'chThemePref';
+var THEME_LABELS = { blue: '腾讯蓝', moon: '月光白', apec: 'APEC 限定' };
 function applyTheme(theme) {
-  var moon = (theme === 'moon');
-  document.body.classList.toggle('theme-moon', moon);
-  var iconMoon = document.getElementById('themeIconMoon');
-  var iconSun = document.getElementById('themeIconSun');
+  if (theme !== 'moon' && theme !== 'blue') theme = 'apec';
+  document.body.classList.remove('theme-moon', 'theme-blue');
+  if (theme === 'moon') document.body.classList.add('theme-moon');
+  else if (theme === 'blue') document.body.classList.add('theme-blue');
+  var label = document.getElementById('themeLabel');
+  if (label) label.textContent = THEME_LABELS[theme];
   var btn = document.getElementById('themeToggleBtn');
-  if (iconMoon) iconMoon.style.display = moon ? 'none' : '';
-  if (iconSun) iconSun.style.display = moon ? '' : 'none';
-  if (btn) btn.title = moon ? '切换到腾讯蓝主题' : '切换到月光白主题';
+  if (btn) btn.title = '当前主题：' + THEME_LABELS[theme] + '，点击切换';
   try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
 }
-function toggleTheme() {
-  var isMoon = document.body.classList.contains('theme-moon');
-  applyTheme(isMoon ? 'blue' : 'moon');
+function selectTheme(theme) {
+  applyTheme(theme);
+  closeThemeMenu();
 }
+function toggleThemeMenu(e) {
+  if (e) e.stopPropagation();
+  var drop = document.getElementById('themeDrop');
+  if (drop) drop.classList.toggle('show');
+}
+function closeThemeMenu() {
+  var drop = document.getElementById('themeDrop');
+  if (drop) drop.classList.remove('show');
+}
+function initThemeMenu() {
+  var items = document.querySelectorAll('#themeDrop .theme-item');
+  Array.prototype.forEach.call(items, function (it) {
+    it.onclick = function () { selectTheme(it.getAttribute('data-theme')); };
+  });
+}
+document.addEventListener('click', function (e) {
+  var menu = document.getElementById('themeMenu');
+  if (menu && !menu.contains(e.target)) closeThemeMenu();
+});
 /* ================= 版本日志 ================= */
 const VERSION_LOG = [
   {
+    ver: 'v1.73 正式版',
+    items: [
+      '新增腾讯蓝、月光白、APEC 限定三主题切换，APEC 卡片改为中性灰，标题优化并为彩带加入跑马灯流光与呼吸明暗特效'
+    ]
+  },
+  {
     ver: 'v1.72 正式版',
     items: [
-      '修复提单附件/图片项「删除」按钮无响应（补齐 removeTbFile 删除逻辑）',
-      '版本号胶囊回归标题行原位置，与天际线背景分层不再重叠',
-      '天际线背景按腾讯滨海大厦、平安金融中心、企鹅岛（大铲湾）等深圳地标重新绘制，保留逐栋描边动画',
-      '副标题更新为「以更轻松的方式解决工单，让工作更简单」'
+      '修复附件删除按钮无响应，版本胶囊归位标题行，重绘深圳地标天际线并更新副标题文案'
     ]
   },
   {
     ver: 'v1.71 正式版',
     items: [
-      '备份与恢复入口整合为「数据迁移」下拉，可完整迁移数据流记录、工单服务记录/草稿与图片附件',
-      '修复月光白主题下标题背景残留黑色、标题与用户胶囊文字对比不清的问题',
-      '副标题更新为「以更简单的方式解决工单，让上班更简单」，用户胶囊移至二级导航行右侧',
-      '天际线补充腾讯滨海大厦、企鹅岛等地标，楼体增加窗格、天线等细节；版本号标签移出天际线层避免重叠'
+      '备份与恢复整合为「数据迁移」下拉，修复月光白主题下标题与胶囊对比度问题'
     ]
   },
   {
@@ -8994,12 +9081,12 @@ document.addEventListener('DOMContentLoaded', function () {
   loadBizDataFromIdb();
   // v1.51 兼容修复：非 Chrome 浏览器开关点击兜底绑定
   if (typeof initOpPresetToggle === 'function') initOpPresetToggle();
-  // 应用已保存的主题偏好（腾讯蓝 / 月光白）
+  // 应用已保存的主题偏好（腾讯蓝 / 月光白 / APEC 限定）
   try {
     var savedTheme = localStorage.getItem(THEME_KEY);
-    if (savedTheme === 'moon') applyTheme('moon');
-    else applyTheme('blue');
+    applyTheme(savedTheme === 'moon' || savedTheme === 'blue' || savedTheme === 'apec' ? savedTheme : 'apec');
   } catch (e) {}
+  initThemeMenu();
   migrateLegacyRM();
   renderWecomSelect();
   renderUserMenu();
