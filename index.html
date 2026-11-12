@@ -141,13 +141,24 @@
   body:not(.theme-moon):not(.theme-blue) .mv-modal-panel,
   body:not(.theme-moon):not(.theme-blue) .region-dropdown,
   body:not(.theme-moon):not(.theme-blue) .wecom-manage-list { background: var(--card); }
-  /* APEC 限定主题：硬编码主按钮同步为 APEC 紫；其它主题保持默认蓝 */
+  /* APEC 限定主题：主按钮灰底紫框描边风，悬浮高亮为紫底白字；其它主题保持默认蓝 */
+  body:not(.theme-moon):not(.theme-blue) .btn-primary,
   body:not(.theme-moon):not(.theme-blue) .btn-success,
-  body:not(.theme-moon):not(.theme-blue) .btn-backup,
+  body:not(.theme-moon):not(.theme-blue) .btn-backup {
+    background: #26262b;
+    border: 1.5px solid #8B5CF6;
+    color: #c4b5fd;
+  }
+  body:not(.theme-moon):not(.theme-blue) .btn-primary:hover,
+  body:not(.theme-moon):not(.theme-blue) .btn-success:hover,
+  body:not(.theme-moon):not(.theme-blue) .btn-backup:hover {
+    background: #8B5CF6;
+    border-color: #7c3aed;
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(139,92,246,.45);
+  }
   body:not(.theme-moon):not(.theme-blue) .bar-btn.active,
   body:not(.theme-moon):not(.theme-blue) .ver-tag { background: #8B5CF6; border-color: #8B5CF6; }
-  body:not(.theme-moon):not(.theme-blue) .btn-success:hover,
-  body:not(.theme-moon):not(.theme-blue) .btn-backup:hover { background: #7c3aed; border-color: #7c3aed; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", system-ui, sans-serif;
@@ -2770,7 +2781,7 @@ const VERSION_LOG = [
   {
     ver: 'v1.74 正式版',
     items: [
-      'APEC 限定改为炭灰暗色卡片与紫色主按钮，彩带整条彩虹流光循环流动；其它主题保持蓝色按钮与浅色默认样式'
+      'APEC 限定炭灰暗色卡片，主按钮灰底紫框描边、悬浮高亮为紫底白字，彩带整条彩虹流光循环；其它主题保持蓝色按钮与浅色默认样式'
     ]
   },
   {
