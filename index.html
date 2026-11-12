@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%230052D9'/%3E%3Crect x='8' y='8' width='16' height='4.5' rx='2.2' fill='%23fff'/%3E%3Crect x='13.75' y='8' width='4.5' height='16' rx='2.2' fill='%23fff'/%3E%3C/svg%3E">
-<title>超核一站式服务系统 v1.76 正式版</title>
+<title>超核一站式服务系统 v1.77 正式版</title>
 <style>
   :root {
     --bg: #000000;
@@ -64,6 +64,8 @@
     --text: #0f172a;
     --text-muted: #64748b;
     --border: #e2e8f0;
+    --primary: #0052D9;
+    --primary-dark: #00379A;
     --header-title: #0f172a;
     --header-sub: #64748b;
     --input-bg: #ffffff;
@@ -101,6 +103,9 @@
     --text: #16233b;
     --text-muted: #5b6b85;
     --border: #e2e8f0;
+    --primary: #0052D9;
+    --primary-dark: #00379A;
+    --header-title: #16233b;
     --input-bg: #ffffff;
     --readonly-bg: #f1f5f9;
     --readonly-text: #5b6b85;
@@ -289,7 +294,7 @@
   }
   .apec-pill:hover { color: #fff; background: rgba(139,92,246,.32); border-color: var(--apec-purple); box-shadow: 0 0 16px rgba(139,92,246,.5); }
   .apec-title-row { position: relative; margin-top: 12px; display: flex; align-items: center; }
-  .apec-skyline { position: absolute; left: 0; right: 0; bottom: 6px; width: 100%; height: 78px; opacity: .6; pointer-events: none; }
+  .apec-skyline { position: absolute; left: 0; right: 0; bottom: 6px; width: 100%; height: 78px; opacity: .85; pointer-events: none; }
   .apec-skyline .sk-line {
     stroke-dasharray: 170; stroke-dashoffset: 170;
     animation: skyDraw .8s cubic-bezier(.4,0,.2,1) forwards;
@@ -297,7 +302,7 @@
   }
   @keyframes skyDraw { to { stroke-dashoffset: 0; } }
   .apec-title {
-    position: relative; z-index: 2; color: var(--hero-title); font-size: 28px; font-weight: 700; letter-spacing: 1px; margin: 0;
+    position: relative; z-index: 2; color: var(--header-title); font-size: 28px; font-weight: 700; letter-spacing: 1px; margin: 0;
   }
   body:not(.theme-moon):not(.theme-blue) .apec-title {
     font-size: 34px; font-weight: 800; letter-spacing: 3px;
@@ -305,8 +310,11 @@
   }
   body.theme-moon .apec-title,
   body.theme-blue .apec-title {
-    font-size: 24px; font-weight: 700; letter-spacing: 0; text-shadow: none;
+    font-size: 26px; font-weight: 700; letter-spacing: .5px; text-shadow: none;
   }
+  .apec-title .t-logo { display: none; width: 24px; height: 24px; vertical-align: middle; margin-right: 2px; }
+  body.theme-moon .apec-title .t-logo,
+  body.theme-blue .apec-title .t-logo { display: inline-block; }
   .apec-title .title-char {
     display: inline-block; opacity: 0; transform: translateY(10px) scale(.94); filter: blur(5px);
     animation: titleCharIn .55s cubic-bezier(.22,.61,.36,1) forwards;
@@ -315,24 +323,18 @@
   @keyframes titleCharIn {
     to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
   }
-  .apec-arc { position: relative; display: block; width: 100%; height: 3px; margin-top: 6px; overflow: hidden; border-radius: 3px; }
-  .arc-base { width: 100%; height: 100%; border-radius: 3px; background: linear-gradient(90deg, #FF8A3D 0%, #F04E45 20%, #8B5CF6 42%, #3D7BFF 66%, #22C7C7 100%); }
-  .arc-flow {
-    position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 3px;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.55) 50%, transparent 100%);
-    background-size: 42% 100%; background-repeat: no-repeat;
-    animation: arcSweep 3.4s linear infinite; opacity: .9;
-  }
-  @keyframes arcSweep { from { background-position: -42% 0; } to { background-position: 142% 0; } }
-  /* 浅色主题（月光白 / 腾讯蓝）不渲染彩带与天际线背景图 */
-  body.theme-moon .apec-arc, body.theme-blue .apec-arc,
+  /* 彩带弧线已并入天际线 SVG（.apec-skyline 内 ribbon path），贯穿左右压在楼群底部 */
+  /* 浅色主题（月光白 / 腾讯蓝）不渲染 APEC 胶囊、天际线与彩带 */
+  body.theme-moon .apec-pill, body.theme-blue .apec-pill,
   body.theme-moon .apec-skyline, body.theme-blue .apec-skyline { display: none; }
   .apec-sub { position: relative; z-index: 2; margin: 8px 0 0; color: var(--hero-sub); font-size: 14px; letter-spacing: .3px; }
   .apec-sub-row { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .apec-sub-row .ver-tag { margin-left: 0; }
   .apec-hero .ver-tag { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.25); color: #e2e8f0; margin-left: 10px; }
   body.theme-moon .apec-hero .ver-tag,
-  body.theme-blue .apec-hero .ver-tag { background: #eef2f7; border-color: #cbd5e1; color: #1e293b; }
+  body.theme-blue .apec-hero .ver-tag { background: #0052D9; border-color: #0052D9; color: #fff; }
+  body.theme-moon .user-chip .avatar, body.theme-blue .user-chip .avatar,
+  body.theme-moon .user-drop .ud-head .avatar, body.theme-blue .user-drop .ud-head .avatar { background: var(--primary); }
   @media (max-width: 760px) {
     .apec-title { font-size: 22px; }
     .apec-hero { padding: 18px 18px 12px; }
@@ -997,7 +999,7 @@
 /* ===== 版本自检 + 埋点统计（v1.64） ===== */
 (function () {
   // 当前版本号：与页面右上角版本标签保持一致，发版时同步更新
-  var APP_VERSION = 'v1.76';
+  var APP_VERSION = 'v1.77';
 
   // 埋点配置：endpoint 留空且 enabled=false 时不上报；已接入 Neon collect 接口
   window.__TRACK__ = window.__TRACK__ || {
@@ -1092,7 +1094,17 @@
         <a class="apec-pill" href="https://www.apec2026.cn/node_106.html" target="_blank" rel="noopener">APEC 2026 · 中国深圳</a>
         <div class="apec-title-row">
           <svg class="apec-skyline" viewBox="0 0 600 78" preserveAspectRatio="none" aria-hidden="true">
-            <g fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
+            <defs>
+              <linearGradient id="ribbonGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#FF8A3D"/>
+                <stop offset="18%" stop-color="#F04E45"/>
+                <stop offset="34%" stop-color="#E85D9A"/>
+                <stop offset="50%" stop-color="#8B5CF6"/>
+                <stop offset="70%" stop-color="#3D7BFF"/>
+                <stop offset="100%" stop-color="#22C7C7"/>
+              </linearGradient>
+            </defs>
+            <g fill="none" stroke="#cbd5e1" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
               <!-- 左侧陪衬楼群（紧凑高低错落） -->
               <rect class="sk-line" style="--i:0" x="6"  y="52" width="9"  height="12"/>
               <rect class="sk-line" style="--i:0" x="19" y="46" width="10" height="18"/>
@@ -1159,12 +1171,10 @@
               <path class="sk-line" style="--i:4" d="M580 48 L580 61"/>
               <path class="sk-line" style="--i:4" d="M585 60 Q591 54 597 60"/>
             </g>
+            <path d="M -12 60 Q 300 70 612 58" fill="none" stroke="url(#ribbonGrad)" stroke-width="5" stroke-linecap="round" opacity=".22"/>
+            <path d="M -12 60 Q 300 70 612 58" fill="none" stroke="url(#ribbonGrad)" stroke-width="3" stroke-linecap="round"/>
           </svg>
-          <h1 class="apec-title">超核一站式服务系统 <span class="ver-tag">v1.76 正式版</span></h1>
-        </div>
-        <div class="apec-arc" aria-hidden="true">
-          <div class="arc-base"></div>
-          <div class="arc-flow"></div>
+          <h1 class="apec-title"><svg class="t-logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="7" fill="#0052D9"/><rect x="8" y="8" width="16" height="4.5" rx="2.2" fill="#fff"/><rect x="13.75" y="8" width="4.5" height="16" rx="2.2" fill="#fff"/></svg>超核一站式服务系统 <span class="ver-tag">v1.77 正式版</span></h1>
         </div>
         <div class="apec-sub-row">
           <p class="apec-sub">以更轻松的方式解决工单，让工作更简单</p>
@@ -2779,6 +2789,12 @@ document.addEventListener('click', function (e) {
 });
 /* ================= 版本日志 ================= */
 const VERSION_LOG = [
+  {
+    ver: 'v1.77 正式版',
+    items: [
+      'APEC 头图彩带改为压在楼群底部、贯穿左右的橙→红→紫→蓝→青渐变上扬弧线；月光白、腾讯蓝两主题回退 1.65 朴素头部（蓝 T Logo、深色标题、蓝底白字版本胶囊、主色 #0052D9，去除紫胶囊/天际线/彩带）；后台 UV 改为登录人按名字归并、匿名按访客 ID 去重，避免清缓存或换浏览器重置 ID 后重复计数'
+    ]
+  },
   {
     ver: 'v1.76 正式版',
     items: [
@@ -8866,10 +8882,11 @@ function handleRestoreFile(ev) {
       const keep = new Set(keys);
       // v1.51 兼容修复：file:///隐私模式下 localStorage 访问可能抛异常，清理旧键走 safeStore 适配层
       const toRemove = [];
+      const PRESERVE_KEYS = { 'ch_visitor_id': true, 'chThemePref': true };
       try {
         for (let i = 0; i < localStorage.length; i++) {
           const k = localStorage.key(i);
-          if (!keep.has(k)) toRemove.push(k);
+          if (!keep.has(k) && !PRESERVE_KEYS[k]) toRemove.push(k);
         }
       } catch (e) {}
       toRemove.forEach(function (k) {

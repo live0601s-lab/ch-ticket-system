@@ -58,12 +58,13 @@ export default async function handler(req: Request): Promise<Response> {
 
   try {
     // 概览：总量 / 今日 / 事件数 / 提单数
+    // UV 归并键：登录人按 user_name，匿名（空名）回退按 visitor_id，避免清缓存/换浏览器重置 ID 后重复计数
     const overviewRows = await sql`SELECT
        (SELECT COUNT(*) FROM visit_logs)                              AS total_pv,
-       (SELECT COUNT(DISTINCT visitor_id) FROM visit_logs)            AS total_uv,
+       (SELECT COUNT(DISTINCT COALESCE(NULLIF(user_name, ''), visitor_id)) FROM visit_logs)            AS total_uv,
        (SELECT COUNT(*) FROM visit_logs
           WHERE created_at >= date_trunc('day', now()))               AS today_pv,
-       (SELECT COUNT(DISTINCT visitor_id) FROM visit_logs
+       (SELECT COUNT(DISTINCT COALESCE(NULLIF(user_name, ''), visitor_id)) FROM visit_logs
           WHERE created_at >= date_trunc('day', now()))               AS today_uv,
        (SELECT COUNT(*) FROM event_logs)                              AS event_count,
        (SELECT COUNT(*) FROM ticket_events)                           AS ticket_count`;

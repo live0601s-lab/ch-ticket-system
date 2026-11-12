@@ -70,9 +70,9 @@ export default async function handler(req: Request): Promise<Response> {
   try {
     if (type === "pageview") {
       await pool.query(
-        `INSERT INTO visit_logs (visitor_id, session_id, path, ua, referrer)
-         VALUES ($1, $2, $3, $4, $5)`,
-        [visitorId, sessionId, clip(body.path, 100), ua, clip(body.referrer, 200)]
+        `INSERT INTO visit_logs (visitor_id, session_id, user_name, path, ua, referrer)
+         VALUES ($1, $2, $3, $4, $5, $6)`,
+        [visitorId, sessionId, userName, clip(body.path, 100), ua, clip(body.referrer, 200)]
       );
     } else if (type === "event") {
       await pool.query(

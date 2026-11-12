@@ -5,11 +5,12 @@
 -- 执行方式：Neon 控制台 SQL Editor 粘贴执行，或 neon CLI 连接后 psql 执行。
 -- =============================================================
 
--- 1) 访问记录（PV/UV）：每条浏览一条记录；UV 按 visitor_id + 日期聚合
+-- 1) 访问记录（PV/UV）：每条浏览一条记录；UV 按登录名优先、匿名按访客 ID 聚合
 CREATE TABLE IF NOT EXISTS visit_logs (
   id          BIGSERIAL PRIMARY KEY,
   visitor_id  TEXT NOT NULL,                 -- 前端 localStorage 生成的匿名访客 ID
   session_id  TEXT,                         -- 会话 ID（刷新不变，关闭重开生成新的）
+  user_name   TEXT,                         -- 登录企微名（脱敏显示名）；匿名访问为空，UV 回退按 visitor_id
   path        TEXT,                         -- 视图/标签页标识，如 ticket / dataflow / marvis
   ua          TEXT,                         -- 浏览器 UA（服务端截取，截断存储）
   referrer    TEXT,
@@ -51,12 +52,12 @@ CREATE INDEX IF NOT EXISTS idx_ticket_visitor_time ON ticket_events (visitor_id,
 CREATE INDEX IF NOT EXISTS idx_ticket_type_time   ON ticket_events (ticket_type, created_at);
 CREATE INDEX IF NOT EXISTS idx_ticket_created_at   ON ticket_events (created_at);
 
--- 可选：每日访问汇总视图（PV 数 / 独立访客数），便于直接查询
+-- 可选：每日访问汇总视图（PV 数 / 独立访客数；登录人按名字、匿名按访客 ID 归并）
 CREATE OR REPLACE VIEW daily_visit_summary AS
 SELECT
   date_trunc('day', created_at)::date AS day,
   COUNT(*)                          AS pv,
-  COUNT(DISTINCT visitor_id)        AS uv
+  COUNT(DISTINCT COALESCE(NULLIF(user_name, ''), visitor_id)) AS uv
 FROM visit_logs
 GROUP BY 1
 ORDER BY 1 DESC;
