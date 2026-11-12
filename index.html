@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%230052D9'/%3E%3Crect x='8' y='8' width='16' height='4.5' rx='2.2' fill='%23fff'/%3E%3Crect x='13.75' y='8' width='4.5' height='16' rx='2.2' fill='%23fff'/%3E%3C/svg%3E">
-<title>超核一站式服务系统 v1.81 正式版</title>
+<title>超核一站式服务系统 v1.82 正式版</title>
 <style>
   :root {
     --bg: #000000;
@@ -98,29 +98,29 @@
   }
   /* 腾讯蓝主题（浅色商务蓝白） */
   body.theme-blue {
-    --app-bg: linear-gradient(135deg, #ffffff 0%, #f7f9fc 50%, #ffffff 100%);
+    --app-bg: linear-gradient(135deg, #eef4ff 0%, #f6f9ff 50%, #eef4ff 100%);
     --card: #ffffff;
     --text: #16233b;
     --text-muted: #5b6b85;
-    --border: #e2e8f0;
+    --border: #d8e4f5;
     --primary: #0052D9;
     --primary-dark: #00379A;
     --header-title: #16233b;
-    --input-bg: #ffffff;
-    --readonly-bg: #f1f5f9;
+    --input-bg: #f6f9ff;
+    --readonly-bg: #eef3fb;
     --readonly-text: #5b6b85;
-    --thead-bg: #f1f5f9;
+    --thead-bg: #eaf1fc;
     --thead-text: #334663;
-    --row-border: #e2e8f0;
-    --row-hover: #f1f5f9;
-    --chip-bg: #f8fafc;
-    --panel-bg: #f8fafc;
-    --code-bg: #f8fafc;
-    --row-soft: #f1f5f9;
-    --nav-bg: #e2e8f0;
+    --row-border: #e6eef9;
+    --row-hover: #eef4ff;
+    --chip-bg: #f0f6ff;
+    --panel-bg: #f3f8ff;
+    --code-bg: #f3f8ff;
+    --row-soft: #eef4ff;
+    --nav-bg: #e3edfb;
     --nav-btn-text: #41557a;
     --nav-btn-hover: #16233b;
-    --hero-bg: linear-gradient(135deg, #ffffff 0%, #f4f7fb 100%);
+    --hero-bg: linear-gradient(135deg, #ffffff 0%, #e7f0ff 100%);
     --hero-title: #10294f;
     --hero-sub: #5b6b85;
     --user-chip-bg: #ffffff;
@@ -323,9 +323,8 @@
     to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
   }
   /* 彩带波浪弧线并入天际线 SVG（.apec-skyline 内 ribbon path），贯穿左右压在楼群底部 */
-  /* 霓虹灯带：渐变颜色沿弧线循环流转，叠加一道随动高光流光 */
+  /* 霓虹灯带：渐变颜色沿弧线无缝循环流转，叠加缓慢呼吸明暗 */
   .ribbon-body { animation: ribbonBreath 4s ease-in-out infinite; }
-  .ribbon-sheen { pointer-events: none; }
   @keyframes ribbonBreath { 0%,100% { opacity: .85; } 50% { opacity: 1; } }
   /* 浅色主题（月光白 / 腾讯蓝）不渲染 APEC 胶囊、天际线与彩带 */
   body.theme-moon .apec-pill, body.theme-blue .apec-pill,
@@ -930,7 +929,7 @@
 /* ===== 版本自检 + 埋点统计（v1.64） ===== */
 (function () {
   // 当前版本号：与页面右上角版本标签保持一致，发版时同步更新
-  var APP_VERSION = 'v1.81';
+  var APP_VERSION = 'v1.82';
 
   // 埋点配置：endpoint 留空且 enabled=false 时不上报；已接入 Neon collect 接口
   window.__TRACK__ = window.__TRACK__ || {
@@ -1027,35 +1026,22 @@
           <svg class="apec-skyline" viewBox="0 0 600 78" preserveAspectRatio="none" aria-hidden="true">
             <defs>
               <linearGradient id="ribbonGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="#FF8A3D"/>
-                <stop offset="18%" stop-color="#F04E45"/>
-                <stop offset="34%" stop-color="#E85D9A"/>
-                <stop offset="50%" stop-color="#8B5CF6"/>
-                <stop offset="70%" stop-color="#3D7BFF"/>
-                <stop offset="100%" stop-color="#22C7C7"/>
+                <stop offset="0" stop-color="#FF8A3D"/><stop offset=".28" stop-color="#F04E45"/>
+                <stop offset=".52" stop-color="#8B5CF6"/><stop offset=".76" stop-color="#3D7BFF"/>
+                <stop offset="1" stop-color="#22C7C7"/>
               </linearGradient>
-              <linearGradient id="ribbonFlowGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="600" y2="0">
+              <linearGradient id="ribbonFlowGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1200" y2="0">
                 <stop offset="0%" stop-color="#FF8A3D"/>
-                <stop offset="16%" stop-color="#F04E45"/>
-                <stop offset="32%" stop-color="#E85D9A"/>
-                <stop offset="48%" stop-color="#8B5CF6"/>
-                <stop offset="64%" stop-color="#3D7BFF"/>
-                <stop offset="82%" stop-color="#22C7C7"/>
+                <stop offset="10%" stop-color="#F04E45"/>
+                <stop offset="20%" stop-color="#8B5CF6"/>
+                <stop offset="30%" stop-color="#3D7BFF"/>
+                <stop offset="40%" stop-color="#22C7C7"/>
+                <stop offset="50%" stop-color="#FF8A3D"/>
+                <stop offset="60%" stop-color="#F04E45"/>
+                <stop offset="70%" stop-color="#8B5CF6"/>
+                <stop offset="80%" stop-color="#3D7BFF"/>
+                <stop offset="90%" stop-color="#22C7C7"/>
                 <stop offset="100%" stop-color="#FF8A3D"/>
-                <animateTransform attributeName="gradientTransform" type="translate" from="0 0" to="-600 0" dur="4s" repeatCount="indefinite"/>
-              </linearGradient>
-              <linearGradient id="ribbonSheenGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="600" y2="0">
-                <stop offset="0%" stop-color="#fff" stop-opacity="0"/>
-                <stop offset="12%" stop-color="#fff" stop-opacity="0"/>
-                <stop offset="19%" stop-color="#fff" stop-opacity=".85"/>
-                <stop offset="26%" stop-color="#fff" stop-opacity="0"/>
-                <stop offset="42%" stop-color="#fff" stop-opacity="0"/>
-                <stop offset="50%" stop-color="#fff" stop-opacity=".85"/>
-                <stop offset="58%" stop-color="#fff" stop-opacity="0"/>
-                <stop offset="74%" stop-color="#fff" stop-opacity="0"/>
-                <stop offset="82%" stop-color="#fff" stop-opacity=".85"/>
-                <stop offset="90%" stop-color="#fff" stop-opacity="0"/>
-                <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
                 <animateTransform attributeName="gradientTransform" type="translate" from="0 0" to="-600 0" dur="4s" repeatCount="indefinite"/>
               </linearGradient>
               <filter id="ribbonGlow" x="-60%" y="-60%" width="220%" height="220%">
@@ -1130,11 +1116,10 @@
               <path class="sk-line" style="--i:4" d="M580 48 L580 61"/>
               <path class="sk-line" style="--i:4" d="M585 60 Q591 54 597 60"/>
             </g>
-            <path d="M -12 76 Q 150 62 300 73 Q 450 64 612 68" fill="none" stroke="url(#ribbonGrad)" stroke-width="6" stroke-linecap="round" opacity=".2"/>
-            <path class="ribbon-body" d="M -12 76 Q 150 62 300 73 Q 450 64 612 68" fill="none" stroke="url(#ribbonFlowGrad)" stroke-width="3" stroke-linecap="round" filter="url(#ribbonGlow)"/>
-            <path class="ribbon-sheen" d="M -12 76 Q 150 62 300 73 Q 450 64 612 68" fill="none" stroke="url(#ribbonSheenGrad)" stroke-width="1.4" stroke-linecap="round" opacity=".75"/>
+            <path d="M -12 72 Q150 64 300 69 Q450 65 612 67" fill="none" stroke="url(#ribbonGrad)" stroke-width="6" stroke-linecap="round" opacity=".2"/>
+            <path class="ribbon-body" d="M -12 72 Q150 64 300 69 Q450 65 612 67" fill="none" stroke="url(#ribbonFlowGrad)" stroke-width="3" stroke-linecap="round" filter="url(#ribbonGlow)"/>
           </svg>
-          <h1 class="apec-title"><svg class="t-logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="7" fill="#0052D9"/><rect x="8" y="8" width="16" height="4.5" rx="2.2" fill="#fff"/><rect x="13.75" y="8" width="4.5" height="16" rx="2.2" fill="#fff"/></svg>超核一站式服务系统 <span class="ver-tag">v1.81 正式版</span></h1>
+          <h1 class="apec-title"><svg class="t-logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="7" fill="#0052D9"/><rect x="8" y="8" width="16" height="4.5" rx="2.2" fill="#fff"/><rect x="13.75" y="8" width="4.5" height="16" rx="2.2" fill="#fff"/></svg>超核一站式服务系统 <span class="ver-tag">v1.82 正式版</span></h1>
         </div>
         <div class="apec-sub-row">
           <p class="apec-sub">以更轻松的方式解决工单，让工作更简单</p>
