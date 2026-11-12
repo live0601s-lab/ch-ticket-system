@@ -1029,7 +1029,7 @@
   if (!sessionId) { sessionId = uid(); sessionStorage.setItem(SID_KEY, sessionId); }
 
   function currentUserName() {
-    try { var u = (typeof getCurrentUser === 'function') ? getCurrentUser() : null; return (u && u.name) || ''; } catch (e) { return ''; }
+    try { var u = (typeof getCurrentUser === 'function') ? getCurrentUser() : null; var n = (u && u.name) || ''; return (n === '未登录' || n === 'guest') ? '' : n; } catch (e) { return ''; }
   }
   function post(payload) {
     var cfg = window.__TRACK__;

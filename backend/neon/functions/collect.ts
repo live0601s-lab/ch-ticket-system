@@ -59,7 +59,8 @@ export default async function handler(req: Request): Promise<Response> {
 
   const sessionId = clip(body.sessionId, 100);
   const type = clip(body.type, 20);
-  const userName = clip(body.userName, 60);
+  let userName = clip(body.userName, 60);
+  if (userName === "未登录" || userName === "guest") userName = "";
   const ua = clip(req.headers.get("user-agent") || body.ua, CLIP_TEXT);
   const detailRaw = body.detail;
   const detail =
