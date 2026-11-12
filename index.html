@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%230052D9'/%3E%3Crect x='8' y='8' width='16' height='4.5' rx='2.2' fill='%23fff'/%3E%3Crect x='13.75' y='8' width='4.5' height='16' rx='2.2' fill='%23fff'/%3E%3C/svg%3E">
-<title>超核一站式服务系统 v1.74 正式版</title>
+<title>超核一站式服务系统 v1.75 正式版</title>
 <style>
   :root {
     --bg: #000000;
@@ -140,7 +140,13 @@
   body:not(.theme-moon):not(.theme-blue) .mv-wrap,
   body:not(.theme-moon):not(.theme-blue) .mv-modal-panel,
   body:not(.theme-moon):not(.theme-blue) .region-dropdown,
-  body:not(.theme-moon):not(.theme-blue) .wecom-manage-list { background: var(--card); }
+  body:not(.theme-moon):not(.theme-blue) .wecom-manage-list,
+  body:not(.theme-moon):not(.theme-blue) .delete-template-content,
+  body:not(.theme-moon):not(.theme-blue) .builtin-priv-item,
+  body:not(.theme-moon):not(.theme-blue) .tb-item-table { background: var(--card); }
+  body:not(.theme-moon):not(.theme-blue) .delete-template-content,
+  body:not(.theme-moon):not(.theme-blue) .builtin-priv-item .bp-name { color: var(--text); }
+  body:not(.theme-moon):not(.theme-blue) .builtin-priv-item { border-color: var(--border); }
   /* APEC 限定主题：主按钮灰底紫框描边风，悬浮高亮为紫底白字；其它主题保持默认蓝 */
   body:not(.theme-moon):not(.theme-blue) .btn-primary,
   body:not(.theme-moon):not(.theme-blue) .btn-success,
@@ -158,6 +164,12 @@
     box-shadow: 0 4px 14px rgba(139,92,246,.45);
   }
   body:not(.theme-moon):not(.theme-blue) .bar-btn.active { background: #8B5CF6; border-color: #8B5CF6; }
+  body:not(.theme-moon):not(.theme-blue) .tp-chip {
+    background: rgba(139,92,246,.14); border: 1px solid rgba(139,92,246,.35); color: #c7d2fe;
+  }
+  body:not(.theme-moon):not(.theme-blue) .tb-item-region {
+    background: rgba(139,92,246,.14); border: 1px solid rgba(139,92,246,.35); color: #c7d2fe;
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", system-ui, sans-serif;
@@ -303,17 +315,15 @@
   @keyframes titleCharIn {
     to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
   }
-  .apec-arc { display: block; width: 100%; height: 3px; margin-top: 6px; overflow: hidden; border-radius: 3px; }
+  .apec-arc { position: relative; display: block; width: 100%; height: 3px; margin-top: 6px; overflow: hidden; border-radius: 3px; }
+  .arc-base { width: 100%; height: 100%; border-radius: 3px; background: linear-gradient(90deg, #FF8A3D 0%, #F04E45 20%, #8B5CF6 42%, #3D7BFF 66%, #22C7C7 100%); }
   .arc-flow {
-    width: 100%; height: 100%; border-radius: 3px;
-    background: linear-gradient(90deg,
-      #FF8A3D 0%, #F04E45 16%, #8B5CF6 32%, #3D7BFF 50%,
-      #22C7C7 66%, #8B5CF6 82%, #F04E45 92%, #FF8A3D 100%);
-    background-size: 200% 100%;
-    animation: arcFlow 4s linear infinite;
-    opacity: .9;
+    position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 3px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.55) 50%, transparent 100%);
+    background-size: 42% 100%; background-repeat: no-repeat;
+    animation: arcSweep 3.4s linear infinite; opacity: .9;
   }
-  @keyframes arcFlow { from { background-position: 0% 0; } to { background-position: -200% 0; } }
+  @keyframes arcSweep { from { background-position: -42% 0; } to { background-position: 142% 0; } }
   /* 浅色主题（月光白 / 腾讯蓝）不渲染彩带与天际线背景图 */
   body.theme-moon .apec-arc, body.theme-blue .apec-arc,
   body.theme-moon .apec-skyline, body.theme-blue .apec-skyline { display: none; }
@@ -357,7 +367,7 @@
   .mv-foot { flex-shrink: 0; border-top: 1px solid var(--border); background: #fff; padding: 10px 12px; }
   .mv-input-row { display: flex; gap: 8px; align-items: flex-end; }
   .mv-input { flex: 1; min-height: 44px; max-height: 130px; resize: vertical; border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit; color: #111827; background: #f8fafc; }
-  .mv-input:focus { outline: none; border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(0, 82, 217, .15); }
+  .mv-input:focus { outline: none; border-color: var(--primary); background: var(--input-bg); box-shadow: 0 0 0 3px rgba(0, 82, 217, .15); }
   .mv-send { height: 44px; padding: 0 22px; border: 0; border-radius: 10px; background: var(--primary); color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
   /* 小萌状态提示行（问题筛）：未接入=灰色小字；已接入=激活态绿色，浅色 / 深色均适配 */
   .mv-tip { margin-top: 8px; font-size: 12px; line-height: 1.6; color: #6b7280; }
@@ -429,9 +439,10 @@
     transition: border-color .15s, box-shadow .15s; width: 100%;
   }
   .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-    outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 82, 217, .18); background: #fff;
+    outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 82, 217, .18); background: var(--input-bg);
   }
   .form-group input[readonly] { background: var(--readonly-bg); color: var(--readonly-text); font-weight: 700; }
+  select option { background: var(--card); color: var(--text); }
   .form-group textarea { resize: vertical; min-height: 72px; }
   /* v1.58：RM 批量举报超大文本框 */
   .report-section .rm-batch-text { min-height: 140px; max-height: 200px; font-family: Consolas, "Courier New", monospace; font-size: 14px; line-height: 1.7; white-space: pre-wrap; }
@@ -599,14 +610,14 @@
   .tp-preset { color: #9ca3af; font-size: 11px; }
   .privilege-add-row { display: flex; gap: 8px; margin-top: 10px; }
   .privilege-add-row input { flex: 1; }
-  tbody tr.done-row { background: #F3F4F6 !important; box-shadow: inset 4px 0 0 0 #9ca3af; color: #6b7280; }
-  tbody tr.done-row:hover { background: #e5e7eb !important; }
+  tbody tr.done-row { background: var(--row-soft) !important; box-shadow: inset 4px 0 0 0 #9ca3af; color: var(--text-muted); }
+  tbody tr.done-row:hover { background: var(--row-hover) !important; }
   /* 已完成行：游戏名称颜色标签/企微圆点/剩余天数/状态徽章整体置灰 */
   tbody tr.done-row .badge { filter: grayscale(1); opacity: .75; }
   tbody tr.done-row .wecom-dot { filter: grayscale(1); opacity: .6; }
-  tbody tr.done-row td:nth-child(10) { color: #9ca3af !important; }
-  tbody tr.overdue-row { background: #fef2f2 !important; box-shadow: inset 4px 0 0 0 #dc2626; }
-  tbody tr.overdue-row:hover { background: #fee2e2 !important; }
+  tbody tr.done-row td:nth-child(10) { color: var(--text-muted) !important; }
+  tbody tr.overdue-row { background: var(--readonly-bg) !important; box-shadow: inset 4px 0 0 0 #dc2626; }
+  tbody tr.overdue-row:hover { background: var(--row-hover) !important; }
   .desc-cell { max-width: 260px; white-space: normal; word-break: break-all; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .ids-cell { max-width: 220px; white-space: pre-line; word-break: break-all; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .empty-tip { text-align: center; padding: 40px 0; color: var(--text-muted); }
@@ -635,7 +646,7 @@
     transition: border-color .15s, box-shadow .15s;
   }
   .toolbar .search-box:focus {
-    outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 82, 217, .18); background: #fff;
+    outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 82, 217, .18); background: var(--input-bg);
   }
   .toolbar .search-box::placeholder { color: var(--placeholder); }
   /* 导出沉默数据复选框 */
@@ -650,7 +661,7 @@
   .cheat-check.del .cheat-del { margin-left: 2px; background: transparent; border: none; color: var(--text-muted); font-size: 14px; line-height: 1; cursor: pointer; padding: 0 2px; }
   .cheat-check.del .cheat-del:hover { color: #b91c1c; }
   .cheat-add-row { display: flex; gap: 8px; margin-top: 8px; }
-  .cheat-add-row input { flex: 1; min-width: 0; border: 1.5px solid var(--border); border-radius: 8px; padding: 6px 10px; font-size: 13px; font-family: inherit; background: #fff; color: var(--text); }
+  .cheat-add-row input { flex: 1; min-width: 0; border: 1.5px solid var(--border); border-radius: 8px; padding: 6px 10px; font-size: 13px; font-family: inherit; background: var(--input-bg); color: var(--text); }
   .cheat-add-row input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(43,108,255,.15); }
   .cheat-filter-tag { font-size: 13px; color: var(--text-muted); font-weight: 600; }
   /* 导出状态徽章 */
@@ -750,15 +761,16 @@
   .bar-seg:hover { opacity: .85; }
   #trendBar { flex: 1; min-height: 0; overflow: hidden; }
   /* 道具库速查 */
-  .item-lib-search { width: 100%; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; margin-bottom: 6px; box-sizing: border-box; flex: 0 0 auto; }
+  .item-lib-search { width: 100%; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; margin-bottom: 6px; box-sizing: border-box; flex: 0 0 auto; background: var(--input-bg); color: var(--text); outline: none; }
+  .item-lib-search::placeholder { color: var(--placeholder); }
   .item-lib-results { flex: 1; min-height: 0; overflow-y: auto; border: 1px solid var(--border); border-radius: 6px; background: var(--card); font-size: 11.5px; }
   .item-lib-results .tb-item-bar { padding: 4px 8px; background: var(--row-soft); font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; position: sticky; top: 0; z-index: 1; }
   .item-lib-results .tb-item-table { width: 100%; border-collapse: collapse; }
-  .item-lib-results .tb-item-table th, .item-lib-results .tb-item-table td { padding: 4px 8px; border-bottom: 1px solid #e2e8f0; text-align: left; white-space: nowrap; }
+  .item-lib-results .tb-item-table th, .item-lib-results .tb-item-table td { padding: 4px 8px; border-bottom: 1px solid var(--row-border); text-align: left; white-space: nowrap; }
   .item-lib-results .tb-item-table th { background: var(--thead-bg); color: var(--thead-text); font-weight: 700; font-size: 11px; }
   .item-lib-results .tb-item-hit td { cursor: pointer; }
-  .item-lib-results .tb-item-hit td:hover { background: #dbeafe; }
-  .item-lib-results .tb-item-empty { padding: 20px; text-align: center; color: #94a3b8; }
+  .item-lib-results .tb-item-hit td:hover { background: var(--row-hover); }
+  .item-lib-results .tb-item-empty { padding: 20px; text-align: center; color: var(--text-muted); }
   .item-lib-card.fullscreen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; border-radius: 0; padding: 16px; height: auto !important; }
   .item-lib-card.fullscreen .item-lib-results { font-size: 13px; }
   .item-lib-card.fullscreen .item-lib-results .tb-item-table th,
@@ -843,12 +855,14 @@
   .tb-detail-value.full { grid-column: 2; }
   .tb-detail-section { font-size: 12px; font-weight: 700; color: var(--primary); margin: 16px 0 8px; padding-left: 10px; border-left: 3px solid var(--primary); grid-column: 1 / -1; }
   .tb-detail-section:first-child { margin-top: 0; }
-  .tb-detail-input { width: 100%; max-width: 320px; box-sizing: border-box; border: 1px solid #93b5e1; border-radius: 6px; padding: 7px 11px; font-size: 13.5px; font-family: inherit; background: #fff; }
+  .tb-detail-input { width: 100%; max-width: 320px; box-sizing: border-box; border: 1px solid var(--border); border-radius: 6px; padding: 7px 11px; font-size: 13.5px; font-family: inherit; background: var(--input-bg); color: var(--text); }
   .tb-detail-input:focus { outline: none; border-color: #2B6CFF; box-shadow: 0 0 0 2px rgba(43,108,255,.12); }
   textarea.tb-detail-input { resize: vertical; min-height: 60px; line-height: 1.6; max-width: 100%; }
   .tb-detail-rows { background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: Consolas, Menlo, monospace; font-size: 12.5px; white-space: pre-wrap; word-break: break-all; line-height: 1.7; }
   .tb-detail-files { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; grid-column: 1 / -1; }
-  .ticket-type-card { display:block; width:100%; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; text-align: left; cursor: pointer; transition: all .15s ease; box-sizing: border-box; }
+  .ticket-type-card { display:block; width:100%; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; text-align: left; cursor: pointer; transition: all .15s ease; box-sizing: border-box; }
+  .ticket-type-card > div:first-child { color: var(--text) !important; }
+  .ticket-type-card > div:last-child { color: var(--text-muted) !important; }
   .tb-img-cat { text-align:center; }
   .tb-img-cat-box { position:relative; width:100%; aspect-ratio:4/3; border:2px dashed #cbd5e1; border-radius:8px; background:#f8fafc; cursor:pointer; overflow:hidden; display:flex; align-items:center; justify-content:center; transition:all .15s; }
   .tb-img-cat-box:hover { border-color:#2B6CFF; background:#E8F0FE; }
@@ -882,10 +896,10 @@
   .wecom-row select { flex: 1; }
   .wecom-row .btn { flex-shrink: 0; }
   .region-select { position: relative; }
-  .region-dropdown { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 24px rgba(15,23,42,.12); max-height: 240px; overflow-y: auto; z-index: 50; display: none; }
-  .region-opt { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; cursor: pointer; font-size: 13px; }
-  .region-opt:hover { background: #f0f6ff; color: var(--primary); }
-  .region-code { color: #94a3b8; font-size: 12px; }
+  .region-dropdown { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--card); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 24px rgba(15,23,42,.12); max-height: 240px; overflow-y: auto; z-index: 50; display: none; }
+  .region-opt { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; cursor: pointer; font-size: 13px; color: var(--text); }
+  .region-opt:hover { background: var(--row-hover); color: var(--primary); }
+  .region-code { color: var(--text-muted); font-size: 12px; }
   /* 企微名彩色标识 */
   .wecom-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
   .wecom-cell { white-space: nowrap; }
@@ -983,7 +997,7 @@
 /* ===== 版本自检 + 埋点统计（v1.64） ===== */
 (function () {
   // 当前版本号：与页面右上角版本标签保持一致，发版时同步更新
-  var APP_VERSION = 'v1.74';
+  var APP_VERSION = 'v1.75';
 
   // 埋点配置：endpoint 留空且 enabled=false 时不上报；已接入 Neon collect 接口
   window.__TRACK__ = window.__TRACK__ || {
@@ -1146,9 +1160,10 @@
               <path class="sk-line" style="--i:4" d="M585 60 Q591 54 597 60"/>
             </g>
           </svg>
-          <h1 class="apec-title">超核一站式服务系统 <span class="ver-tag">v1.74 正式版</span></h1>
+          <h1 class="apec-title">超核一站式服务系统 <span class="ver-tag">v1.75 正式版</span></h1>
         </div>
         <div class="apec-arc" aria-hidden="true">
+          <div class="arc-base"></div>
           <div class="arc-flow"></div>
         </div>
         <div class="apec-sub-row">
@@ -1507,7 +1522,7 @@
       </div>
       <div class="chart-card item-lib-card" id="itemLibCard">
         <div class="chart-title">道具库速查 <span class="chart-hint">输入名称 / 编码 / ID 模糊搜索，点击单元格复制 · 数据源：20260923.xlsx</span>
-          <button type="button" id="itemLibFsBtn" onclick="toggleItemLibFullscreen()" title="全屏放大" style="margin-left:auto;border:1px solid var(--border);background:#fff;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;padding:0;">⛶</button>
+          <button type="button" id="itemLibFsBtn" onclick="toggleItemLibFullscreen()" title="全屏放大" style="margin-left:auto;border:1px solid var(--border);background:var(--input-bg);color:var(--text);border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;padding:0;">⛶</button>
         </div>
         <input type="search" id="itemLibSearch" class="item-lib-search" placeholder="输入道具名称 / 编码 / ID…" oninput="searchItemLib(this.value)" onfocus="if(!this.value)searchItemLib('')">
         <div id="itemLibResults" class="item-lib-results" style="display:none;"></div>
@@ -2764,6 +2779,12 @@ document.addEventListener('click', function (e) {
 });
 /* ================= 版本日志 ================= */
 const VERSION_LOG = [
+  {
+    ver: 'v1.75 正式版',
+    items: [
+      '修复暗色下输入框聚焦变白底灰字；提单类型卡片、特权下拉、道具库搜索与表格行背景文字对比；大区/特权标签改为 APEC 紫胶囊；彩带改为彩虹底+柔光自然扫过；浅色主题保持原始浅色样式，APEC 定制仅作用限定主题'
+    ]
+  },
   {
     ver: 'v1.74 正式版',
     items: [
