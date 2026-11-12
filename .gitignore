@@ -1,0 +1,9 @@
+# 本地语法自检脚本（纯工具，不属于线上系统）
+_check_syntax.js
+
+# 调试用独立浏览器配置目录
+_cdp_profile/
+
+# 依赖与日志
+node_modules/
+*.log

@@ -1,0 +1,9 @@
+{
+  "name": "ch-ticket-neon-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "超核一站式服务系统埋点收集后端（Neon Functions + Postgres）",
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.0"
+  }
+}
