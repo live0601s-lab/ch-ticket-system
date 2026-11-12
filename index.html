@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%230052D9'/%3E%3Crect x='8' y='8' width='16' height='4.5' rx='2.2' fill='%23fff'/%3E%3Crect x='13.75' y='8' width='4.5' height='16' rx='2.2' fill='%23fff'/%3E%3C/svg%3E">
-<title>超核一站式服务系统 v1.71 正式版</title>
+<title>超核一站式服务系统 v1.72 正式版</title>
 <style>
   :root {
     --bg: #0f172a;
@@ -890,7 +890,7 @@
 /* ===== 版本自检 + 埋点统计（v1.64） ===== */
 (function () {
   // 当前版本号：与页面右上角版本标签保持一致，发版时同步更新
-  var APP_VERSION = 'v1.71';
+  var APP_VERSION = 'v1.72';
 
   // 埋点配置：endpoint 留空且 enabled=false 时不上报；已接入 Neon collect 接口
   window.__TRACK__ = window.__TRACK__ || {
@@ -986,59 +986,42 @@
         <div class="apec-title-row">
           <svg class="apec-skyline" viewBox="0 0 600 78" preserveAspectRatio="none" aria-hidden="true">
             <g fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
-              <!-- 左打底楼群 -->
-              <rect class="sk-line" style="--i:0" x="12" y="48" width="12" height="16"/>
-              <path class="sk-line" style="--i:0" d="M18 51 L18 61"/>
-              <rect class="sk-line" style="--i:0" x="28" y="43" width="13" height="21"/>
-              <path class="sk-line" style="--i:0" d="M34 46 L34 61"/>
-              <path class="sk-line" style="--i:0" d="M48 58 Q68 48 88 58"/>
-              <path class="sk-line" style="--i:0" d="M54 58 L54 64"/>
-              <path class="sk-line" style="--i:0" d="M82 58 L82 64"/>
-              <!-- 国贸大厦 -->
-              <rect class="sk-line" style="--i:1" x="96" y="38" width="15" height="26"/>
-              <path class="sk-line" style="--i:1" d="M94 38 L113 38"/>
-              <path class="sk-line" style="--i:1" d="M101 42 L101 60 M106 42 L106 60"/>
-              <!-- 地王双塔 -->
-              <path class="sk-line" style="--i:2" d="M120 64 L120 34 L127 29 L134 34 L134 64"/>
-              <path class="sk-line" style="--i:2" d="M140 64 L140 38 L146 33 L152 38 L152 64"/>
-              <!-- 京基100 -->
-              <path class="sk-line" style="--i:3" d="M158 64 L158 38 Q165 27 172 38 L172 64"/>
-              <path class="sk-line" style="--i:3" d="M162 42 L162 60 M168 42 L168 60"/>
-              <!-- 市民中心展翅 -->
-              <path class="sk-line" style="--i:4" d="M182 64 L182 44 Q196 34 210 44 L210 64"/>
-              <path class="sk-line" style="--i:4" d="M178 48 L214 48"/>
-              <!-- 腾讯滨海大厦（双塔 + 空中连廊） -->
-              <path class="sk-line" style="--i:5" d="M222 64 L222 30 L230 30 L230 64"/>
-              <path class="sk-line" style="--i:5" d="M238 64 L238 30 L246 30 L246 64"/>
-              <path class="sk-line" style="--i:5" d="M222 44 L246 44"/>
-              <path class="sk-line" style="--i:5" d="M226 34 L226 60 M242 34 L242 60"/>
-              <!-- 平安金融中心（最高平顶冠 + 天线） -->
-              <path class="sk-line" style="--i:6" d="M256 64 L256 22 L260 16 L284 16 L288 22 L288 64"/>
-              <path class="sk-line" style="--i:6" d="M272 16 L272 10"/>
-              <path class="sk-line" style="--i:6" d="M260 24 L284 24"/>
-              <!-- 企鹅岛（简笔企鹅 + 岛礁波浪） -->
-              <ellipse class="sk-line" style="--i:7" cx="302" cy="52" rx="6" ry="10"/>
-              <path class="sk-line" style="--i:7" d="M302 44 L306 47 L302 50"/>
-              <path class="sk-line" style="--i:7" d="M296 52 Q292 56 296 60"/>
-              <ellipse class="sk-line" style="--i:7" cx="318" cy="54" rx="5" ry="8"/>
-              <path class="sk-line" style="--i:7" d="M318 47 L321 49 L318 51"/>
-              <path class="sk-line" style="--i:7" d="M294 63 Q302 59 310 63 Q318 59 326 63"/>
-              <!-- 华润春笋 -->
-              <path class="sk-line" style="--i:8" d="M336 64 Q345 30 354 64 Z"/>
-              <path class="sk-line" style="--i:8" d="M345 34 L345 62"/>
-              <!-- 赛格广场 -->
-              <rect class="sk-line" style="--i:9" x="366" y="36" width="15" height="28"/>
-              <path class="sk-line" style="--i:9" d="M373 36 L373 28"/>
-              <path class="sk-line" style="--i:9" d="M370 40 L370 60 M376 40 L376 60"/>
-              <!-- 右打底楼群 -->
-              <rect class="sk-line" style="--i:10" x="390" y="44" width="13" height="20"/>
-              <rect class="sk-line" style="--i:10" x="408" y="40" width="15" height="24"/>
-              <rect class="sk-line" style="--i:10" x="430" y="48" width="12" height="16"/>
-              <path class="sk-line" style="--i:10" d="M452 60 Q486 44 520 60"/>
-              <path class="sk-line" style="--i:10" d="M460 60 L460 64 M512 60 L512 64"/>
+              <!-- 左侧陪衬楼群 -->
+              <rect class="sk-line" style="--i:0" x="12" y="50" width="11" height="14"/>
+              <path class="sk-line" style="--i:0" d="M17 53 L17 61"/>
+              <rect class="sk-line" style="--i:0" x="27" y="44" width="13" height="20"/>
+              <path class="sk-line" style="--i:0" d="M33 47 L33 61"/>
+              <rect class="sk-line" style="--i:0" x="44" y="52" width="10" height="12"/>
+              <path class="sk-line" style="--i:0" d="M62 59 Q86 49 110 59"/>
+              <path class="sk-line" style="--i:0" d="M70 59 L70 64 M102 59 L102 64"/>
+              <!-- 腾讯滨海大厦：双塔 + 空中连廊 -->
+              <path class="sk-line" style="--i:1" d="M152 64 L152 32 L156 28 L160 32 L160 64"/>
+              <path class="sk-line" style="--i:1" d="M172 64 L172 32 L176 28 L180 32 L180 64"/>
+              <path class="sk-line" style="--i:1" d="M152 46 L180 46"/>
+              <path class="sk-line" style="--i:1" d="M156 36 L156 60 M176 36 L176 60"/>
+              <!-- 平安金融中心：超高层 + 平顶冠 + 天线 -->
+              <path class="sk-line" style="--i:2" d="M252 64 L252 24 L256 18 L288 18 L292 24 L292 64"/>
+              <path class="sk-line" style="--i:2" d="M272 18 L272 11"/>
+              <path class="sk-line" style="--i:2" d="M256 26 L288 26"/>
+              <path class="sk-line" style="--i:2" d="M262 30 L262 60 M282 30 L282 60"/>
+              <!-- 企鹅岛（大铲湾）：岛礁波浪 + 企鹅 + 岛后群楼 -->
+              <path class="sk-line" style="--i:3" d="M332 63 Q344 59 356 63 Q368 59 380 63 Q386 61 392 63"/>
+              <ellipse class="sk-line" style="--i:3" cx="346" cy="52" rx="6" ry="10"/>
+              <path class="sk-line" style="--i:3" d="M346 44 L350 47 L346 50"/>
+              <path class="sk-line" style="--i:3" d="M340 52 Q336 56 340 60"/>
+              <ellipse class="sk-line" style="--i:3" cx="366" cy="54" rx="5" ry="8"/>
+              <path class="sk-line" style="--i:3" d="M366 47 L369 49 L366 51"/>
+              <rect class="sk-line" style="--i:3" x="378" y="46" width="10" height="16"/>
+              <rect class="sk-line" style="--i:3" x="390" y="50" width="9" height="12"/>
+              <!-- 右侧陪衬楼群 -->
+              <rect class="sk-line" style="--i:4" x="410" y="44" width="13" height="20"/>
+              <rect class="sk-line" style="--i:4" x="428" y="40" width="14" height="24"/>
+              <rect class="sk-line" style="--i:4" x="448" y="48" width="11" height="16"/>
+              <path class="sk-line" style="--i:4" d="M470 60 Q505 44 540 60"/>
+              <path class="sk-line" style="--i:4" d="M478 60 L478 64 M532 60 L532 64"/>
             </g>
           </svg>
-          <h1 class="apec-title">超核一站式服务系统</h1>
+          <h1 class="apec-title">超核一站式服务系统 <span class="ver-tag">v1.72 正式版</span></h1>
         </div>
         <svg class="apec-arc" viewBox="0 0 600 14" preserveAspectRatio="none" aria-hidden="true">
           <defs>
@@ -1051,8 +1034,7 @@
           <path d="M0 10 Q150 2 300 7 T600 5" fill="none" stroke="url(#apecArcGrad)" stroke-width="3" stroke-linecap="round"/>
         </svg>
         <div class="apec-sub-row">
-          <p class="apec-sub">以更简单的方式解决工单，让上班更简单</p>
-          <span class="ver-tag">v1.71 正式版</span>
+          <p class="apec-sub">以更轻松的方式解决工单，让工作更简单</p>
         </div>
       </div>
     </div>
@@ -2637,6 +2619,15 @@ function toggleTheme() {
 }
 /* ================= 版本日志 ================= */
 const VERSION_LOG = [
+  {
+    ver: 'v1.72 正式版',
+    items: [
+      '修复提单附件/图片项「删除」按钮无响应（补齐 removeTbFile 删除逻辑）',
+      '版本号胶囊回归标题行原位置，与天际线背景分层不再重叠',
+      '天际线背景按腾讯滨海大厦、平安金融中心、企鹅岛（大铲湾）等深圳地标重新绘制，保留逐栋描边动画',
+      '副标题更新为「以更轻松的方式解决工单，让工作更简单」'
+    ]
+  },
   {
     ver: 'v1.71 正式版',
     items: [
@@ -7628,6 +7619,14 @@ function viewTbAttach(i) {
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
+}
+/* 删除提单附件/图片项（按类型与索引） */
+function removeTbFile(kind, i) {
+  const arr = tbFiles[kind];
+  if (!Array.isArray(arr) || !arr[i]) return;
+  arr.splice(i, 1);
+  renderTbFileList(kind);
+  if (kind === 'image') renderTbImageCategories();
 }
 /* 从剪贴板字符串中提取 data:image 图片 URL（支持 <img src="data:image/..."> 与裸 data:image/... URL） */
 function extractDataImageUrl(str) {
