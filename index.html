@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%230052D9'/%3E%3Crect x='8' y='8' width='16' height='4.5' rx='2.2' fill='%23fff'/%3E%3Crect x='13.75' y='8' width='4.5' height='16' rx='2.2' fill='%23fff'/%3E%3C/svg%3E">
-<title>超核一站式服务系统 v1.79 正式版</title>
+<title>超核一站式服务系统 v1.80 正式版</title>
 <style>
   :root {
     --bg: #000000;
@@ -292,8 +292,8 @@
     text-decoration: none; letter-spacing: .5px; transition: all .18s ease;
   }
   .apec-pill:hover { color: #fff; background: rgba(139,92,246,.32); border-color: var(--apec-purple); box-shadow: 0 0 16px rgba(139,92,246,.5); }
-  .apec-title-row { position: relative; margin-top: 12px; display: flex; align-items: center; }
-  .apec-skyline { position: absolute; left: 0; right: 0; bottom: 6px; width: 100%; height: 78px; opacity: .85; pointer-events: none; }
+  .apec-title-row { position: relative; margin-top: 12px; display: flex; align-items: center; padding-bottom: 14px; }
+  .apec-skyline { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 78px; opacity: .85; pointer-events: none; }
   .apec-skyline .sk-line {
     stroke-dasharray: 170; stroke-dashoffset: 170;
     animation: skyDraw .8s cubic-bezier(.4,0,.2,1) forwards;
@@ -323,8 +323,9 @@
     to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
   }
   /* 彩带波浪弧线并入天际线 SVG（.apec-skyline 内 ribbon path），贯穿左右压在楼群底部 */
-  .ribbon-flow { stroke-dasharray: 42 582; animation: ribbonFlow 3.2s linear infinite; }
-  @keyframes ribbonFlow { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -624; } }
+  /* 彩带回旋呼吸：明暗缓慢循环，贴合霓虹灯带流转感 */
+  .ribbon-body { animation: ribbonBreath 3.4s ease-in-out infinite; }
+  @keyframes ribbonBreath { 0%,100% { opacity: .82; } 50% { opacity: 1; } }
   /* 浅色主题（月光白 / 腾讯蓝）不渲染 APEC 胶囊、天际线与彩带 */
   body.theme-moon .apec-pill, body.theme-blue .apec-pill,
   body.theme-moon .apec-skyline, body.theme-blue .apec-skyline { display: none; }
@@ -928,7 +929,7 @@
 /* ===== 版本自检 + 埋点统计（v1.64） ===== */
 (function () {
   // 当前版本号：与页面右上角版本标签保持一致，发版时同步更新
-  var APP_VERSION = 'v1.79';
+  var APP_VERSION = 'v1.80';
 
   // 埋点配置：endpoint 留空且 enabled=false 时不上报；已接入 Neon collect 接口
   window.__TRACK__ = window.__TRACK__ || {
@@ -1032,6 +1033,10 @@
                 <stop offset="70%" stop-color="#3D7BFF"/>
                 <stop offset="100%" stop-color="#22C7C7"/>
               </linearGradient>
+              <filter id="ribbonGlow" x="-60%" y="-60%" width="220%" height="220%">
+                <feGaussianBlur stdDeviation="2.6" result="ribbonBlur"/>
+                <feMerge><feMergeNode in="ribbonBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
             </defs>
             <g fill="none" stroke="#cbd5e1" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
               <!-- 左侧陪衬楼群（紧凑高低错落） -->
@@ -1100,11 +1105,18 @@
               <path class="sk-line" style="--i:4" d="M580 48 L580 61"/>
               <path class="sk-line" style="--i:4" d="M585 60 Q591 54 597 60"/>
             </g>
-            <path d="M -12 71 Q 150 63 300 70 T 612 66" fill="none" stroke="url(#ribbonGrad)" stroke-width="5" stroke-linecap="round" opacity=".18"/>
-            <path d="M -12 71 Q 150 63 300 70 T 612 66" fill="none" stroke="url(#ribbonGrad)" stroke-width="3" stroke-linecap="round"/>
-            <path class="ribbon-flow" d="M -12 71 Q 150 63 300 70 T 612 66" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-opacity=".45" stroke-dasharray="42 582"/>
+            <path d="M -12 76 Q 150 62 300 73 Q 450 64 612 68" fill="none" stroke="url(#ribbonGrad)" stroke-width="6" stroke-linecap="round" opacity=".2"/>
+            <path class="ribbon-body" d="M -12 76 Q 150 62 300 73 Q 450 64 612 68" fill="none" stroke="url(#ribbonGrad)" stroke-width="3" stroke-linecap="round" filter="url(#ribbonGlow)"/>
+            <g filter="url(#ribbonGlow)">
+              <ellipse rx="10" ry="3.4" fill="#fff" opacity=".5">
+                <animateMotion dur="3.4s" repeatCount="indefinite" rotate="auto" path="M -12 76 Q 150 62 300 73 Q 450 64 612 68"/>
+              </ellipse>
+              <ellipse rx="5.5" ry="2.2" fill="#fff" opacity=".85">
+                <animateMotion dur="3.4s" repeatCount="indefinite" rotate="auto" path="M -12 76 Q 150 62 300 73 Q 450 64 612 68"/>
+              </ellipse>
+            </g>
           </svg>
-          <h1 class="apec-title"><svg class="t-logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="7" fill="#0052D9"/><rect x="8" y="8" width="16" height="4.5" rx="2.2" fill="#fff"/><rect x="13.75" y="8" width="4.5" height="16" rx="2.2" fill="#fff"/></svg>超核一站式服务系统 <span class="ver-tag">v1.79 正式版</span></h1>
+          <h1 class="apec-title"><svg class="t-logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="7" fill="#0052D9"/><rect x="8" y="8" width="16" height="4.5" rx="2.2" fill="#fff"/><rect x="13.75" y="8" width="4.5" height="16" rx="2.2" fill="#fff"/></svg>超核一站式服务系统 <span class="ver-tag">v1.80 正式版</span></h1>
         </div>
         <div class="apec-sub-row">
           <p class="apec-sub">以更轻松的方式解决工单，让工作更简单</p>
@@ -2168,469 +2180,7 @@ document.addEventListener('click', function (e) {
   if (menu && !menu.contains(e.target)) closeThemeMenu();
 });
 /* ================= 版本日志 ================= */
-const VERSION_LOG = [
-  {
-    ver: 'v1.79 正式版',
-    items: [
-      '修复 APEC 头部彩带：还原为压在楼群底脚、贯穿左右的平缓波浪渐变弧线（不再是水平直线），并恢复沿彩带循环扫过的流光跑马灯特效；月光白、腾讯蓝两主题去除标题背后的白色圆角卡片背景，标题直接铺在页面背景上'
-    ]
-  },
-  {
-    ver: 'v1.78 正式版',
-    items: [
-      '业务按钮「Marvis」更名为「CF班表」；下线原小萌 AI 对话窗、模型接入设置弹窗与首次接入引导及相关对话/配置/话术逻辑，板块先保留为占位面板，功能后续版本更新'
-    ]
-  },
-  {
-    ver: 'v1.77 正式版',
-    items: [
-      'APEC 头图彩带改为压在楼群底部、贯穿左右的橙→红→紫→蓝→青渐变上扬弧线；月光白、腾讯蓝两主题回退 1.65 朴素头部（蓝 T Logo、深色标题、蓝底白字版本胶囊、主色 #0052D9，去除紫胶囊/天际线/彩带）；后台 UV 改为登录人按名字归并、匿名按访客 ID 去重，避免清缓存或换浏览器重置 ID 后重复计数'
-    ]
-  },
-  {
-    ver: 'v1.76 正式版',
-    items: [
-      '修复工单服务提单记录与草稿备份恢复后丢失：大对象改以 IndexedDB 为主存直写直读，绕开 localStorage 5MB 配额；备份导出与恢复导入两端自动抽取内嵌图片进媒体段；媒体主库与长期备份库双写兜底，记录、草稿、文本配置与图片 1:1 还原'
-    ]
-  },
-  {
-    ver: 'v1.75 正式版',
-    items: [
-      '修复暗色下输入框聚焦变白底灰字；提单类型卡片、特权下拉、道具库搜索与表格行背景文字对比；大区/特权标签改为 APEC 紫胶囊；彩带改为彩虹底+柔光自然扫过；浅色主题保持原始浅色样式，APEC 定制仅作用限定主题'
-    ]
-  },
-  {
-    ver: 'v1.74 正式版',
-    items: [
-      'APEC 限定炭灰暗色卡片，主按钮灰底紫框描边、悬浮高亮；彩带连续渐变无缝流光；浅色主题隐藏彩带与天际线、标题恢复默认；修复分页下拉与按钮暗色对比，版本胶囊不再按按钮填充'
-    ]
-  },
-  {
-    ver: 'v1.73 正式版',
-    items: [
-      '新增腾讯蓝、月光白、APEC 限定三主题切换，APEC 卡片改为中性灰，标题优化并为彩带加入跑马灯流光与呼吸明暗特效'
-    ]
-  },
-  {
-    ver: 'v1.72 正式版',
-    items: [
-      '修复附件删除按钮无响应，版本胶囊归位标题行，重绘深圳地标天际线并更新副标题文案'
-    ]
-  },
-  {
-    ver: 'v1.71 正式版',
-    items: [
-      '备份与恢复整合为「数据迁移」下拉，修复月光白主题下标题与胶囊对比度问题'
-    ]
-  },
-  {
-    ver: 'v1.70 正式版',
-    items: [
-      '管理员后台「操作事件」表格调整为：时间、名字、使用的业务、详情四列',
-      '埋点上报与后端落库补充操作人名字，事件与提单流水均可追溯到成员'
-    ]
-  },
-  {
-    ver: 'v1.69 正式版',
-    items: [
-      '头图天际线重绘为深圳地标简笔线稿：平安金融中心、京基100、地王大厦、春笋等地标高低错落',
-      '天际线建筑随开场逐个描边画出，与标题、弧线动画节奏统一'
-    ]
-  },
-  {
-    ver: 'v1.68 正式版',
-    items: [
-      '页面底色改为纯黑，头图标题字号、字距与发光质感优化',
-      '新增开场动画：标题逐字笔画落字显现，下方渐变弧线由左至右描边画出'
-    ]
-  },
-  {
-    ver: 'v1.67 正式版',
-    items: [
-      '接入企业微信 OAuth 登录骨架：后端新增换码函数，前端支持授权跳转、回跳落地会话与退出登录',
-      '新增登录墙开关：开启后未登录一律拦截浏览；企微内走授权登录，外部浏览器引导复制链接到企微打开',
-      '用户下拉补充退出登录入口，身份信息优先取企微登录会话'
-    ]
-  },
-  {
-    ver: 'v1.66 正式版',
-    items: [
-      '界面切换为 APEC 2026 深圳主题：深色头图、城市天际线线稿与多彩渐变弧线，APEC 标签可点击跳转官方站点',
-      '顶部新增用户头像下拉，含消息通知与后台管理入口，原顶部「管理员后台」按钮整合进下拉',
-      '管理员后台按访问概览 / 操作事件 / 提单流水标签页重排，新增今日 PV/UV 卡片与近 7 日趋势折线图',
-      '修复首次刷新后「新建问题」标题被误改为工单服务计数的问题',
-      '修复备份时工单服务提单记录在 IDB 为空数组/对象时被漏备的问题，回退内存与本地缓存兜底',
-      '移除首次进入强制弹出的企微名引导弹窗'
-    ]
-  },
-  {
-    ver: 'v1.65 正式版',
-    items: [
-      '修复备份迁移丢数据：备份改为直接从 IndexedDB 读取提单记录与草稿（权威源），不再只取内存缓存，避免页面异步回填时漏备',
-      '备份图片/附件时合并主库与长期备份库，补上仅存于备份库、主库缺失的图片',
-      '恢复备份时先清空旧的提单记录/草稿与旧媒体库，再按备份完整还原，避免旧数据在刷新后复活覆盖恢复结果',
-      '恢复流程等待记录、草稿与图片附件全部写入完成后再自动刷新页面，防止写入中断导致丢图丢单'
-    ]
-  },
-  {
-    ver: 'v1.64 正式版',
-    items: [
-      '商业化活动提单图片区新增两个补充截图框：业受删除流水截图、PD要求的其它补充截图，独立成行并附说明小字，尺寸与上方主截图框保持一致',
-      '工单服务工单号改为可点击超链接，点击直接打开对应提单记录的提单弹窗',
-      '修复商业化活动提单打开时特权库内置截图未自动带入的问题',
-      '新增图片长期备份库：工单图片保存时双写备份，备份导入图片失败时自动从备份库补回',
-      '同一账户同一问题再次提单直接覆盖旧记录，不同问题才新建工单服务记录',
-      '提单记录与草稿迁移至 IndexedDB 存储，突破浏览器 localStorage 5MB 配额限制',
-      '旧图与粘贴图片兜底自动归类，避免图片已上传却未进入任何分类框',
-      '修复重开新单时「新增操作二」按钮未还原显示的问题',
-      '接入后端埋点统计，自动上报页面访问、操作事件与提单流水',
-      '新增管理员后台入口，口令验证后可查看访问量、操作事件与提单流水'
-    ]
-  },
-  {
-    ver: 'v1.63 正式版',
-    items: [
-      '新增大区转区功能：允许填写转移大区，可填写目标大区后，自动读取新大区信息',
-      '优化工单详情布局，道具明细统一命名'
-    ]
-  },
-  {
-    ver: 'v1.62 正式版',
-    items: [
-      '商业化活动提单进行了一些优化',
-      '商业化活动图片分类扩展至7个，新增活动信息与企微项目群确认截图'
-    ]
-  },
-  {
-    ver: 'v1.61 正式版',
-    items: [
-      '初步试点商业化活动快捷提单功能，提单功能全面重构，新增提单类型选择弹窗，仓库道具删除与商业化活动两个大类，选择后出现不同的提单弹窗类型',
-      '优化上传图片区，支持检测上传图片是否齐全，改造为分类虚线框，支持多图上传、切换、预览与复制粘贴',
-      '特权库截图现在开始会自动带入，不同的提单类型会自动带入不同的特权库截图'
-    ]
-  },
-  {
-    ver: 'v1.60 正式版',
-    items: [
-      '修复举报记录表格删除逻辑：行内删除仅删除单条记录，不再误删整批',
-      '举报记录表格新增全选与删除选中：点击全选勾选全部记录，再点击删除选中才批量删除',
-      '优化了系统整体布局，提高信息查阅的效率'
-    ]
-  },
-  {
-    ver: 'v1.59 正式版',
-    items: [
-      '新增举报记录表格页：批量举报文本自动解析为表格展示，支持搜索与分页',
-      '举报内容导出 txt 调整为按指定格式导出'
-    ]
-  },
-  {
-    ver: 'v1.58 正式版',
-    items: [
-      'RM 举报界面改为批量举报提交，仅保留超大文本框填写举报内容，其它字段已删除',
-      '界面文案调整为 CF 举报 / CF 批量举报信息'
-    ]
-  },
-  {
-    ver: 'v1.57 正式版',
-    items: [
-      '大图弹窗新增复制图片/下载图片/复制图片数据，图片复制三级降级彻底解决浏览器限制',
-      '优化提单弹窗排版布局与观感',
-      '上传图片新增撤回撤回：Ctrl+Shift+Z 或 Ctrl+Y 恢复最近一次被撤回的上传'
-    ]
-  },
-  {
-    ver: 'v1.56 正式版',
-    items: [
-      '上传图片支持 Ctrl+Z 撤回最近一次上传；预览图悬浮选择框弱化为引导可见并修复鼠标移出后不消失'
-    ]
-  },
-  {
-    ver: 'v1.55 正式版',
-    items: [
-      '提单专用列表与提单弹窗预览图悬浮显示蓝色选择框，聚焦后支持 Ctrl+C 一键复制图片'
-    ]
-  },
-  {
-    ver: 'v1.54 正式版',
-    items: [
-      '自定义特权模板支持导入图片，提单时自动加入上传图片'
-    ]
-  },
-  {
-    ver: 'v1.53 正式版',
-    items: [
-      '优化道具库与特权名搜索的英文大小写兼容'
-    ]
-  },
-  {
-    ver: 'v1.51 正式版',
-    items: [
-      '优化备份与恢复数据流程，修复恢复后图片丢失问题',
-      '新增自定义特权「修改」功能，优化批量道具预设开关兼容性',
-      '优化备份按钮样式与下载稳定性'
-    ]
-  },
-  {
-    ver: 'v1.40 正式版',
-    items: [
-      '更新道具库数据至 20260923 版',
-      '新增自定义特权模板，支持批量道具预设',
-      '优化道具搜索、单元格复制与备份下载体验'
-    ]
-  },
-  {
-    ver: 'v1.39 正式版',
-    items: [
-      '新增道具ID重复检测'
-    ]
-  },
-  {
-    ver: 'v1.38 正式版',
-    items: [
-      '提单窗口关闭增加二次确认'
-    ]
-  },
-  {
-    ver: 'v1.37 正式版',
-    items: [
-      '新增 Marvis 小萌 AI 接入，支持主流大模型一键配置',
-      '新增道具ID纯数字校验'
-    ]
-  },
-  {
-    ver: 'v1.36 正式版',
-    items: [
-      '道具库搜索支持按道具ID匹配',
-      '操作一新增批量增加与批量删除'
-    ]
-  },
-  {
-    ver: 'v1.35 正式版',
-    items: [
-      '下线内置业受板块，新增 Marvis 对话板块'
-    ]
-  },
-  {
-    ver: 'v1.34 正式版',
-    items: [
-      '更新道具库数据至 20260910 版'
-    ]
-  },
-  {
-    ver: 'v1.33 正式版',
-    items: [
-      '提单图片支持拖拽排序'
-    ]
-  },
-  {
-    ver: 'v1.32 正式版',
-    items: [
-      '优化批量txt文件名生成'
-    ]
-  },
-  {
-    ver: 'v1.31 正式版',
-    items: [
-      '已完成工单剩余天数定格显示'
-    ]
-  },
-  {
-    ver: 'v1.30 正式版',
-    items: [
-      '道具库结果改为按单元格复制',
-      '提单工单号支持两态展示'
-    ]
-  },
-  {
-    ver: 'v1.29 正式版',
-    items: [
-      '提单记录支持工单号快捷填写，搜索同步匹配工单号'
-    ]
-  },
-  {
-    ver: 'v1.28 正式版',
-    items: [
-      '提单列表新增分页、搜索与特权筛选',
-      '批量txt文件兼容旧版文本工具打开不乱码'
-    ]
-  },
-  {
-    ver: 'v1.27 正式版',
-    items: [
-      '优化上传图片清晰度'
-    ]
-  },
-  {
-    ver: 'v1.26 正式版',
-    items: [
-      '修复提单模板操作一取值错误，优化动作词解析'
-    ]
-  },
-  {
-    ver: 'v1.25 正式版',
-    items: [
-      '提单操作一支持自动读取问题描述中的动作词'
-    ]
-  },
-  {
-    ver: 'v1.24 正式版',
-    items: [
-      '图片/附件存储容量升级，支持大图与多图完整保存',
-      '历史数据自动迁移，备份恢复同步适配'
-    ]
-  },
-  {
-    ver: 'v1.23 正式版',
-    items: [
-      '内置业受改版，优化提单流程与道具库弹窗'
-    ]
-  },
-  {
-    ver: 'v1.22 正式版',
-    items: [
-      '正式交付版发布，移除 BETA 标记'
-    ]
-  },
-  {
-    ver: 'v1.22 BETA',
-    items: [
-      '业务栏合并，新增录入类型选择'
-    ]
-  },
-  {
-    ver: 'v1.21 BETA',
-    items: [
-      '新增内置业受业务板块'
-    ]
-  },
-  {
-    ver: 'v1.20 BETA',
-    items: [
-      '修复月光白主题下道具库搜索表格对比度'
-    ]
-  },
-  {
-    ver: 'v1.19 BETA',
-    items: [
-      '操作一新增道具库模糊搜索，内置道具数据库'
-    ]
-  },
-  {
-    ver: 'v1.18 BETA',
-    items: [
-      '优化数据流视图与提单记录展示，新增特权彩色标签'
-    ]
-  },
-  {
-    ver: 'v1.17 BETA',
-    items: [
-      '修复举报录入历史数据字段错位'
-    ]
-  },
-  {
-    ver: 'v1.16 BETA',
-    items: [
-      '举报录入历史数据清洗，优化提单文本展示'
-    ]
-  },
-  {
-    ver: 'v1.15 BETA',
-    items: [
-      '优化提单专用弹窗布局，修复举报记录错位数据'
-    ]
-  },
-  {
-    ver: 'v1.14 BETA',
-    items: [
-      '仓库道具删除恢复独立弹窗，修复举报录入列错位'
-    ]
-  },
-  {
-    ver: 'v1.13 BETA',
-    items: [
-      '提单模板文本优化，操作一升级为动态行录入'
-    ]
-  },
-  {
-    ver: 'v1.12 BETA',
-    items: [
-      '新增问题类别，优化状态标签与行颜色'
-    ]
-  },
-  {
-    ver: 'v1.11 BETA',
-    items: [
-      '业务更名，新增游戏选择'
-    ]
-  },
-  {
-    ver: 'v1.10 BETA',
-    items: [
-      '记录查看更名为数据流'
-    ]
-  },
-  {
-    ver: 'v1.9 BETA',
-    items: [
-      '优化版本日志弹窗与工单状态文本'
-    ]
-  },
-  {
-    ver: 'v1.8 BETA',
-    items: [
-      '新增已逾期状态，提单专用功能完整实现'
-    ]
-  },
-  {
-    ver: 'v1.7 BETA',
-    items: [
-      '新增主题切换，优化举报记录导出'
-    ]
-  },
-  {
-    ver: 'v1.6 BETA',
-    items: [
-      '新增提单专用入口与版本日志'
-    ]
-  },
-  {
-    ver: 'v1.5 BETA',
-    items: [
-      '优化完成按钮确认流程，已完成工单自动沉底'
-    ]
-  },
-  {
-    ver: 'v1.4 BETA',
-    items: [
-      '优化返回按钮与完成确认'
-    ]
-  },
-  {
-    ver: 'v1.3 BETA',
-    items: [
-      '系统更名，新增已提单状态'
-    ]
-  },
-  {
-    ver: 'v1.2 BETA',
-    items: [
-      '工单列表新增分页'
-    ]
-  },
-  {
-    ver: 'v1.1 BETA',
-    items: [
-      '新增RM举报独立业务与工单功能'
-    ]
-  },
-  {
-    ver: 'v1.0 BETA',
-    items: [
-      '超核记录管理系统初始版本，本地化单文件部署'
-    ]
-  }
-];
+const VERSION_LOG = [];
 function openAdminPanel() {
   location.href = 'admin.html';
 }
