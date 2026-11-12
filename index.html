@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%230052D9'/%3E%3Crect x='8' y='8' width='16' height='4.5' rx='2.2' fill='%23fff'/%3E%3Crect x='13.75' y='8' width='4.5' height='16' rx='2.2' fill='%23fff'/%3E%3C/svg%3E">
-<title>超核一站式服务系统 v1.77 正式版</title>
+<title>超核一站式服务系统 v1.78 正式版</title>
 <style>
   :root {
     --bg: #000000;
@@ -142,8 +142,7 @@
   body:not(.theme-moon):not(.theme-blue) .modal,
   body:not(.theme-moon):not(.theme-blue) .tb-item,
   body:not(.theme-moon):not(.theme-blue) .ticket-type-card,
-  body:not(.theme-moon):not(.theme-blue) .mv-wrap,
-  body:not(.theme-moon):not(.theme-blue) .mv-modal-panel,
+  body:not(.theme-moon):not(.theme-blue) .schedule-placeholder,
   body:not(.theme-moon):not(.theme-blue) .region-dropdown,
   body:not(.theme-moon):not(.theme-blue) .wecom-manage-list,
   body:not(.theme-moon):not(.theme-blue) .delete-template-content,
@@ -349,87 +348,11 @@
     font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 999px;
     background: #eff6ff; color: var(--primary);
   }
-  /* Marvis 超核管家小萌：网页内内置对话窗口 */
-  #marvisView { padding: 0; overflow: hidden; }
-  .mv-wrap { display: flex; flex-direction: column; height: 1050px; min-height: 1050px; background: #fff; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-  .mv-head { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: #eef0f4; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-  .mv-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; flex-shrink: 0; }
-  .mv-head-info { flex: 1; min-width: 0; }
-  .mv-name { font-size: 14px; font-weight: 700; color: #111827; }
-  .mv-sub { font-size: 12px; color: #6b7280; margin-top: 2px; }
-  .mv-head-actions { display: flex; gap: 6px; flex-shrink: 0; }
-  .mv-btn { display: inline-flex; align-items: center; justify-content: center; height: 30px; padding: 0 12px; border: 1px solid var(--border); border-radius: 999px; background: #fff; color: #374151; font-size: 13px; cursor: pointer; }
-  .mv-btn:hover { background: #eef2f7; border-color: var(--primary); color: var(--primary); }
-  .mv-body { flex: 1; overflow-y: auto; padding: 18px 16px; background: #f8fafc; }
-  .mv-msg { display: flex; margin-bottom: 14px; }
-  .mv-msg.user { justify-content: flex-end; }
-  .mv-bubble { max-width: 76%; padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.65; white-space: pre-wrap; word-break: break-word; }
-  .mv-msg.bot .mv-bubble { background: #fff; border: 1px solid var(--border); color: #111827; border-top-left-radius: 4px; }
-  .mv-msg.user .mv-bubble { background: var(--primary); color: #fff; border-top-right-radius: 4px; }
-  .mv-foot { flex-shrink: 0; border-top: 1px solid var(--border); background: #fff; padding: 10px 12px; }
-  .mv-input-row { display: flex; gap: 8px; align-items: flex-end; }
-  .mv-input { flex: 1; min-height: 44px; max-height: 130px; resize: vertical; border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit; color: #111827; background: #f8fafc; }
-  .mv-input:focus { outline: none; border-color: var(--primary); background: var(--input-bg); box-shadow: 0 0 0 3px rgba(0, 82, 217, .15); }
-  .mv-send { height: 44px; padding: 0 22px; border: 0; border-radius: 10px; background: var(--primary); color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
-  /* 小萌状态提示行（问题筛）：未接入=灰色小字；已接入=激活态绿色，浅色 / 深色均适配 */
-  .mv-tip { margin-top: 8px; font-size: 12px; line-height: 1.6; color: #6b7280; }
-  .mv-tip.mv-on, .mv-sub.mv-on { color: #059669; font-weight: 600; }
-  body.theme-moon .mv-tip { color: #94a3b8; }
-  body.theme-moon .mv-tip.mv-on, body.theme-moon .mv-sub.mv-on { color: #34d399; }
-  .mv-send:disabled { opacity: .55; cursor: not-allowed; }
-  /* 小萌设置：独立居中模态弹窗（不再内联展开在对话窗底部） */
-  .mv-modal { display: none; position: fixed; inset: 0; z-index: 10049; background: rgba(15, 23, 42, .55); padding: 28px 16px; overflow-y: auto; }
-  .mv-modal.show { display: flex; align-items: flex-start; justify-content: center; }
-  .mv-modal-panel { width: min(720px, 100%); margin: auto; background: #fff; border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 24px 64px rgba(2, 12, 32, .38); overflow: hidden; }
-  .mv-modal-head { display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: #f8fafc; border-bottom: 1px solid var(--border); }
-  .mv-modal-title { flex: 1; min-width: 0; font-size: 15px; font-weight: 700; color: #111827; }
-  .mv-modal-title small { display: block; margin-top: 3px; font-size: 12px; font-weight: 400; color: #6b7280; }
-  .mv-modal-close { width: 30px; height: 30px; flex-shrink: 0; border: 1px solid var(--border); border-radius: 8px; background: #fff; color: #6b7280; font-size: 17px; line-height: 1; cursor: pointer; }
-  .mv-modal-close:hover { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
-  .mv-modal-body { padding: 16px 18px; max-height: min(62vh, 540px); overflow-y: auto; }
-  .mv-set-section + .mv-set-section { margin-top: 18px; padding-top: 16px; border-top: 1px dashed var(--border); }
-  .mv-set-section-title { font-size: 13px; font-weight: 700; color: #111827; }
-  .mv-set-desc { margin: 6px 0 10px; font-size: 12px; line-height: 1.65; color: #6b7280; }
-  .mv-set-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
-  .mv-set-field { display: flex; flex-direction: column; gap: 5px; }
-  .mv-set-field.full { grid-column: 1 / -1; }
-  .mv-set-field label { font-size: 12px; font-weight: 600; color: #6b7280; }
-  .mv-set-field input, .mv-set-field textarea { border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 13px; font-family: inherit; color: #111827; background: #fff; }
-  .mv-set-field input { height: 36px; padding: 0 10px; }
-  .mv-set-field input:focus, .mv-set-field textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 82, 217, .12); }
-  .mv-set-field textarea { min-height: 104px; resize: vertical; line-height: 1.6; }
-  .mv-key-row { display: flex; align-items: center; gap: 8px; }
-  .mv-key-row input { flex: 1; min-width: 0; }
-  .mv-key-toggle { height: 36px; padding: 0 12px; flex-shrink: 0; border: 1px solid var(--border); border-radius: 8px; background: #f8fafc; color: #374151; font-size: 12.5px; cursor: pointer; }
-  .mv-key-toggle:hover { border-color: var(--primary); color: var(--primary); }
-  .mv-modal-foot { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 12px 18px; background: #f8fafc; border-top: 1px solid var(--border); }
-  .mv-modal-btn { height: 36px; padding: 0 16px; border: 1px solid var(--border); border-radius: 8px; background: #fff; color: #374151; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; }
-  .mv-modal-btn:hover { border-color: var(--primary); color: var(--primary); }
-  .mv-modal-btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
-  .mv-modal-btn.primary:hover { background: var(--primary-dark); border-color: var(--primary-dark); color: #fff; }
-  .mv-modal-btn.ghost { margin-left: auto; }
-  body.theme-moon .mv-wrap { background: #0f172a; }
-  body.theme-moon .mv-head { background: #1e293b; border-bottom-color: #334155; }
-  body.theme-moon .mv-name { color: #f1f5f9; }
-  body.theme-moon .mv-sub { color: #94a3b8; }
-  body.theme-moon .mv-btn { background: #1e293b; border-color: #334155; color: #cbd5e1; }
-  body.theme-moon .mv-btn:hover { background: #263449; border-color: #3b82f6; color: #93b4ff; }
-  body.theme-moon .mv-body { background: #0f172a; }
-  body.theme-moon .mv-msg.bot .mv-bubble { background: #1e293b; border-color: #334155; color: #f1f5f9; }
-  body.theme-moon .mv-foot { background: #0f172a; border-top-color: #334155; }
-  body.theme-moon .mv-input { background: #1e293b; border-color: #334155; color: #f1f5f9; }
-  body.theme-moon .mv-input:focus { background: #1e293b; }
-  body.theme-moon .mv-modal { background: rgba(2, 6, 23, .68); }
-  body.theme-moon .mv-modal-panel { background: #0f172a; border-color: #334155; }
-  body.theme-moon .mv-modal-head, body.theme-moon .mv-modal-foot { background: #1e293b; border-color: #334155; }
-  body.theme-moon .mv-modal-title { color: #f1f5f9; }
-  body.theme-moon .mv-modal-title small, body.theme-moon .mv-set-desc, body.theme-moon .mv-set-field label { color: #94a3b8; }
-  body.theme-moon .mv-modal-close { background: #1e293b; border-color: #334155; color: #94a3b8; }
-  body.theme-moon .mv-set-section-title { color: #f1f5f9; }
-  body.theme-moon .mv-set-section + .mv-set-section { border-top-color: #334155; }
-  body.theme-moon .mv-set-field input, body.theme-moon .mv-set-field textarea, body.theme-moon .mv-key-toggle, body.theme-moon .mv-modal-btn { background: #1e293b; border-color: #334155; color: #f1f5f9; }
-  body.theme-moon .mv-modal-btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
-
+  /* CF班表占位板块：功能后续版本更新 */
+  #marvisView { padding: 0; }
+  .schedule-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 64px 24px; border: 1px solid var(--border); border-radius: 12px; background: var(--card); }
+  .schedule-placeholder .sp-title { font-size: 18px; font-weight: 700; color: var(--text); }
+  .schedule-placeholder .sp-desc { font-size: 13px; color: var(--text-muted); }
   .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
   .form-group { display: flex; flex-direction: column; gap: 6px; }
   .form-group.full { grid-column: 1 / -1; }
@@ -999,7 +922,7 @@
 /* ===== 版本自检 + 埋点统计（v1.64） ===== */
 (function () {
   // 当前版本号：与页面右上角版本标签保持一致，发版时同步更新
-  var APP_VERSION = 'v1.77';
+  var APP_VERSION = 'v1.78';
 
   // 埋点配置：endpoint 留空且 enabled=false 时不上报；已接入 Neon collect 接口
   window.__TRACK__ = window.__TRACK__ || {
@@ -1174,7 +1097,7 @@
             <path d="M -12 60 Q 300 70 612 58" fill="none" stroke="url(#ribbonGrad)" stroke-width="5" stroke-linecap="round" opacity=".22"/>
             <path d="M -12 60 Q 300 70 612 58" fill="none" stroke="url(#ribbonGrad)" stroke-width="3" stroke-linecap="round"/>
           </svg>
-          <h1 class="apec-title"><svg class="t-logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="7" fill="#0052D9"/><rect x="8" y="8" width="16" height="4.5" rx="2.2" fill="#fff"/><rect x="13.75" y="8" width="4.5" height="16" rx="2.2" fill="#fff"/></svg>超核一站式服务系统 <span class="ver-tag">v1.77 正式版</span></h1>
+          <h1 class="apec-title"><svg class="t-logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="7" fill="#0052D9"/><rect x="8" y="8" width="16" height="4.5" rx="2.2" fill="#fff"/><rect x="13.75" y="8" width="4.5" height="16" rx="2.2" fill="#fff"/></svg>超核一站式服务系统 <span class="ver-tag">v1.78 正式版</span></h1>
         </div>
         <div class="apec-sub-row">
           <p class="apec-sub">以更轻松的方式解决工单，让工作更简单</p>
@@ -1220,7 +1143,7 @@
     <div class="biz-switch" id="bizSwitch">
       <div class="biz-nav-slider" id="bizNavSlider"></div>
       <button type="button" id="bizBtnCF" class="biz-btn active" onclick="switchBiz('CF')">新建问题</button>
-      <button type="button" id="bizBtnMarvis" class="biz-btn" onclick="switchBiz('MARVIS')">Marvis</button>
+      <button type="button" id="bizBtnMarvis" class="biz-btn" onclick="switchBiz('MARVIS')">CF班表</button>
       <button type="button" id="bizBtnData" class="biz-btn" onclick="showRecordsView()">数据流</button>
       <button type="button" id="bizBtnTicketOnly" class="biz-btn" onclick="switchBiz('TICKET_ONLY')">工单服务</button>
     </div>
@@ -1380,126 +1303,13 @@
     <div id="ticketBizHint" style="display:none;text-align:center;padding:60px 0;color:#6b7280;">提单专用：请先在「数据流」的工单记录中点击「提单」按钮，将自动跳转并填入玩家账号 / 大区 / 问题描述。</div>
   </div>
 
-  <!-- Marvis 超核管家小萌（网页内置对话窗，默认隐藏，由业务栏「Marvis」按钮打开） -->
+  <!-- CF班表（占位板块，功能后续版本更新） -->
   <div class="card" id="marvisView" style="display:none;">
-    <div class="mv-wrap">
-      <div class="mv-head">
-        <div class="mv-avatar">萌</div>
-        <div class="mv-head-info">
-          <div class="mv-name">Marvis 超核管家 · 小萌</div>
-          <div class="mv-sub" id="mvStatus">在线</div>
-        </div>
-        <div class="mv-head-actions">
-          <button type="button" class="mv-btn" onclick="mvToggleSettings()">设置</button>
-          <button type="button" class="mv-btn" onclick="mvClearChat()">清空</button>
-        </div>
-      </div>
-      <div class="mv-body" id="mvMessages"></div>
-      <div class="mv-foot">
-        <div class="mv-input-row">
-          <textarea id="mvInput" class="mv-input" placeholder="和小萌说点什么…（Enter 发送，Shift+Enter 换行）"></textarea>
-          <button type="button" class="mv-send" id="mvSendBtn" onclick="mvSend()">发送</button>
-        </div>
-        <div class="mv-tip" id="mvTip"></div>
-      </div>
+    <div class="schedule-placeholder">
+      <div class="sp-title">CF班表</div>
+      <div class="sp-desc">功能建设中，将在后续版本更新，敬请期待。</div>
     </div>
   </div>
-
-  <!-- Marvis 小萌：对话设置（独立居中模态弹窗，由对话窗右上角「设置」打开） -->
-  <div class="mv-modal" id="mvSettingsModal" onclick="mvModalBackdrop(event)">
-    <div class="mv-modal-panel" role="dialog" aria-modal="true" aria-labelledby="mvModalTitle">
-      <div class="mv-modal-head">
-        <div class="mv-modal-title" id="mvModalTitle">对话设置<small>配置小萌的模型接入与人设，仅保存在本机浏览器</small></div>
-        <button type="button" class="mv-modal-close" onclick="mvCloseSettings()" title="关闭" aria-label="关闭">&#215;</button>
-      </div>
-      <div class="mv-modal-body">
-        <div class="mv-set-section">
-          <div class="mv-set-section-title">模型接入（OpenAI 兼容接口）</div>
-          <div class="mv-set-desc">接口地址、模型、API Key 三项全部填写后，小萌将调用真实模型回答；任一项留空则使用内置话术模式。接口地址需为完整的对话补全地址，例如 https://api.deepseek.com/v1/chat/completions。</div>
-          <div class="mv-set-field" style="margin-bottom:10px;">
-            <label>推荐模型（选择后自动填入接口地址与模型名，只需再填 API Key）</label>
-            <select id="mvPresetSelect" onchange="mvApplyPreset()" style="height:36px;border:1.5px solid var(--border);border-radius:8px;padding:0 10px;font-size:13px;font-family:inherit;color:#111827;background:#fff;">
-              <option value="">— 手动填写 / 选择推荐模型 —</option>
-              <option value="0">DeepSeek 深度求索 · deepseek-chat（文本性价比高）</option>
-              <option value="1">阿里通义千问 · qwen-plus（文本理解强）</option>
-              <option value="2">智谱 GLM · glm-4-flash（免费可用）</option>
-              <option value="3">月之暗面 Kimi · moonshot-v1-8k（长文本出色）</option>
-              <option value="4">字节豆包 · doubao-pro-32k</option>
-              <option value="5">腾讯混元 · hunyuan-turbo</option>
-              <option value="6">百度文心 · ernie-4.0-turbo-8k</option>
-              <option value="7">讯飞星火 · spark-lite（免费可用）</option>
-            </select>
-          </div>
-          <div class="mv-set-grid">
-            <div class="mv-set-field full"><label>接口地址 base_url</label><input type="text" id="mvBaseUrl" placeholder="https://api.example.com/v1/chat/completions" spellcheck="false" autocomplete="off"></div>
-            <div class="mv-set-field"><label>模型 model</label><input type="text" id="mvModel" placeholder="例如 deepseek-chat" spellcheck="false" autocomplete="off"></div>
-            <div class="mv-set-field"><label>API Key</label>
-              <div class="mv-key-row">
-                <input type="password" id="mvApiKey" placeholder="sk-..." spellcheck="false" autocomplete="off">
-                <button type="button" class="mv-key-toggle" id="mvKeyToggle" onclick="mvToggleKeyVisible()">显示</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="mv-set-section">
-          <div class="mv-set-section-title">小萌人设设定</div>
-          <div class="mv-set-desc">即 system prompt，决定小萌的身份与回答风格，可自由修改；如需回到初始设定，点底部「恢复默认人设」。</div>
-          <div class="mv-set-grid">
-            <div class="mv-set-field full"><textarea id="mvPersona"></textarea></div>
-          </div>
-        </div>
-      </div>
-      <div class="mv-modal-foot">
-        <button type="button" class="mv-modal-btn primary" onclick="mvSaveSettings()">保存配置</button>
-        <button type="button" class="mv-modal-btn" onclick="mvClearSettings()">清除配置</button>
-        <button type="button" class="mv-modal-btn" onclick="mvResetPersona()">恢复默认人设</button>
-        <button type="button" class="mv-modal-btn ghost" onclick="mvCloseSettings()">关闭</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Marvis 小萌：首次接入引导弹窗（检测到本机有网络且尚未配置模型时自动弹出） -->
-  <div class="mv-modal" id="mvSetupModal" onclick="mvSetupBackdrop(event)">
-    <div class="mv-modal-panel" role="dialog" aria-modal="true" aria-labelledby="mvSetupTitle">
-      <div class="mv-modal-head">
-        <div class="mv-modal-title" id="mvSetupTitle">接入 AI 模型<small>检测到本机已联网，选择推荐模型并填写 API Key 即可自动接入；配置仅保存在本机浏览器，不会上传</small></div>
-        <button type="button" class="mv-modal-close" onclick="mvCloseSetup()" title="关闭" aria-label="关闭">&#215;</button>
-      </div>
-      <div class="mv-modal-body">
-        <div class="mv-set-section">
-          <div class="mv-set-section-title">选择推荐文本大模型（8 个推荐）</div>
-          <div class="mv-set-desc">下方为常用的 OpenAI 兼容文本大模型，选择后自动填入接口地址与模型名，你只需填写 API Key。各厂商接口地址与模型名以官方文档为准。</div>
-          <div class="mv-set-field" style="margin-bottom:10px;">
-            <select id="mvSetupPreset" onchange="mvApplySetupPreset()" style="height:36px;border:1.5px solid var(--border);border-radius:8px;padding:0 10px;font-size:13px;font-family:inherit;color:#111827;background:#fff;">
-              <option value="0">DeepSeek 深度求索 · deepseek-chat（文本性价比高，推荐）</option>
-              <option value="1">阿里通义千问 · qwen-plus（文本理解与生成强）</option>
-              <option value="2">智谱 GLM · glm-4-flash（免费可用）</option>
-              <option value="3">月之暗面 Kimi · moonshot-v1-8k（长文本出色）</option>
-              <option value="4">字节豆包 · doubao-pro-32k</option>
-              <option value="5">腾讯混元 · hunyuan-turbo</option>
-              <option value="6">百度文心 · ernie-4.0-turbo-8k</option>
-              <option value="7">讯飞星火 · spark-lite（免费可用）</option>
-            </select>
-          </div>
-          <div class="mv-set-grid">
-            <div class="mv-set-field full"><label>接口地址 base_url</label><input type="text" id="mvSetupBaseUrl" readonly spellcheck="false" autocomplete="off"></div>
-            <div class="mv-set-field"><label>模型 model</label><input type="text" id="mvSetupModel" readonly spellcheck="false" autocomplete="off"></div>
-            <div class="mv-set-field"><label>API Key</label>
-              <div class="mv-key-row">
-                <input type="password" id="mvSetupApiKey" placeholder="填写所选模型的 API Key" spellcheck="false" autocomplete="off">
-                <button type="button" class="mv-key-toggle" id="mvSetupKeyToggle" onclick="mvSetupToggleKey()">显示</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="mv-modal-foot">
-        <button type="button" class="mv-modal-btn primary" onclick="mvSaveSetup()">保存并接入</button>
-        <button type="button" class="mv-modal-btn ghost" onclick="mvDismissSetup()">暂不接入</button>
-      </div>
-    </div>
-  </div>
-
   <!-- 数据流（数据视图，默认隐藏，由「数据流」按钮打开） -->
   <div class="card" id="dataView">
     <div class="card-title">数据流 <span class="tag">问题录入</span></div>
@@ -2228,8 +2038,8 @@ function calcDays() {
 }
 
 /* ================= 业务与视图切换 ================= */
-let currentBiz = 'CF'; // 'CF' => 新建问题-新建工单；'RM' => 新建问题-新建举报；'MARVIS' => Marvis 小萌对话；'TICKET_ONLY' => 提单专用
-/* Marvis 小萌对话窗：业务板块与组件见下方「Marvis 超核管家小萌」模块 */
+let currentBiz = 'CF'; // 'CF' => 新建问题-新建工单；'RM' => 新建问题-新建举报；'MARVIS' => CF班表占位板块；'TICKET_ONLY' => 提单专用
+/* CF班表：占位板块，功能后续版本更新 */
 /* 新工单支持 CF / CFHD / RM手游 三款游戏；历史 CF / CFHD / CF&CFHD 统一归一化为 CF&CFHD（往期数据不变） */
 function displayGame(game) {
   if (game === 'CF' || game === 'CFHD' || game === 'RM手游') return game;
@@ -2249,7 +2059,7 @@ function moveBizSlider() {
 window.addEventListener('load', function () { setTimeout(moveBizSlider, 100); });
 window.addEventListener('resize', moveBizSlider);
 
-/* 业务切换：新建问题（内含新建工单/新建举报两种录入类型）；提单专用为占位业务；Marvis 为小萌对话窗 */
+/* 业务切换：新建问题（内含新建工单/新建举报两种录入类型）；提单专用为占位业务；CF班表为占位板块 */
 function switchBiz(biz) {
   currentBiz = biz;
   // 切换业务板块后，数据流表格中的 NEW 标记全部消失（仅内存，不落存储）
@@ -2287,450 +2097,13 @@ function switchBiz(biz) {
     el.disabled = isTicketOnly;
   });
   // 数据板块标签页由用户手动切换，业务按钮不再联动（见 switchTab / currentTab）
-  // 视图互斥：录入区 / 数据流 / Marvis 对话 三者只显示其一；从数据流进入业务板块时回到顶部
+  // 视图互斥：录入区 / 数据流 / CF班表占位 三者只显示其一；从数据流进入业务板块时回到顶部
   const wasDataView = document.getElementById('dataView').style.display === 'block';
   document.getElementById('entryView').style.display = isMarvis ? 'none' : '';
   document.getElementById('dataView').style.display = 'none';
   const marvisView = document.getElementById('marvisView');
   if (marvisView) marvisView.style.display = isMarvis ? 'block' : 'none';
-  // Marvis：首次进入时初始化小萌对话窗（渲染历史、绑定回车发送）
-  if (isMarvis) {
-    mvInit();
-  }
   if (wasDataView) window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-/* ================= Marvis 超核管家小萌：网页内置对话窗 ================= */
-const MARVIS_CFG_KEY = 'marvisChatCfg_v1';
-const MARVIS_CHAT_KEY = 'marvisChatHistory_v1';
-const MV_NL = String.fromCharCode(10);
-/* 8 个推荐文本大模型（OpenAI 兼容接口，接口地址与模型名以各厂商官方文档为准） */
-const MV_PRESET_MODELS = [
-  { name: 'DeepSeek 深度求索', baseUrl: 'https://api.deepseek.com/v1/chat/completions', model: 'deepseek-chat', note: '文本性价比高，推荐' },
-  { name: '阿里通义千问', baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', model: 'qwen-plus', note: '文本理解与生成强' },
-  { name: '智谱 GLM', baseUrl: 'https://open.bigmodel.cn/api/paas/v4/chat/completions', model: 'glm-4-flash', note: '免费可用' },
-  { name: '月之暗面 Kimi', baseUrl: 'https://api.moonshot.cn/v1/chat/completions', model: 'moonshot-v1-8k', note: '长文本出色' },
-  { name: '字节豆包', baseUrl: 'https://ark.cn-beijing.volces.com/api/v3/chat/completions', model: 'doubao-pro-32k', note: '' },
-  { name: '腾讯混元', baseUrl: 'https://api.hunyuan.cloud.tencent.com/v1/chat/completions', model: 'hunyuan-turbo', note: '' },
-  { name: '百度文心', baseUrl: 'https://qianfan.baidubce.com/v2/chat/completions', model: 'ernie-4.0-turbo-8k', note: '' },
-  { name: '讯飞星火', baseUrl: 'https://spark-api-open.xf-yun.com/v1/chat/completions', model: 'spark-lite', note: '免费可用' }
-];
-/* 小萌默认人设（内置设定，可在对话窗「设置」中修改并本地保存） */
-const MARVIS_PERSONA_DEFAULT = [
-  '你是「小萌」，Marvis 超核管家，服务对象是超核一站式服务系统的运营使用者。',
-  '你能协助的范围：工单录入与跟进（新建工单 / 新建举报 / 提单专用）、道具库查询与按单元格复制、批量道具 txt 生成、活动道具补发与回收、灵狐龙珠操作、数据流统计与记录筛选、系统版本与功能说明。',
-  '回答风格：亲切、简洁、条理清晰，先给结论再给要点；不确定的信息如实说明，不编造系统里不存在的功能或数据。',
-  '涉及删除、覆盖等高危操作时，提醒用户二次确认后再执行。'
-].join(MV_NL);
-let mvHistory = [];
-let mvNetBound = false;
-let mvInited = false;
-let mvBusy = false;
-function mvLoadCfg() {
-  try { return JSON.parse(localStorage.getItem(MARVIS_CFG_KEY) || '{}') || {}; } catch (e) { return {}; }
-}
-function mvPersonaOf(cfg) {
-  return (cfg && cfg.persona && cfg.persona.trim()) ? cfg.persona : MARVIS_PERSONA_DEFAULT;
-}
-/* 问题筛：联网状态判定（无 navigator.onLine 时按联网处理，保证单文件离线可用不报错） */
-function mvNetOnline() {
-  return (typeof navigator.onLine === 'boolean') ? navigator.onLine : true;
-}
-/* 问题筛：接入准入判定——base_url / model / API Key 三项齐全 */
-function mvCfgReady(cfg) {
-  return !!(cfg && cfg.baseUrl && cfg.model && cfg.apiKey);
-}
-/* 问题筛：每次生成回复前调用——重新读取「设置」中已保存的配置（含小萌人设 system prompt），并判定当前是否联网 */
-function mvEnsureReady() {
-  const cfg = mvLoadCfg();
-  return { cfg: cfg, ready: mvCfgReady(cfg) && mvNetOnline() };
-}
-/* 取 base_url 主机名，用于「已接入 XXX（模型 model）」文案 */
-function mvHostOf(url) {
-  const raw = String(url || '').trim();
-  const m = raw.match(/^[a-z][a-z0-9+.-]*:\/\/([^\/?#]+)/i);
-  if (m && m[1]) return m[1];
-  const seg = raw.replace(/^\/+/, '').split('/')[0];
-  return seg || '自定义接口';
-}
-/* ===== 推荐模型一键填充与首次接入引导（v1.37） ===== */
-const MARVIS_SETUP_DISMISS_KEY = 'marvisSetupDismissed_v1';
-/* 设置弹窗：选择推荐模型后自动填充 base_url / model */
-function mvApplyPreset() {
-  const sel = document.getElementById('mvPresetSelect');
-  const idx = sel ? parseInt(sel.value, 10) : -1;
-  if (isNaN(idx) || idx < 0 || idx >= MV_PRESET_MODELS.length) return;
-  const p = MV_PRESET_MODELS[idx];
-  const b = document.getElementById('mvBaseUrl');
-  const m = document.getElementById('mvModel');
-  if (b) b.value = p.baseUrl;
-  if (m) m.value = p.model;
-  const k = document.getElementById('mvApiKey');
-  if (k) k.focus();
-  if (typeof showToast === 'function') showToast('已填入「' + p.name + '」的接口与模型名，请填写 API Key', 'info');
-}
-/* 首次接入引导弹窗：选择推荐模型后自动填充 */
-function mvApplySetupPreset() {
-  const sel = document.getElementById('mvSetupPreset');
-  const idx = sel ? parseInt(sel.value, 10) : 0;
-  if (isNaN(idx) || idx < 0 || idx >= MV_PRESET_MODELS.length) return;
-  const p = MV_PRESET_MODELS[idx];
-  const b = document.getElementById('mvSetupBaseUrl');
-  const m = document.getElementById('mvSetupModel');
-  if (b) b.value = p.baseUrl;
-  if (m) m.value = p.model;
-}
-function mvSetupToggleKey() {
-  const k = document.getElementById('mvSetupApiKey');
-  const btn = document.getElementById('mvSetupKeyToggle');
-  if (!k) return;
-  const show = k.type === 'password';
-  k.type = show ? 'text' : 'password';
-  if (btn) btn.textContent = show ? '隐藏' : '显示';
-}
-function mvOpenSetup() {
-  const modal = document.getElementById('mvSetupModal');
-  if (!modal) return;
-  const sel = document.getElementById('mvSetupPreset');
-  if (sel) sel.selectedIndex = 0;
-  mvApplySetupPreset();
-  const k = document.getElementById('mvSetupApiKey');
-  if (k) { k.value = ''; k.type = 'password'; }
-  const tb = document.getElementById('mvSetupKeyToggle');
-  if (tb) tb.textContent = '显示';
-  modal.classList.add('show');
-  document.body.style.overflow = 'hidden';
-}
-function mvCloseSetup() {
-  const modal = document.getElementById('mvSetupModal');
-  if (modal) modal.classList.remove('show');
-  document.body.style.overflow = '';
-}
-function mvSetupBackdrop(e) {
-  if (e && e.target && e.target.id === 'mvSetupModal') mvCloseSetup();
-}
-function mvSaveSetup() {
-  const b = document.getElementById('mvSetupBaseUrl');
-  const m = document.getElementById('mvSetupModel');
-  const k = document.getElementById('mvSetupApiKey');
-  const baseUrl = b ? (b.value || '').trim() : '';
-  const model = m ? (m.value || '').trim() : '';
-  const apiKey = k ? (k.value || '').trim() : '';
-  if (!baseUrl || !model || !apiKey) {
-    if (typeof showToast === 'function') showToast('请完整填写接口地址、模型与 API Key', 'error');
-    return;
-  }
-  const cfg = mvLoadCfg();
-  cfg.baseUrl = baseUrl;
-  cfg.model = model;
-  cfg.apiKey = apiKey;
-  try { localStorage.setItem(MARVIS_CFG_KEY, JSON.stringify(cfg)); } catch (e) {}
-  try { localStorage.removeItem(MARVIS_SETUP_DISMISS_KEY); } catch (e) {}
-  mvCloseSetup();
-  mvSyncTip();
-  if (typeof showToast === 'function') showToast('已接入 ' + model + '，小萌现在由真实模型回答', 'success');
-}
-function mvDismissSetup() {
-  try { localStorage.setItem(MARVIS_SETUP_DISMISS_KEY, '1'); } catch (e) {}
-  mvCloseSetup();
-  if (typeof showToast === 'function') showToast('本次不再自动提示，可随时点右上角「设置」接入模型', 'info');
-}
-/* 自动接入：本地有网络且尚未配置模型时，自动弹出首次接入引导；已配置则直接使用 */
-function mvAutoSetup() {
-  if (!mvNetOnline()) return;
-  const cfg = mvLoadCfg();
-  if (mvCfgReady(cfg)) return;
-  let dismissed = false;
-  try { dismissed = localStorage.getItem(MARVIS_SETUP_DISMISS_KEY) === '1'; } catch (e) {}
-  if (dismissed) return;
-  mvOpenSetup();
-}
-/* 状态提示行两态：未接入=灰色小字提示；已接入=绿色激活态（浅色 / 深色均适配） */
-function mvSyncTip() {
-  const cfg = mvLoadCfg();
-  const hasCfg = mvCfgReady(cfg);
-  const online = mvNetOnline();
-  const on = hasCfg && online;
-  const tip = document.getElementById('mvTip');
-  const st = document.getElementById('mvStatus');
-  if (tip) {
-    tip.classList.toggle('mv-on', on);
-    tip.textContent = on
-      ? ('已接入 ' + mvHostOf(cfg.baseUrl) + '（模型 ' + cfg.model + '），正在使用的模型为 ' + cfg.model)
-      : (hasCfg
-          ? ('当前网络未连接，暂时无法接入 ' + cfg.model + '，已回到内置话术模式，网络恢复后会自动接入。')
-          : '当前为内置话术模式。联网后会自动弹出推荐模型接入引导，也可点右上角「设置」一键选择推荐模型接入');
-  }
-  if (st) {
-    st.classList.toggle('mv-on', on);
-    st.textContent = on
-      ? ('在线 · 已接入 ' + cfg.model)
-      : (hasCfg ? '离线 · 内置话术模式（等待网络恢复）' : '在线 · 内置话术模式（可在「设置」接入模型）');
-  }
-}
-/* online / offline 事件：动态刷新提示文案与颜色（刷新后联网即自动进入已接入态） */
-function mvBindNetEvents() {
-  if (mvNetBound) return;
-  mvNetBound = true;
-  window.addEventListener('online', function () { mvSyncTip(); mvAutoSetup(); });
-  window.addEventListener('offline', mvSyncTip);
-}
-function mvOpenSettings() {
-  const modal = document.getElementById('mvSettingsModal');
-  if (!modal) return;
-  const cfg = mvLoadCfg();
-  const b = document.getElementById('mvBaseUrl');
-  const m = document.getElementById('mvModel');
-  const k = document.getElementById('mvApiKey');
-  const p = document.getElementById('mvPersona');
-  if (b) b.value = cfg.baseUrl || '';
-  if (m) m.value = cfg.model || '';
-  if (k) k.value = cfg.apiKey || '';
-  if (p) p.value = mvPersonaOf(cfg);
-  mvSetKeyVisible(false);
-  modal.classList.add('show');
-  document.body.style.overflow = 'hidden';
-}
-function mvCloseSettings() {
-  const modal = document.getElementById('mvSettingsModal');
-  if (modal) modal.classList.remove('show');
-  document.body.style.overflow = '';
-}
-/* 对话窗右上角「设置」按钮入口：打开独立模态弹窗 */
-function mvToggleSettings() { mvOpenSettings(); }
-/* 点击半透明遮罩（弹窗外空白区域）关闭 */
-function mvModalBackdrop(e) {
-  if (e && e.target && e.target.id === 'mvSettingsModal') mvCloseSettings();
-}
-function mvSetKeyVisible(show) {
-  const k = document.getElementById('mvApiKey');
-  const btn = document.getElementById('mvKeyToggle');
-  if (k) k.type = show ? 'text' : 'password';
-  if (btn) btn.textContent = show ? '隐藏' : '显示';
-}
-function mvToggleKeyVisible() {
-  const k = document.getElementById('mvApiKey');
-  mvSetKeyVisible(!!(k && k.type === 'password'));
-}
-document.addEventListener('keydown', function (e) {
-  if (e.key !== 'Escape') return;
-  const modal = document.getElementById('mvSettingsModal');
-  if (modal && modal.classList.contains('show')) mvCloseSettings();
-  const sm = document.getElementById('mvSetupModal');
-  if (sm && sm.classList.contains('show')) mvCloseSetup();
-});
-function mvSaveSettings() {
-  const b = document.getElementById('mvBaseUrl');
-  const m = document.getElementById('mvModel');
-  const k = document.getElementById('mvApiKey');
-  const p = document.getElementById('mvPersona');
-  const cfg = {
-    baseUrl: b ? (b.value || '').trim() : '',
-    model: m ? (m.value || '').trim() : '',
-    apiKey: k ? (k.value || '').trim() : '',
-    persona: p ? (p.value || '').trim() : ''
-  };
-  try { localStorage.setItem(MARVIS_CFG_KEY, JSON.stringify(cfg)); } catch (e) {}
-  mvSyncTip();
-  if (typeof showToast === 'function') showToast('配置已保存：人设与模型已更新，新消息将按最新人设回复', 'success');
-  mvCloseSettings();
-}
-function mvClearSettings() {
-  try { localStorage.removeItem(MARVIS_CFG_KEY); } catch (e) {}
-  try { localStorage.removeItem(MARVIS_SETUP_DISMISS_KEY); } catch (e) {}
-  const b = document.getElementById('mvBaseUrl');
-  const m = document.getElementById('mvModel');
-  const k = document.getElementById('mvApiKey');
-  if (b) b.value = '';
-  if (m) m.value = '';
-  if (k) k.value = '';
-  mvResetPersona();
-  mvSyncTip();
-  if (typeof showToast === 'function') showToast('已清除模型配置，回到内置话术模式', 'success');
-}
-function mvResetPersona() {
-  const p = document.getElementById('mvPersona');
-  if (p) p.value = MARVIS_PERSONA_DEFAULT;
-}
-function mvLoadHistory() {
-  try { mvHistory = JSON.parse(localStorage.getItem(MARVIS_CHAT_KEY) || '[]') || []; } catch (e) { mvHistory = []; }
-  if (!Array.isArray(mvHistory)) mvHistory = [];
-}
-function mvPersist() {
-  try { localStorage.setItem(MARVIS_CHAT_KEY, JSON.stringify(mvHistory.slice(-200))); } catch (e) {}
-}
-function mvEsc(t) {
-  return String(t === null || t === undefined ? '' : t).replace(/[&<>"']/g, function (c) {
-    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-  });
-}
-function mvRender() {
-  const box = document.getElementById('mvMessages');
-  if (!box) return;
-  const html = mvHistory.map(function (m) {
-    const who = m.role === 'user' ? 'user' : 'bot';
-    return '<div class="mv-msg ' + who + '"><div class="mv-bubble">' + mvEsc(m.content) + '</div></div>';
-  }).join('');
-  box.innerHTML = html;
-  box.scrollTop = box.scrollHeight;
-}
-function mvAppend(role, content) {
-  mvHistory.push({ role: role, content: content });
-  mvPersist();
-  mvRender();
-}
-function mvGreeting() {
-  return [
-    '我是小萌，Marvis 超核管家，很高兴为你服务。',
-    '工单录入与跟进、道具库查询与复制、批量道具 txt、活动道具补发与回收、灵狐龙珠操作、数据流统计筛选，这些都可以直接问我。',
-    '直接说需求就行，比如「提单专用怎么用」「道具库怎么按单元格复制」。'
-  ].join(MV_NL);
-}
-/* 未接入模型时的内置话术（关键词命中即给出该模块的用法说明） */
-function mvLocalReply(q) {
-  const t = String(q || '');
-  const has = function (arr) { return arr.some(function (k) { return t.indexOf(k) >= 0; }); };
-  if (has(['你好', '您好', 'hi', 'hello', '你是谁', '介绍'])) {
-    return '我是小萌，Marvis 超核管家，负责陪你打理超核一站式服务系统。' + MV_NL + '能帮你的：工单录入与跟进、道具库查询与复制、批量道具 txt、活动道具补发与回收、灵狐龙珠操作、数据流统计与筛选。';
-  }
-  if (has(['工单', '提单', '录入', '逾期', '紧急', '剩余工作日'])) {
-    return '工单相关这样走：' + MV_NL + '1）「新建问题」里点「新建工单」，填玩家账号 / 大区 / 问题描述 / 交付时间；剩余工作日 ≤ 3 会自动转紧急。' + MV_NL + '2）保存后去「数据流 - 问题录入记录」筛选查看，已完成工单会沉底置灰，需要时可一键恢复。' + MV_NL + '3）「提单专用」里点「提单」按钮，会自动带入账号 / 大区 / 问题描述再保存。';
-  }
-  if (has(['道具库', '道具ID', '道 具', '复制'])) {
-    return '道具库用法：' + MV_NL + '鼠标停在哪个单元格就复制哪个字段——中文名复制 NAME_CN、英文名复制 NAME_EN、道具编码复制 ITEM_CODE、道具 ID 复制 ITEM_ID；「复制全部」会复制整行。' + MV_NL + '在搜索框输入名称 / 编码 / ID 即可过滤。';
-  }
-  if (has(['批量', 'txt', '文本'])) {
-    return '批量道具 txt：在「提单专用」记录卡片上生成，文件名为「玩家账号批量道具.txt」，内容只有大区编号、玩家账号、道具 ID 三列数字，空格分隔逐行，编码为 ANSI(GBK)，可直接给后台使用。';
-  }
-  if (has(['回收', '补发', '活动道具'])) {
-    return '活动道具补发 / 回收：在「提单专用」板块顶部工具栏点「活动道具补发」或「活动道具回收」，按弹窗提示选择道具与数量，生成对应记录后可复制文本或图片。';
-  }
-  if (has(['龙珠', '灵狐'])) {
-    return '灵狐龙珠操作在「提单专用」板块顶部工具栏，点开后按提示填写玩家账号与大区，提交后会生成一条可复制、可下载的操作记录。';
-  }
-  if (has(['举报', '作弊'])) {
-    return '举报录入：在「新建问题」里切到「新建举报」，选择作弊类型、填玩家账号与说明后保存；举报记录在数据流的举报页签里查看。';
-  }
-  if (has(['数据流', '统计', '筛选', '导出', '记录'])) {
-    return '数据流板块可以看统计卡片（总工单 / 已完成 / 跟进中 / 已提单 / 紧急待处理 / 已逾期）与全部记录，支持按账号、企微名、游戏、状态筛选；右上角「导出 Excel」可把记录导出。';
-  }
-  if (has(['版本', '更新', '日志'])) {
-    return '点右上角「版本日志」可以查看每个版本的更新内容；本次为 v1.40：「选择特权」下拉支持自定义特权模版（点下拉旁「自定义」按钮，填写特权名称与自动填充文本，保存后选中即自动填充问题描述），并取消了内置的「仓库道具删除」特权选项，需要时可自行添加。';
-  }
-  if (has(['设置', 'api', 'key', '模型', 'base_url', 'baseurl'])) {
-    return '接入真实模型：点对话窗右上角「设置」，填写 base_url（OpenAI 兼容，例如 https://api.deepseek.com/v1）、model（例如 deepseek-chat）、API Key，保存后即可真实对话。配置只保存在本机浏览器，不会上传。';
-  }
-  return '收到。不过我现在还没接入模型，属于内置话术模式，能答的主要是系统用法。' + MV_NL + '你可以在右上角「设置」里填写 base_url / model / API Key，接入后我就能完整回答各类问题了。' + MV_NL + '也可以先问我：工单怎么录、提单专用怎么用、道具库怎么复制、批量 txt 在哪生成。';
-}
-/* 调用 OpenAI 兼容接口（非流式） */
-function mvCallApi(cfg, text) {
-  // 问题筛：调用前再读一次「设置」中已保存的配置，确保使用最新保存的小萌人设（system prompt）
-  const live = mvLoadCfg();
-  const useCfg = mvCfgReady(live) ? live : cfg;
-  const messages = [{ role: 'system', content: mvPersonaOf(useCfg) }];
-  mvHistory.slice(-20).forEach(function (m) {
-    messages.push({ role: m.role === 'user' ? 'user' : 'assistant', content: m.content });
-  });
-  const base = String(useCfg.baseUrl || '').trim();
-  return fetch(base, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + useCfg.apiKey },
-    body: JSON.stringify({ model: useCfg.model, messages: messages, temperature: 0.6 })
-  }).then(function (resp) {
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    return resp.json();
-  }).then(function (data) {
-    let out = '';
-    if (data && data.choices && data.choices[0]) {
-      const msg = data.choices[0].message || {};
-      out = msg.content || data.choices[0].text || '';
-    }
-    if (data && data.output_text) out = data.output_text;
-    if (!out || !String(out).trim()) throw new Error('模型返回内容为空');
-    return String(out).trim();
-  });
-}
-const MV_TIMEOUT_MS = 60000;
-function mvSend() {
-  if (mvBusy) return;
-  const input = document.getElementById('mvInput');
-  if (!input) return;
-  const text = (input.value || '').trim();
-  if (!text) return;
-  input.value = '';
-  mvAppend('user', text);
-  const gate = mvEnsureReady(); // 问题筛：生成回复前重读已保存配置（含人设）并判定三项是否齐全 + 当前是否联网
-  const cfg = gate.cfg;
-  const ready = gate.ready;
-  const btn = document.getElementById('mvSendBtn');
-  mvBusy = true;
-  if (btn) btn.disabled = true;
-  const st = document.getElementById('mvStatus');
-  if (st) st.textContent = '小萌正在输入…';
-  let timedOut = false;
-  const timer = setTimeout(function () { timedOut = true; }, MV_TIMEOUT_MS);
-  const done = function (reply) {
-    clearTimeout(timer);
-    mvBusy = false;
-    if (btn) btn.disabled = false;
-    mvAppend('assistant', reply);
-    mvSyncTip();
-  };
-  if (ready) {
-    mvCallApi(cfg, text).then(function (reply) {
-      if (timedOut) return;
-      done(reply);
-    })['catch'](function (err) {
-      if (timedOut) return;
-      done('调用模型失败：' + (err && err.message ? err.message : '未知错误') + MV_NL + '请检查「设置」里的 base_url / model / API Key 是否正确、网络是否可达。');
-    });
-  } else {
-    setTimeout(function () {
-      if (timedOut) return;
-      done(mvLocalReply(text));
-    }, 260);
-  }
-}
-function mvClearChat() {
-  if (!mvHistory.length) {
-    if (typeof showToast === 'function') showToast('当前没有对话记录', 'info');
-    return;
-  }
-  if (!window.confirm('确定清空与小萌的全部对话记录吗？此操作不可撤销。')) return;
-  mvHistory = [];
-  mvPersist();
-  mvRender();
-  if (typeof showToast === 'function') showToast('对话已清空', 'success');
-}
-function mvInit() {
-  if (mvInited) return;
-  mvInited = true;
-  mvLoadHistory();
-  const cfg = mvLoadCfg();
-  const b = document.getElementById('mvBaseUrl');
-  const m = document.getElementById('mvModel');
-  const k = document.getElementById('mvApiKey');
-  const p = document.getElementById('mvPersona');
-  if (b) b.value = cfg.baseUrl || '';
-  if (m) m.value = cfg.model || '';
-  if (k) k.value = cfg.apiKey || '';
-  if (p) p.value = mvPersonaOf(cfg);
-  mvBindNetEvents();
-  mvSyncTip();
-  mvAutoSetup();
-  if (!mvHistory.length) {
-    mvHistory.push({ role: 'assistant', content: mvGreeting() });
-    mvPersist();
-  }
-  mvRender();
-  const input = document.getElementById('mvInput');
-  if (input) {
-    input.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        mvSend();
-      }
-    });
-  }
 }
 /* 录入类型选择按钮：同步高亮（新建工单 / 新建举报），hideSwitch 时整组隐藏 */
 function syncEntryTypeButtons(isRM, hideSwitch) {
@@ -2789,6 +2162,12 @@ document.addEventListener('click', function (e) {
 });
 /* ================= 版本日志 ================= */
 const VERSION_LOG = [
+  {
+    ver: 'v1.78 正式版',
+    items: [
+      '业务按钮「Marvis」更名为「CF班表」；下线原小萌 AI 对话窗、模型接入设置弹窗与首次接入引导及相关对话/配置/话术逻辑，板块先保留为占位面板，功能后续版本更新'
+    ]
+  },
   {
     ver: 'v1.77 正式版',
     items: [
@@ -9304,8 +8683,6 @@ document.addEventListener('DOMContentLoaded', function () {
   // v1.40 修复：页面加载即重建「选择特权」下拉，保证已保存的自定义特权模版在刷新/重开后立即可见
   renderCategoryPrivilegeOptions();
   // 问题筛：页面打开即按「已保存配置 + 当前联网状态」刷新状态提示；监听 online / offline 动态更新（关闭后重开、只要联网即自动接入）
-  mvBindNetEvents();
-  mvSyncTip();
   switchBiz('CF');
   renderRmCheatFilters();
   renderTable();
