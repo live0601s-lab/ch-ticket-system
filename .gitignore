@@ -7,3 +7,7 @@ _cdp_profile/
 # 依赖与日志
 node_modules/
 *.log
+.env.local
+
+# Neon 本地项目上下文（含项目/分支 ID，不入库）
+.neon
