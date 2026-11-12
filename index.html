@@ -763,8 +763,11 @@
   // 当前版本号：与页面右上角版本标签保持一致，发版时同步更新
   var APP_VERSION = 'v1.64';
 
-  // 埋点配置：endpoint 留空且 enabled=false 时不上报；部署 Neon 后填入 /collect 地址并置 enabled=true
-  window.__TRACK__ = window.__TRACK__ || { endpoint: '', enabled: false };
+  // 埋点配置：endpoint 留空且 enabled=false 时不上报；已接入 Neon collect 接口
+  window.__TRACK__ = window.__TRACK__ || {
+    endpoint: 'https://br-floral-fire-ao5mpj63-collect.compute.c-2.ap-southeast-1.aws.neon.tech/collect',
+    enabled: true
+  };
 
   function uid() {
     return 'anon_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
@@ -785,7 +788,7 @@
         navigator.sendBeacon(cfg.endpoint, new Blob([JSON.stringify(body)], { type: 'application/json' }));
         return;
       }
-      fetch(cfg.endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), keepalive: true }).catch(function () {});
+      fetch(cfg.endpoint, { method: 'POST', credentials: 'omit', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), keepalive: true }).catch(function () {});
     } catch (e) {}
   }
 
