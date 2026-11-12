@@ -14,5 +14,14 @@ export default defineConfig({
         ADMIN_TOKEN: { value: process.env.ADMIN_TOKEN, required: true },
       },
     },
+    oauth: {
+      name: "企业微信登录换码接口",
+      source: "./functions/oauth.ts",
+      env: {
+        WECOM_CORPID: { value: process.env.WECOM_CORPID || "", required: false },
+        WECOM_AGENTID: { value: process.env.WECOM_AGENTID || "", required: false },
+        WECOM_SECRET: { value: process.env.WECOM_SECRET || "", required: false },
+      },
+    },
   },
 });

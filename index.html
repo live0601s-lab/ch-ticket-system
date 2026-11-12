@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%230052D9'/%3E%3Crect x='8' y='8' width='16' height='4.5' rx='2.2' fill='%23fff'/%3E%3Crect x='13.75' y='8' width='4.5' height='16' rx='2.2' fill='%23fff'/%3E%3C/svg%3E">
-<title>超核一站式服务系统 v1.66 正式版</title>
+<title>超核一站式服务系统 v1.67 正式版</title>
 <style>
   :root {
     --bg: #0f172a;
@@ -126,6 +126,37 @@
   body.theme-moon .theme-toggle-btn { background: var(--primary); border-color: var(--primary); color: #fff; }
   body.theme-moon .theme-toggle-btn:hover { background: var(--primary-dark); border-color: var(--primary-dark); color: #fff; }
   .app-title-block { display: flex; flex-direction: column; gap: 3px; }
+
+  /* ===== 登录墙遮罩（未授权不可浏览） ===== */
+  #authGate {
+    position: fixed; inset: 0; z-index: 9999; display: none;
+    align-items: center; justify-content: center; padding: 24px;
+    background: var(--app-bg);
+  }
+  #authGate.show { display: flex; }
+  .auth-card {
+    width: 100%; max-width: 420px; background: rgba(17, 24, 39, .92);
+    border: 1px solid rgba(255,255,255,.12); border-radius: 20px;
+    box-shadow: var(--shadow); padding: 34px 30px; text-align: center; color: #e2e8f0;
+  }
+  .auth-card .auth-logo {
+    width: 52px; height: 52px; margin: 0 auto 16px; border-radius: 15px;
+    background: var(--primary); display: flex; align-items: center; justify-content: center;
+  }
+  .auth-card .auth-logo svg { width: 28px; height: 28px; }
+  .auth-card h2 { font-size: 20px; color: #f8fafc; margin-bottom: 8px; }
+  .auth-card p.auth-desc { font-size: 13px; color: #94a3b8; line-height: 1.7; margin-bottom: 22px; }
+  .auth-card .auth-btn {
+    width: 100%; justify-content: center; padding: 12px; border: none; border-radius: 12px;
+    background: var(--primary); color: #fff; font-size: 15px; font-weight: 700; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px; transition: background .15s;
+  }
+  .auth-card .auth-btn:hover { background: var(--primary-dark); }
+  .auth-card .auth-btn.ghost { background: rgba(255,255,255,.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,.18); margin-top: 10px; }
+  .auth-card .auth-error { margin-top: 14px; font-size: 13px; color: #fca5a5; min-height: 18px; }
+  .auth-card .auth-tip { margin-top: 16px; font-size: 12px; color: #64748b; line-height: 1.7; }
+  .auth-card .auth-link-row { display: flex; gap: 10px; margin-top: 10px; }
+  .auth-card .auth-link-row .auth-btn { margin-top: 0; }
 
   /* ===== APEC 2026 头图（复刻参考图3） ===== */
   .apec-hero {
@@ -808,12 +839,23 @@
 /* ===== 版本自检 + 埋点统计（v1.64） ===== */
 (function () {
   // 当前版本号：与页面右上角版本标签保持一致，发版时同步更新
-  var APP_VERSION = 'v1.66';
+  var APP_VERSION = 'v1.67';
 
   // 埋点配置：endpoint 留空且 enabled=false 时不上报；已接入 Neon collect 接口
   window.__TRACK__ = window.__TRACK__ || {
     endpoint: 'https://br-floral-fire-ao5mpj63-collect.compute.c-2.ap-southeast-1.aws.neon.tech/collect',
     enabled: true
+  };
+
+  // 企微网页授权（OAuth）配置：CorpID/AgentId 由企业后台获取，Secret 只放后端；
+  // enabled=true 时未登录一律拦截浏览；填入 CorpID/AgentId 并接通后端后置 true。
+  // oauthEndpoint 为后端 Neon 换码函数地址；未接通前前端登录入口给出未配置提示。
+  window.__WECOM__ = window.__WECOM__ || {
+    enabled: false,
+    corpId: '',
+    agentId: '',
+    oauthEndpoint: 'https://br-floral-fire-ao5mpj63-oauth.compute.c-2.ap-southeast-1.aws.neon.tech/oauth',
+    redirectUri: location.origin + location.pathname
   };
 
   function uid() {
@@ -880,6 +922,7 @@
 </script>
 </head>
 <body>
+<div id="authGate"></div>
 <div class="container">
 
   <header class="app-header">
@@ -909,7 +952,7 @@
               <path d="M496 62 Q520 30 544 62 Z"/>
             </g>
           </svg>
-          <h1 class="apec-title">超核一站式服务系统 <span class="ver-tag">v1.66 正式版</span></h1>
+          <h1 class="apec-title">超核一站式服务系统 <span class="ver-tag">v1.67 正式版</span></h1>
         </div>
         <svg class="apec-arc" viewBox="0 0 600 14" preserveAspectRatio="none" aria-hidden="true">
           <defs>
@@ -2492,6 +2535,14 @@ function toggleTheme() {
 /* ================= 版本日志 ================= */
 const VERSION_LOG = [
   {
+    ver: 'v1.67 正式版',
+    items: [
+      '接入企业微信 OAuth 登录骨架：后端新增换码函数，前端支持授权跳转、回跳落地会话与退出登录',
+      '新增登录墙开关：开启后未登录一律拦截浏览；企微内走授权登录，外部浏览器引导复制链接到企微打开',
+      '用户下拉补充退出登录入口，身份信息优先取企微登录会话'
+    ]
+  },
+  {
     ver: 'v1.66 正式版',
     items: [
       '界面切换为 APEC 2026 深圳主题：深色头图、城市天际线线稿与多彩渐变弧线，APEC 标签可点击跳转官方站点',
@@ -2873,8 +2924,123 @@ const VERSION_LOG = [
 function openAdminPanel() {
   location.href = 'admin.html';
 }
-/* ===== 顶部用户菜单（企微登录占位：当前取本地记住的企微名，预留 OAuth 接入位） ===== */
+/* ===== 企业微信登录会话与 OAuth 流程 ===== */
+var WECOM_SESSION_KEY = 'ch_wecom_session';
+
+function getSession() {
+  try {
+    var raw = localStorage.getItem(WECOM_SESSION_KEY);
+    if (!raw) return null;
+    var s = JSON.parse(raw);
+    if (s && (s.userId || s.name)) return s;
+  } catch (e) {}
+  return null;
+}
+function setSession(user) {
+  try { localStorage.setItem(WECOM_SESSION_KEY, JSON.stringify(Object.assign({ loginAt: Date.now() }, user))); } catch (e) {}
+}
+function clearSession() {
+  try { localStorage.removeItem(WECOM_SESSION_KEY); } catch (e) {}
+}
+function isInWecom() {
+  return /wxwork|WXWork|WeWork/i.test(navigator.userAgent || '');
+}
+function buildWecomAuthUrl() {
+  var cfg = window.__WECOM__ || {};
+  var state = Math.random().toString(36).slice(2, 10);
+  try { sessionStorage.setItem('ch_oauth_state', state); } catch (e) {}
+  var redirect = encodeURIComponent(cfg.redirectUri || (location.origin + location.pathname));
+  return 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + encodeURIComponent(cfg.corpId || '') +
+    '&agentid=' + encodeURIComponent(cfg.agentId || '') +
+    '&redirect_uri=' + redirect +
+    '&response_type=code&scope=snsapi_base&state=' + state + '#wechat_redirect';
+}
+
+// 回跳落地：解析 code，调后端换码，写会话；随后清理 URL 上的 code/state
+function handleOAuthCallback() {
+  var params = new URLSearchParams(location.search);
+  var code = params.get('code');
+  if (!code) return Promise.resolve(false);
+  var cfg = window.__WECOM__ || {};
+  if (!cfg.oauthEndpoint) return Promise.resolve(false);
+  return fetch(cfg.oauthEndpoint, {
+    method: 'POST',
+    credentials: 'omit',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code: code })
+  }).then(function (r) { return r.json(); }).then(function (data) {
+    if (data && data.ok && data.user) {
+      setSession(data.user);
+      try { history.replaceState(null, '', location.pathname + location.hash); } catch (e) {}
+      return true;
+    }
+    return false;
+  }).catch(function () { return false; });
+}
+
+function renderAuthGate() {
+  var gate = document.getElementById('authGate');
+  if (!gate) return;
+  var cfg = window.__WECOM__ || {};
+  // 未开启强制登录：不拦截，沿用现状
+  if (!cfg.enabled) { gate.className = ''; gate.innerHTML = ''; return; }
+  if (getSession()) { gate.className = ''; gate.innerHTML = ''; return; }
+
+  var inWecom = isInWecom();
+  var configured = !!(cfg.corpId && cfg.agentId);
+  var logoSvg = '<svg viewBox="0 0 32 32" fill="#fff"><rect x="8" y="8" width="16" height="4.5" rx="2.2"/><rect x="13.75" y="8" width="4.5" height="16" rx="2.2"/></svg>';
+  var inner = '';
+  if (!configured) {
+    inner = '<div class="auth-card">' +
+      '<div class="auth-logo">' + logoSvg + '</div>' +
+      '<h2>企业微信登录待接入</h2>' +
+      '<p class="auth-desc">管理员尚未配置企业 CorpID / AgentId，登录功能暂未接通。请联系系统管理员完成接入。</p>' +
+      '<div class="auth-tip">后台配置项：企业 CorpID、应用 AgentId、后端 Secret（仅后端保管）、可信域名。</div>' +
+      '</div>';
+  } else if (inWecom) {
+    inner = '<div class="auth-card">' +
+      '<div class="auth-logo">' + logoSvg + '</div>' +
+      '<h2>企业微信登录</h2>' +
+      '<p class="auth-desc">系统仅限企业成员访问，请完成企业微信授权后进入。</p>' +
+      '<button type="button" class="auth-btn" id="authLoginBtn">企业微信授权登录</button>' +
+      '<div class="auth-error" id="authError"></div>' +
+      '</div>';
+  } else {
+    inner = '<div class="auth-card">' +
+      '<div class="auth-logo">' + logoSvg + '</div>' +
+      '<h2>请在企业微信中打开</h2>' +
+      '<p class="auth-desc">当前浏览器无法完成企业微信授权。请将本站链接发送到企业微信（文件传输助手或会话）后点开，或从企业微信工作台对应应用进入。</p>' +
+      '<div class="auth-link-row"><button type="button" class="auth-btn ghost" id="authCopyBtn">复制本站链接</button></div>' +
+      '<div class="auth-tip">链接：' + escapeHtml(cfg.redirectUri || '') + '</div>' +
+      '</div>';
+  }
+  gate.className = 'show';
+  gate.innerHTML = inner;
+
+  var loginBtn = document.getElementById('authLoginBtn');
+  if (loginBtn) loginBtn.onclick = function () { location.href = buildWecomAuthUrl(); };
+  var copyBtn = document.getElementById('authCopyBtn');
+  if (copyBtn) copyBtn.onclick = function () {
+    var url = cfg.redirectUri || location.href;
+    var done = function () { showToast('链接已复制，请到企业微信中打开', 'success'); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(done).catch(function () { fallbackCopy(url); });
+    } else { fallbackCopy(url); }
+  };
+}
+
+function logoutWecom() {
+  clearSession();
+  renderAuthGate();
+  renderUserMenu();
+}
+
+/* ===== 顶部用户菜单：优先取企微登录会话，回退本地占位名 ===== */
 function getCurrentUser() {
+  var session = getSession();
+  if (session && session.name) {
+    return { name: session.name, account: session.account || session.userId || session.name, avatar: session.avatar || '', userId: session.userId || '' };
+  }
   var name = '';
   try { name = localStorage.getItem('ch_last_wecom') || ''; } catch (e) {}
   if (!name) {
@@ -2882,13 +3048,17 @@ function getCurrentUser() {
     if (names && names.length) name = names[0].name;
   }
   name = name || '未登录';
-  return { name: name, account: name === '未登录' ? 'guest' : name };
+  return { name: name, account: name === '未登录' ? 'guest' : name, avatar: '', userId: '' };
 }
 function renderUserMenu() {
   var box = document.getElementById('userMenu');
   if (!box) return;
   var u = getCurrentUser();
+  var session = getSession();
   var initial = (u.name || '?').trim().charAt(0).toUpperCase();
+  var logoutItem = session
+    ? '<div class="ud-item" id="udLogout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>退出登录</div>'
+    : '';
   box.innerHTML =
     '<div class="user-chip" id="userChip">' +
       '<span class="avatar">' + escapeHtml(initial) + '</span>' +
@@ -2899,12 +3069,15 @@ function renderUserMenu() {
       '<div class="ud-head"><span class="avatar">' + escapeHtml(initial) + '</span><div><div class="ud-name">' + escapeHtml(u.name) + '</div><div class="ud-sub">' + escapeHtml(u.account) + '</div></div></div>' +
       '<div class="ud-item" id="udNotify"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>消息通知</div>' +
       '<div class="ud-item" id="udAdmin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.92 1 1.6 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>后台管理</div>' +
+      logoutItem +
     '</div>';
   var chip = document.getElementById('userChip');
   var drop = document.getElementById('userDrop');
   chip.onclick = function (e) { e.stopPropagation(); drop.classList.toggle('show'); };
   document.getElementById('udAdmin').onclick = function () { drop.classList.remove('show'); openAdminPanel(); };
   document.getElementById('udNotify').onclick = function () { drop.classList.remove('show'); showToast('暂无新的消息通知', 'info'); };
+  var logoutBtn = document.getElementById('udLogout');
+  if (logoutBtn) logoutBtn.onclick = function () { drop.classList.remove('show'); logoutWecom(); };
   document.addEventListener('click', function (e) { if (!box.contains(e.target)) drop.classList.remove('show'); });
 }
 function openLogModal() {
@@ -8626,6 +8799,8 @@ function showToast(msg, type, fadeDelay, action) {
 
 /* ================= 初始化 ================= */
 document.addEventListener('DOMContentLoaded', function () {
+  // 企微 OAuth 回跳换码：落地会话后再渲染登录墙与用户菜单
+  handleOAuthCallback().then(function () { renderAuthGate(); renderUserMenu(); });
   document.getElementById('ticketForm').addEventListener('submit', handleSubmit);
   // v1.51 修复：页面加载即预读 IndexedDB 媒体到内存缓存，保证点击备份时同步组装立即下载（避免异步丢失用户激活被 Chrome 拦截）
   cacheMediaDb();
