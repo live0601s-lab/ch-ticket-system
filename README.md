@@ -35,20 +35,15 @@ https://live0601s-lab.github.io/ch-ticket-system/
   1. `index.html` 里的 `var APP_VERSION = 'v1.64'`
   2. `version.json` 里的 `version` 字段
 
-## 埋点后端（可选，默认关闭）
+## 埋点后端（已接入 Neon）
 
-前端埋点默认 `endpoint` 留空、`enabled=false`，不上报任何数据，不影响使用。
-
-需要收集 PV/UV、操作事件、提单流水时：
-
-1. 按 `backend/neon/README.md` 部署 Neon 后端并建表。
-2. 把部署后得到的 `/collect` 公网地址填入 `index.html` 顶部配置：
+前端已接入 Neon 自建后端，自动上报 PV/UV、操作事件、提单流水，配置位于 `index.html` 顶部：
 
 ```js
 window.__TRACK__ = {
-  endpoint: 'https://<project>-<branch>.functions.neon.dev/collect',
+  endpoint: 'https://br-floral-fire-ao5mpj63-collect.compute.c-2.ap-southeast-1.aws.neon.tech/collect',
   enabled: true
 };
 ```
 
-上报内容仅含匿名访客 ID、动作类型、提单类型、内部记录引用，**不含玩家账号、大区、特权、道具等敏感信息**。
+后端部署与查询说明见 `backend/neon/README.md`。上报内容仅含匿名访客 ID、动作类型、提单类型、内部记录引用，**不含玩家账号、大区、特权、道具等敏感信息**。若把 `endpoint` 留空并置 `enabled=false`，则静默不上报，不影响使用。
