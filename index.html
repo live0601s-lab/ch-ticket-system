@@ -157,8 +157,7 @@
     color: #fff;
     box-shadow: 0 4px 14px rgba(139,92,246,.45);
   }
-  body:not(.theme-moon):not(.theme-blue) .bar-btn.active,
-  body:not(.theme-moon):not(.theme-blue) .ver-tag { background: #8B5CF6; border-color: #8B5CF6; }
+  body:not(.theme-moon):not(.theme-blue) .bar-btn.active { background: #8B5CF6; border-color: #8B5CF6; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", system-ui, sans-serif;
@@ -292,6 +291,10 @@
     font-size: 34px; font-weight: 800; letter-spacing: 3px;
     text-shadow: 0 2px 22px rgba(61,123,255,.5), 0 1px 4px rgba(0,0,0,.8);
   }
+  body.theme-moon .apec-title,
+  body.theme-blue .apec-title {
+    font-size: 24px; font-weight: 700; letter-spacing: 0; text-shadow: none;
+  }
   .apec-title .title-char {
     display: inline-block; opacity: 0; transform: translateY(10px) scale(.94); filter: blur(5px);
     animation: titleCharIn .55s cubic-bezier(.22,.61,.36,1) forwards;
@@ -300,19 +303,20 @@
   @keyframes titleCharIn {
     to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
   }
-  .apec-arc { display: block; width: 100%; height: 14px; margin-top: 4px; overflow: hidden; }
-  .apec-arc .arc-base {
-    stroke-dasharray: 620; stroke-dashoffset: 620;
-    animation: arcDraw 1.1s cubic-bezier(.4,0,.2,1) .35s forwards, arcBreathe 3.4s ease-in-out 1.6s infinite;
+  .apec-arc { display: block; width: 100%; height: 3px; margin-top: 6px; overflow: hidden; border-radius: 3px; }
+  .arc-flow {
+    width: 100%; height: 100%; border-radius: 3px;
+    background: linear-gradient(90deg,
+      #FF8A3D 0%, #F04E45 16%, #8B5CF6 32%, #3D7BFF 50%,
+      #22C7C7 66%, #8B5CF6 82%, #F04E45 92%, #FF8A3D 100%);
+    background-size: 200% 100%;
+    animation: arcFlow 4s linear infinite;
+    opacity: .9;
   }
-  .apec-arc .arc-runner {
-    fill: none; stroke: url(#arcRunnerGrad); stroke-width: 3; stroke-linecap: round;
-    stroke-dasharray: 16 16; stroke-dashoffset: 0; opacity: .9;
-    animation: arcMarquee 2.2s linear infinite;
-  }
-  @keyframes arcDraw { to { stroke-dashoffset: 0; } }
-  @keyframes arcBreathe { 0%, 100% { opacity: .72; } 50% { opacity: 1; } }
-  @keyframes arcMarquee { to { stroke-dashoffset: -32; } }
+  @keyframes arcFlow { from { background-position: 0% 0; } to { background-position: -200% 0; } }
+  /* 浅色主题（月光白 / 腾讯蓝）不渲染彩带与天际线背景图 */
+  body.theme-moon .apec-arc, body.theme-blue .apec-arc,
+  body.theme-moon .apec-skyline, body.theme-blue .apec-skyline { display: none; }
   .apec-sub { position: relative; z-index: 2; margin: 8px 0 0; color: var(--hero-sub); font-size: 14px; letter-spacing: .3px; }
   .apec-sub-row { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .apec-sub-row .ver-tag { margin-left: 0; }
@@ -934,13 +938,13 @@
 #tbPager { position: sticky; bottom: 0; z-index: 5; background: var(--card, #fff); padding-bottom: 10px; margin-top: 4px; box-shadow: 0 -6px 12px -8px rgba(15,23,42,.25); flex-direction: column; align-items: stretch; gap: 8px; }
 .rm-pager .pager-left { display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-muted); }
 #tbPager .pager-left { justify-content: flex-start; }
-.rm-pager select { padding:5px 10px; border:1.5px solid var(--border); border-radius:8px; font-size:13px; background:#fff; color:var(--text); outline:none; cursor:pointer; }
+.rm-pager select { padding:5px 10px; border:1.5px solid var(--border); border-radius:8px; font-size:13px; background:var(--input-bg); color:var(--text); outline:none; cursor:pointer; }
 .rm-pager select:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(43,108,255,.12); }
 .pager-right { display:flex; gap:6px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
 #tbPager .pager-right { flex-direction: column; align-items: flex-start; gap: 8px; }
 #tbPager .pager-nums { display:flex; gap:6px; flex-wrap:wrap; align-items:center; justify-content:flex-start; }
 #tbPager .pager-nav { display:flex; gap:6px; align-items:center; justify-content:flex-start; }
-.page-btn { min-width:34px; height:30px; padding:0 8px; border:1.5px solid var(--border); border-radius:8px; background:#fff; color:var(--text); font-size:13px; cursor:pointer; line-height:1; transition:all .15s; display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto; white-space:nowrap; }
+.page-btn { min-width:34px; height:30px; padding:0 8px; border:1.5px solid var(--border); border-radius:8px; background:var(--input-bg); color:var(--text); font-size:13px; cursor:pointer; line-height:1; transition:all .15s; display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto; white-space:nowrap; }
 .page-btn:hover:not(:disabled):not(.active) { border-color:var(--primary); color:var(--primary); }
 .page-btn.active { background:var(--primary); border-color:var(--primary); color:#fff; }
 .page-btn:disabled { opacity:.45; cursor:not-allowed; }
@@ -1144,27 +1148,9 @@
           </svg>
           <h1 class="apec-title">超核一站式服务系统 <span class="ver-tag">v1.74 正式版</span></h1>
         </div>
-        <svg class="apec-arc" viewBox="0 0 600 14" preserveAspectRatio="none" aria-hidden="true">
-          <defs>
-            <linearGradient id="apecArcGrad" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0" stop-color="#FF8A3D"/><stop offset=".28" stop-color="#F04E45"/>
-              <stop offset=".52" stop-color="#8B5CF6"/><stop offset=".76" stop-color="#3D7BFF"/>
-              <stop offset="1" stop-color="#22C7C7"/>
-            </linearGradient>
-            <linearGradient id="arcRunnerGrad" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0" stop-color="#FF5E57"/><stop offset=".07" stop-color="#FF8A3D"/>
-              <stop offset=".14" stop-color="#FFC53D"/><stop offset=".21" stop-color="#FDE047"/>
-              <stop offset=".28" stop-color="#84CC16"/><stop offset=".35" stop-color="#22C7C7"/>
-              <stop offset=".42" stop-color="#2DD4BF"/><stop offset=".5" stop-color="#3D7BFF"/>
-              <stop offset=".57" stop-color="#6366F1"/><stop offset=".64" stop-color="#8B5CF6"/>
-              <stop offset=".71" stop-color="#D946EF"/><stop offset=".78" stop-color="#F472B6"/>
-              <stop offset=".85" stop-color="#F04E45"/><stop offset=".92" stop-color="#FF8A3D"/>
-              <stop offset="1" stop-color="#FF5E57"/>
-            </linearGradient>
-          </defs>
-          <path class="arc-base" d="M0 10 Q150 2 300 7 T600 5" fill="none" stroke="url(#apecArcGrad)" stroke-width="3" stroke-linecap="round"/>
-          <path class="arc-runner" d="M0 10 Q150 2 300 7 T600 5"/>
-        </svg>
+        <div class="apec-arc" aria-hidden="true">
+          <div class="arc-flow"></div>
+        </div>
         <div class="apec-sub-row">
           <p class="apec-sub">以更轻松的方式解决工单，让工作更简单</p>
         </div>
@@ -2781,7 +2767,7 @@ const VERSION_LOG = [
   {
     ver: 'v1.74 正式版',
     items: [
-      'APEC 限定炭灰暗色卡片，主按钮灰底紫框描边、悬浮高亮为紫底白字，彩带整条彩虹流光循环；其它主题保持蓝色按钮与浅色默认样式'
+      'APEC 限定炭灰暗色卡片，主按钮灰底紫框描边、悬浮高亮；彩带连续渐变无缝流光；浅色主题隐藏彩带与天际线、标题恢复默认；修复分页下拉与按钮暗色对比，版本胶囊不再按按钮填充'
     ]
   },
   {
