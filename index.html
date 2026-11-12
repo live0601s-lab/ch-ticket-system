@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%230052D9'/%3E%3Crect x='8' y='8' width='16' height='4.5' rx='2.2' fill='%23fff'/%3E%3Crect x='13.75' y='8' width='4.5' height='16' rx='2.2' fill='%23fff'/%3E%3C/svg%3E">
-<title>超核一站式服务系统 v1.64 正式版</title>
+<title>超核一站式服务系统 v1.65 正式版</title>
 <style>
   :root {
     --bg: #0f172a;
@@ -761,7 +761,7 @@
 /* ===== 版本自检 + 埋点统计（v1.64） ===== */
 (function () {
   // 当前版本号：与页面右上角版本标签保持一致，发版时同步更新
-  var APP_VERSION = 'v1.64';
+  var APP_VERSION = 'v1.65';
 
   // 埋点配置：endpoint 留空且 enabled=false 时不上报；已接入 Neon collect 接口
   window.__TRACK__ = window.__TRACK__ || {
@@ -837,7 +837,7 @@
 
   <header class="app-header">
     <div class="app-title-block">
-      <h1><svg class="t-logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="7" fill="#0052D9"/><rect x="8" y="8" width="16" height="4.5" rx="2.2" fill="#fff"/><rect x="13.75" y="8" width="4.5" height="16" rx="2.2" fill="#fff"/></svg>超核一站式服务系统 <span class="ver-tag">v1.64 正式版</span></h1>
+      <h1><svg class="t-logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="7" fill="#0052D9"/><rect x="8" y="8" width="16" height="4.5" rx="2.2" fill="#fff"/><rect x="13.75" y="8" width="4.5" height="16" rx="2.2" fill="#fff"/></svg>超核一站式服务系统 <span class="ver-tag">v1.65 正式版</span></h1>
       <div class="admin-line">项目接口人：v_bwbnbu</div>
     </div>
     <div class="header-actions">
@@ -2407,6 +2407,15 @@ function toggleTheme() {
 }
 /* ================= 版本日志 ================= */
 const VERSION_LOG = [
+  {
+    ver: 'v1.65 正式版',
+    items: [
+      '修复备份迁移丢数据：备份改为直接从 IndexedDB 读取提单记录与草稿（权威源），不再只取内存缓存，避免页面异步回填时漏备',
+      '备份图片/附件时合并主库与长期备份库，补上仅存于备份库、主库缺失的图片',
+      '恢复备份时先清空旧的提单记录/草稿与旧媒体库，再按备份完整还原，避免旧数据在刷新后复活覆盖恢复结果',
+      '恢复流程等待记录、草稿与图片附件全部写入完成后再自动刷新页面，防止写入中断导致丢图丢单'
+    ]
+  },
   {
     ver: 'v1.64 正式版',
     items: [
@@ -4621,6 +4630,41 @@ function bizdataGet(key) {
     });
   });
 }
+/* v1.65：清空 bizdata（提单记录/草稿）。恢复备份时先清旧值，避免旧 IDB 记录 reload 后复活覆盖 */
+function bizdataClear() {
+  return openMediaDb().then(function (db) {
+    return new Promise(function (resolve, reject) {
+      const tx = db.transaction(BIZDATA_STORE, 'readwrite');
+      tx.objectStore(BIZDATA_STORE).clear();
+      tx.oncomplete = function () { resolve(true); };
+      tx.onerror = function () { reject(tx.error); };
+      tx.onabort = function () { reject(tx.error); };
+    });
+  });
+}
+/* v1.65：读取 bizdata 全部提单记录/草稿（IDB 权威源），无数据的字段返回 null */
+function bizdataGetAll() {
+  return Promise.all([bizdataGet('records'), bizdataGet('drafts')]).then(function (r) {
+    return {
+      records: (r[0] !== undefined && r[0] !== null) ? r[0] : null,
+      drafts: (r[1] !== undefined && r[1] !== null) ? r[1] : null
+    };
+  });
+}
+/* v1.65：恢复备份时重建 bizdata——先清空旧记录/草稿，再按刚写回 localStorage 的备份值写入，
+ * 避免旧 IDB 记录在 reload 后复活覆盖恢复结果。 */
+function restoreBizdataFromLocal() {
+  return bizdataClear().then(function () {
+    var tasks = [];
+    try {
+      var recStr = localStorage.getItem(TICKET_RECORDS_KEY);
+      if (recStr) tasks.push(bizdataPut('records', JSON.parse(recStr)));
+      var drfStr = localStorage.getItem(TICKET_DRAFTS_KEY);
+      if (drfStr) tasks.push(bizdataPut('drafts', JSON.parse(drfStr)));
+    } catch (e) {}
+    return Promise.all(tasks);
+  }).catch(function () {});
+}
 /* 启动时把 IDB 中的提单记录/草稿载入内存缓存，再刷新界面；IDB 无数据时回退 localStorage */
 function loadBizDataFromIdb() {
   return Promise.all([
@@ -4663,6 +4707,66 @@ function mediaGetAllDataUrls() {
       };
       tx.onerror = function () { reject(req.error); };
       tx.onabort = function () { reject(req.error); };
+    });
+  });
+}
+/* v1.65：清空长期备份媒体库（恢复备份时与主库一起重建，避免旧 blob 残留） */
+function mediaBackupClear() {
+  return openMediaDb().then(function (db) {
+    return new Promise(function (resolve, reject) {
+      const tx = db.transaction(MEDIA_BACKUP_STORE, 'readwrite');
+      tx.objectStore(MEDIA_BACKUP_STORE).clear();
+      tx.oncomplete = function () { resolve(true); };
+      tx.onerror = function () { reject(tx.error); };
+      tx.onabort = function () { reject(tx.error); };
+    });
+  });
+}
+/* v1.65：合并读取主库 + 长期备份库媒体（主库优先），全部转 dataUrl。
+ * 修复旧逻辑只读主库、漏掉仅存于备份库图片导致备份缺图的问题。 */
+function mediaGetAllMerged() {
+  return openMediaDb().then(function (db) {
+    return new Promise(function (resolve, reject) {
+      var collect = function (store) {
+        return new Promise(function (res) {
+          try {
+            var tx = db.transaction(store, 'readonly');
+            var cur = tx.objectStore(store).openCursor();
+            var pending = [];
+            cur.onsuccess = function () {
+              var c = cur.result;
+              if (c) { pending.push({ mid: String(c.key), v: c.value }); c.continue(); }
+            };
+            tx.oncomplete = function () { res(pending); };
+            tx.onerror = function () { res([]); };
+            tx.onabort = function () { res([]); };
+          } catch (e) { res([]); }
+        });
+      };
+      Promise.all([collect(MEDIA_DB_STORE), collect(MEDIA_BACKUP_STORE)]).then(function (lists) {
+        var mainMids = {};
+        lists[0].forEach(function (x) { mainMids[x.mid] = true; });
+        var merged = {};
+        // 备份库中主库没有的先放入
+        lists[1].forEach(function (item) { if (!mainMids[item.mid]) merged[item.mid] = item.v; });
+        // 主库覆盖
+        lists[0].forEach(function (item) { merged[item.mid] = item.v; });
+        var out = {};
+        var chain = Promise.resolve();
+        Object.keys(merged).forEach(function (mid) {
+          var v = merged[mid];
+          chain = chain.then(function () {
+            if (v instanceof Blob) {
+              return blobToDataUrl(v).then(function (url) { out[mid] = url; }, function () {});
+            } else if (typeof v === 'string') {
+              out[mid] = v;
+              return Promise.resolve();
+            }
+            return Promise.resolve();
+          });
+        });
+        chain.then(function () { resolve(out); });
+      });
     });
   });
 }
@@ -7955,12 +8059,9 @@ function downloadJsonBlob(payload, fileName) {
 }
 
 function backupAllData() {
-  // v1.60 修复：不再依赖预读缓存状态，点击备份时直接从 IndexedDB 读取全部媒体，
-  // 确保备份文件一定包含图片/附件。仅当 IndexedDB 完全不可用时才降级为仅文本备份。
-  showToast('正在读取图片/附件媒体，请稍候…', 'info', 10000);
-  const proceed = function (mediaMap) {
-    doBackupAllData(false, mediaMap);
-  };
+  // v1.65：备份前先从 IDB 读取权威的提单记录/草稿，并合并主库+长期备份库媒体，确保完整迁移
+  showToast('正在读取图片/附件与提单数据，请稍候…', 'info', 10000);
+  const proceed = function (collected) { doBackupAllData(false, collected.media, collected.biz); };
   const fallback = function () {
     showConfirm({
       icon: '⚠️',
@@ -7968,28 +8069,28 @@ function backupAllData() {
       message: '无法从浏览器 IndexedDB 读取图片/附件媒体。此时备份将【仅含文本数据】，恢复后图片将丢失。若您确认没有图片需要备份，可继续；否则请刷新页面后重试。',
       confirmText: '仍要仅文本备份',
       danger: true,
-      onConfirm: function () { doBackupAllData(true, null); }
+      onConfirm: function () { doBackupAllData(true, null, null); }
     });
   };
-  if (__mediaCacheState__ === 'ready' && __mediaCache__) {
-    proceed(__mediaCache__);
-    return;
-  }
-  try {
-    if (typeof mediaGetAllDataUrls === 'function' && window.indexedDB) {
-      mediaGetAllDataUrls().then(function (allMedia) {
-        __mediaCache__ = allMedia;
-        __mediaCacheState__ = 'ready';
-        try { updateMediaCacheStatus(); } catch (e) {}
-        proceed(allMedia);
-      }, function () { fallback(); });
-    } else {
-      fallback();
+  var readBiz = (typeof bizdataGetAll === 'function' && window.indexedDB)
+    ? bizdataGetAll().catch(function () { return { records: null, drafts: null }; })
+    : Promise.resolve({ records: null, drafts: null });
+  var readMedia = (typeof mediaGetAllMerged === 'function' && window.indexedDB)
+    ? mediaGetAllMerged().catch(function () { return null; })
+    : Promise.resolve(null);
+  Promise.all([readBiz, readMedia]).then(function (results) {
+    var biz = results[0];
+    var allMedia = results[1];
+    if (allMedia) {
+      __mediaCache__ = allMedia;
+      __mediaCacheState__ = 'ready';
+      try { updateMediaCacheStatus(); } catch (e) {}
     }
-  } catch (e) { fallback(); }
+    proceed({ media: allMedia, biz: biz });
+  }, function () { fallback(); });
 }
 
-function doBackupAllData(textOnly, mediaMap) {
+function doBackupAllData(textOnly, mediaMap, bizData) {
   const data = {};
   try {
     for (let i = 0; i < localStorage.length; i++) {
@@ -8003,9 +8104,16 @@ function doBackupAllData(textOnly, mediaMap) {
   Object.keys(SAFE_STORE_MEM).forEach(function (k) {
     if (data[k] === undefined) data[k] = SAFE_STORE_MEM[k];
   });
-  // v1.64：提单记录/草稿主存已迁 IDB，备份时直接取内存缓存最新值，避免 localStorage 配额满时备份漏数据
-  if (_bizRecordsCache) data[TICKET_RECORDS_KEY] = JSON.stringify(_bizRecordsCache);
-  if (_bizDraftsCache) data[TICKET_DRAFTS_KEY] = JSON.stringify(_bizDraftsCache);
+  // v1.65：提单记录/草稿以 IDB bizdata 为权威源；IDB 为空再回退内存缓存 / localStorage，避免漏备
+  function parseLs(key) { try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; } }
+  var records = (bizData && bizData.records != null) ? bizData.records
+    : (_bizRecordsCache || parseLs(TICKET_RECORDS_KEY));
+  var drafts = (bizData && bizData.drafts != null) ? bizData.drafts
+    : (_bizDraftsCache || parseLs(TICKET_DRAFTS_KEY));
+  var hasRecords = Array.isArray(records) ? records.length > 0 : !!records;
+  var hasDrafts = Array.isArray(drafts) ? drafts.length > 0 : !!(drafts && Object.keys(drafts).length);
+  if (hasRecords) data[TICKET_RECORDS_KEY] = JSON.stringify(records);
+  if (hasDrafts) data[TICKET_DRAFTS_KEY] = JSON.stringify(drafts);
   // v1.60：优先使用调用方传入的 mediaMap（直接从 IndexedDB 读取），否则回退内存缓存
   const mediaSource = (!textOnly && mediaMap) ? mediaMap : ((!textOnly && __mediaCacheState__ === 'ready' && __mediaCache__) ? __mediaCache__ : null);
   data.__media__ = mediaSource || {};
@@ -8085,13 +8193,9 @@ function handleRestoreFile(ev) {
           else { try { localStorage.setItem(k, String(v)); } catch (e2) {} }
         }
       });
-      // v1.64：恢复时把提单记录/草稿同步写入 IDB bizdata，避免 reload 后 loadBizDataFromIdb 用旧 IDB 数据覆盖刚恢复的数据
-      try {
-        const recStr = localStorage.getItem(TICKET_RECORDS_KEY);
-        if (recStr) bizdataPut('records', JSON.parse(recStr));
-        const drfStr = localStorage.getItem(TICKET_DRAFTS_KEY);
-        if (drfStr) bizdataPut('drafts', JSON.parse(drfStr));
-      } catch (e) {}
+      // v1.65：bizdata 重建改为异步（先清旧再写备份值），纳入下方恢复链，确保 reload 前完成
+      var bizRestorePromise = (typeof restoreBizdataFromLocal === 'function')
+        ? restoreBizdataFromLocal() : Promise.resolve();
       // v1.51 修复（媒体恢复链路）：写回后读回校验 localStorage 是否真正落盘（业务读取走原生 localStorage），
       // 不可用时明确警示「数据可能仅本次会话可见」，避免用户误以为恢复成功
       let lsOk = true;
@@ -8132,9 +8236,13 @@ function handleRestoreFile(ev) {
           } else afterLegacy();
         } catch (e) { afterLegacy(); }
       };
+      var mediaPromise;
       if (mediaMap) {
         showToast('正在恢复媒体数据…');
-        mediaClearAll().then(function () {
+        mediaPromise = mediaClearAll().then(function () {
+          // v1.65：长期备份库一并清空后重建，避免旧 blob 残留
+          return (typeof mediaBackupClear === 'function' ? mediaBackupClear() : Promise.resolve());
+        }).then(function () {
           const mids = Object.keys(mediaMap);
           const info = { ok: 0, fail: 0, total: mids.length, idbCount: -1 };
           const chain = Promise.resolve();
@@ -8156,19 +8264,28 @@ function handleRestoreFile(ev) {
               });
             }, function () { info.idbCount = -1; return info; });
           });
-        }).then(function (info) {
+        });
+      } else {
+        mediaPromise = Promise.resolve(null);
+      }
+      // v1.65：bizdata 重建与媒体写入全部完成后再 finish，避免 reload 中断写入
+      Promise.all([bizRestorePromise, mediaPromise]).then(function (arr) {
+        const info = arr[1];
+        if (mediaMap) {
           if (info.idbCount >= 0 && info.idbCount !== info.total) {
             showToast('媒体写入校验异常：备份含 ' + info.total + ' 条媒体，恢复后媒体库仅 ' + info.idbCount + ' 条，部分图片可能无法显示，请重新备份/恢复', 'error', 6000);
           }
           finish({ mediaInfo: info });
-        }, function () {
-          // 媒体库打开/清空失败：不能提示「全部恢复成功」
+        } else {
+          finish();
+        }
+      }, function () {
+        // 媒体库打开/清空失败：不能提示「全部恢复成功」
+        if (mediaMap) {
           showToast('媒体库写入失败，数据键已恢复但图片/附件媒体可能缺失，请刷新后重试或检查浏览器 IndexedDB 支持', 'error', 6000);
-          finish({ mediaInfo: { ok: 0, fail: -1, total: 0 } });
-        });
-      } else {
-        finish();
-      }
+        }
+        finish({ mediaInfo: mediaMap ? { ok: 0, fail: -1, total: 0 } : null });
+      });
     } catch (e) {
       console.error(e);
       showToast('恢复失败：' + e.message, 'error');
