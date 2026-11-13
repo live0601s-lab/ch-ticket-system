@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%230052D9'/%3E%3Crect x='8' y='8' width='16' height='4.5' rx='2.2' fill='%23fff'/%3E%3Crect x='13.75' y='8' width='4.5' height='16' rx='2.2' fill='%23fff'/%3E%3C/svg%3E">
-<title>超核一站式服务系统 v1.87 正式版</title>
+<title>超核一站式服务系统 v1.88 正式版</title>
 <style>
   :root {
     --bg: #000000;
@@ -928,6 +928,17 @@
   .theme-moon .tb-item-hit td:hover { background:#d3e2ff; }
   .theme-moon .tb-item-bar { color:#475569; }
   .theme-moon .tb-item-empty { color:#475569; }
+  /* 腾讯蓝主题：工单卡片/表格改深底浅字，避免亮字落白底对比过低 */
+  body.theme-blue .tb-item { background: var(--card); border-color: var(--border); }
+  body.theme-blue .tb-item:hover { background: var(--row-hover); border-color: var(--primary); }
+  body.theme-blue .tb-item.active { background: var(--row-soft); border-color: var(--primary); }
+  body.theme-blue .tb-item-table { background: var(--card); border:1px solid var(--border); }
+  body.theme-blue .tb-item-table td { color: var(--text); }
+  body.theme-blue .tb-item-hit td:hover { background: var(--row-hover); }
+  body.theme-blue .tb-item-region { background: rgba(43,108,255,.18); border-color: rgba(43,108,255,.38); color: #BFD6FF; }
+  body.theme-blue .builtin-priv-item { background: var(--row-soft); border-color: var(--border); }
+  body.theme-blue .builtin-priv-item .bp-name { color: var(--text); }
+  body.theme-blue .builtin-priv-item img { border-color: var(--border); }
   .image-view-actions { justify-content: center; gap: 10px; flex-wrap: wrap; }
   .image-view-actions .btn { min-height: 32px; }
   .image-view-tip { font-size: 12px; color: var(--text-muted); margin-top: 10px; line-height: 1.5; }
@@ -940,7 +951,7 @@
 /* ===== 版本自检 + 埋点统计（v1.64） ===== */
 (function () {
   // 当前版本号：与页面右上角版本标签保持一致，发版时同步更新
-  var APP_VERSION = 'v1.87';
+  var APP_VERSION = 'v1.88';
 
   // 埋点配置：endpoint 留空且 enabled=false 时不上报；已接入 Neon collect 接口
   window.__TRACK__ = window.__TRACK__ || {
@@ -1103,7 +1114,7 @@
                 <path d="M0 7 Q160 15 320 7" fill="none" stroke="url(#ribbonGrad)" stroke-width="3" stroke-linecap="round"/>
               </svg>
             </div>
-            <span class="ver-tag">v1.87 正式版</span>
+            <span class="ver-tag">v1.88 正式版</span>
           </div>
         </div>
         <div class="apec-sub-row">
