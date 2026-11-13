@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%230052D9'/%3E%3Crect x='8' y='8' width='16' height='4.5' rx='2.2' fill='%23fff'/%3E%3Crect x='13.75' y='8' width='4.5' height='16' rx='2.2' fill='%23fff'/%3E%3C/svg%3E">
-<title>超核一站式服务系统 v1.85 正式版</title>
+<title>超核一站式服务系统 v1.86 正式版</title>
 <style>
   :root {
     --bg: #000000;
@@ -23,7 +23,7 @@
     /* APEC 2026 弧线多彩色 */
     --apec-orange: #FF8A3D;
     --apec-red: #F04E45;
-    --apec-purple: #8B5CF6;
+    --apec-purple: #131885;
     --apec-blue: #3D7BFF;
     --apec-cyan: #22C7C7;
     /* 主题相关（APEC 纯黑 / 月光白覆盖） */
@@ -133,10 +133,10 @@
     --log-btn-hover-border: #3E6AA8;
     --shadow: 0 10px 30px rgba(4, 18, 44, .5);
   }
-  /* APEC 限定主题：主按钮切换为 APEC 紫，月光白/腾讯蓝保持默认蓝 */
+  /* APEC 限定主题：主按钮切换为 APEC 深蓝，月光白/腾讯蓝保持默认蓝 */
   body:not(.theme-moon):not(.theme-blue) {
-    --primary: #8B5CF6;
-    --primary-dark: #7c3aed;
+    --primary: #131885;
+    --primary-dark: #0D1166;
   }
   /* APEC 限定主题：主要卡片容器由纯白改为中性灰，文字沿用深色保证对比 */
   body:not(.theme-moon):not(.theme-blue) .modal,
@@ -151,28 +151,28 @@
   body:not(.theme-moon):not(.theme-blue) .delete-template-content,
   body:not(.theme-moon):not(.theme-blue) .builtin-priv-item .bp-name { color: var(--text); }
   body:not(.theme-moon):not(.theme-blue) .builtin-priv-item { border-color: var(--border); }
-  /* APEC 限定主题：主按钮灰底紫框描边风，悬浮高亮为紫底白字；其它主题保持默认蓝 */
+  /* APEC 限定主题：主按钮灰底深蓝框描边风，悬浮高亮为深蓝底白字；其它主题保持默认蓝 */
   body:not(.theme-moon):not(.theme-blue) .btn-primary,
   body:not(.theme-moon):not(.theme-blue) .btn-success,
   body:not(.theme-moon):not(.theme-blue) .btn-backup {
     background: #26262b;
-    border: 1.5px solid #8B5CF6;
-    color: #c4b5fd;
+    border: 1.5px solid #131885;
+    color: #cdd9ff;
   }
   body:not(.theme-moon):not(.theme-blue) .btn-primary:hover,
   body:not(.theme-moon):not(.theme-blue) .btn-success:hover,
   body:not(.theme-moon):not(.theme-blue) .btn-backup:hover {
-    background: #8B5CF6;
-    border-color: #7c3aed;
+    background: #131885;
+    border-color: #0D1166;
     color: #fff;
-    box-shadow: 0 4px 14px rgba(139,92,246,.45);
+    box-shadow: 0 4px 14px rgba(19,24,133,.5);
   }
-  body:not(.theme-moon):not(.theme-blue) .bar-btn.active { background: #8B5CF6; border-color: #8B5CF6; }
+  body:not(.theme-moon):not(.theme-blue) .bar-btn.active { background: #131885; border-color: #131885; }
   body:not(.theme-moon):not(.theme-blue) .tp-chip {
-    background: rgba(139,92,246,.14); border: 1px solid rgba(139,92,246,.35); color: #c7d2fe;
+    background: rgba(19,24,133,.16); border: 1px solid rgba(19,24,133,.35); color: #cdd9ff;
   }
   body:not(.theme-moon):not(.theme-blue) .tb-item-region {
-    background: rgba(139,92,246,.14); border: 1px solid rgba(139,92,246,.35); color: #c7d2fe;
+    background: rgba(19,24,133,.16); border: 1px solid rgba(19,24,133,.35); color: #cdd9ff;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -292,12 +292,12 @@
   .apec-pill {
     display: inline-flex; align-items: center; gap: 6px; align-self: flex-start;
     padding: 5px 16px; border-radius: 999px; font-size: 13px; font-weight: 600;
-    color: #c7d2fe; background: rgba(139,92,246,.14); border: 1px solid rgba(139,92,246,.35);
+    color: #cdd9ff; background: rgba(19,24,133,.16); border: 1px solid rgba(19,24,133,.35);
     text-decoration: none; letter-spacing: .5px; transition: all .18s ease;
   }
-  .apec-pill:hover { color: #fff; background: rgba(139,92,246,.32); border-color: var(--apec-purple); box-shadow: 0 0 16px rgba(139,92,246,.5); }
+  .apec-pill:hover { color: #fff; background: rgba(19,24,133,.35); border-color: var(--apec-purple); box-shadow: 0 0 16px rgba(19,24,133,.5); }
   .apec-title-row { position: relative; margin-top: 12px; display: flex; align-items: center; padding-bottom: 14px; }
-  .apec-skyline { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 78px; opacity: .85; pointer-events: none; }
+  .apec-skyline { position: absolute; left: 0; right: 0; top: -20px; width: 100%; height: 78px; opacity: .85; pointer-events: none; }
   .apec-skyline .sk-line {
     stroke-dasharray: 170; stroke-dashoffset: 170;
     animation: skyDraw .8s cubic-bezier(.4,0,.2,1) forwards;
@@ -940,7 +940,7 @@
 /* ===== 版本自检 + 埋点统计（v1.64） ===== */
 (function () {
   // 当前版本号：与页面右上角版本标签保持一致，发版时同步更新
-  var APP_VERSION = 'v1.85';
+  var APP_VERSION = 'v1.86';
 
   // 埋点配置：endpoint 留空且 enabled=false 时不上报；已接入 Neon collect 接口
   window.__TRACK__ = window.__TRACK__ || {
@@ -1036,20 +1036,71 @@
         <div class="apec-title-row">
           <svg class="apec-skyline" viewBox="0 0 600 78" preserveAspectRatio="none" aria-hidden="true">
             <g fill="none" stroke="#cbd5e1" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
-              <!-- 左侧楼群（复刻参考图3左组）：弧顶小屋 + 弧顶扁塔 + 尖顶高楼 -->
-              <path class="sk-line" style="--i:0" d="M16 64 L16 55 Q31 47 46 55 L46 64"/>
-              <path class="sk-line" style="--i:0" d="M56 64 L56 42 Q65 35 74 42 L74 64"/>
-              <path class="sk-line" style="--i:0" d="M86 64 L94 30 L102 64"/>
-              <path class="sk-line" style="--i:0" d="M94 34 L94 60"/>
-              <!-- 右侧楼群（复刻参考图3右组）：斜顶尖塔 + 两方楼 + 网格穹顶 -->
-              <path class="sk-line" style="--i:1" d="M470 64 L478 32 L486 64"/>
-              <rect class="sk-line" style="--i:1" x="496" y="40" width="16" height="24"/>
-              <path class="sk-line" style="--i:1" d="M504 40 L504 64"/>
-              <rect class="sk-line" style="--i:1" x="516" y="46" width="12" height="18"/>
-              <path class="sk-line" style="--i:1" d="M538 64 Q554 34 570 64"/>
-              <path class="sk-line" style="--i:1" d="M545 64 Q554 40 563 64"/>
-              <path class="sk-line" style="--i:1" d="M538 56 Q554 36 570 56"/>
-              <path class="sk-line" style="--i:1" d="M538 64 L570 64"/>
+              <!-- 左侧陪衬楼群（紧凑高低错落） -->
+              <rect class="sk-line" style="--i:0" x="6"  y="52" width="9"  height="12"/>
+              <rect class="sk-line" style="--i:0" x="19" y="46" width="10" height="18"/>
+              <path class="sk-line" style="--i:0" d="M24 49 L24 61"/>
+              <rect class="sk-line" style="--i:0" x="33" y="54" width="8"  height="10"/>
+              <rect class="sk-line" style="--i:0" x="45" y="42" width="11" height="22"/>
+              <path class="sk-line" style="--i:0" d="M50 45 L50 61"/>
+              <rect class="sk-line" style="--i:0" x="60" y="50" width="9"  height="14"/>
+              <rect class="sk-line" style="--i:0" x="73" y="47" width="10" height="17"/>
+              <rect class="sk-line" style="--i:0" x="87" y="53" width="8"  height="11"/>
+              <rect class="sk-line" style="--i:0" x="99" y="44" width="11" height="20"/>
+              <path class="sk-line" style="--i:0" d="M104 47 L104 61"/>
+              <path class="sk-line" style="--i:0" d="M112 59 Q126 50 140 59"/>
+              <path class="sk-line" style="--i:0" d="M118 59 L118 64 M134 59 L134 64"/>
+              <!-- 腾讯滨海大厦：双塔 + 空中连廊 -->
+              <path class="sk-line" style="--i:1" d="M152 64 L152 32 L156 28 L160 32 L160 64"/>
+              <path class="sk-line" style="--i:1" d="M172 64 L172 32 L176 28 L180 32 L180 64"/>
+              <path class="sk-line" style="--i:1" d="M152 46 L180 46"/>
+              <path class="sk-line" style="--i:1" d="M156 36 L156 60 M176 36 L176 60"/>
+              <!-- 中部陪衬楼群 -->
+              <rect class="sk-line" style="--i:1" x="188" y="50" width="9"  height="14"/>
+              <rect class="sk-line" style="--i:1" x="201" y="45" width="10" height="19"/>
+              <path class="sk-line" style="--i:1" d="M206 48 L206 61"/>
+              <rect class="sk-line" style="--i:1" x="215" y="52" width="8"  height="12"/>
+              <rect class="sk-line" style="--i:1" x="227" y="43" width="11" height="21"/>
+              <rect class="sk-line" style="--i:1" x="242" y="51" width="9"  height="13"/>
+              <!-- 平安金融中心：超高层 + 平顶冠 + 天线 -->
+              <path class="sk-line" style="--i:2" d="M252 64 L252 24 L256 18 L288 18 L292 24 L292 64"/>
+              <path class="sk-line" style="--i:2" d="M272 18 L272 11"/>
+              <path class="sk-line" style="--i:2" d="M256 26 L288 26"/>
+              <path class="sk-line" style="--i:2" d="M262 30 L262 60 M282 30 L282 60"/>
+              <!-- 中部陪衬楼群 -->
+              <rect class="sk-line" style="--i:2" x="297" y="50" width="9"  height="14"/>
+              <rect class="sk-line" style="--i:2" x="310" y="46" width="10" height="18"/>
+              <path class="sk-line" style="--i:2" d="M315 49 L315 61"/>
+              <rect class="sk-line" style="--i:2" x="323" y="53" width="8"  height="11"/>
+              <!-- 企鹅岛（大铲湾）：岛礁波浪 + 企鹅 + 岛后群楼 -->
+              <path class="sk-line" style="--i:3" d="M332 63 Q344 59 356 63 Q368 59 380 63 Q386 61 392 63"/>
+              <ellipse class="sk-line" style="--i:3" cx="346" cy="52" rx="6" ry="10"/>
+              <path class="sk-line" style="--i:3" d="M346 44 L350 47 L346 50"/>
+              <path class="sk-line" style="--i:3" d="M340 52 Q336 56 340 60"/>
+              <ellipse class="sk-line" style="--i:3" cx="366" cy="54" rx="5" ry="8"/>
+              <path class="sk-line" style="--i:3" d="M366 47 L369 49 L366 51"/>
+              <rect class="sk-line" style="--i:3" x="378" y="46" width="10" height="16"/>
+              <rect class="sk-line" style="--i:3" x="390" y="50" width="9"  height="12"/>
+              <!-- 右侧陪衬楼群（紧凑高低错落） -->
+              <rect class="sk-line" style="--i:4" x="396" y="48" width="10" height="16"/>
+              <rect class="sk-line" style="--i:4" x="410" y="43" width="11" height="21"/>
+              <path class="sk-line" style="--i:4" d="M415 46 L415 61"/>
+              <rect class="sk-line" style="--i:4" x="425" y="51" width="9"  height="13"/>
+              <rect class="sk-line" style="--i:4" x="438" y="45" width="10" height="19"/>
+              <rect class="sk-line" style="--i:4" x="452" y="53" width="8"  height="11"/>
+              <rect class="sk-line" style="--i:4" x="464" y="42" width="12" height="22"/>
+              <path class="sk-line" style="--i:4" d="M470 45 L470 61"/>
+              <rect class="sk-line" style="--i:4" x="480" y="49" width="10" height="15"/>
+              <rect class="sk-line" style="--i:4" x="494" y="46" width="9"  height="18"/>
+              <rect class="sk-line" style="--i:4" x="507" y="52" width="10" height="12"/>
+              <rect class="sk-line" style="--i:4" x="521" y="44" width="11" height="20"/>
+              <path class="sk-line" style="--i:4" d="M526 47 L526 61"/>
+              <rect class="sk-line" style="--i:4" x="536" y="50" width="9"  height="14"/>
+              <rect class="sk-line" style="--i:4" x="549" y="47" width="10" height="17"/>
+              <rect class="sk-line" style="--i:4" x="563" y="53" width="8"  height="11"/>
+              <rect class="sk-line" style="--i:4" x="575" y="45" width="11" height="19"/>
+              <path class="sk-line" style="--i:4" d="M580 48 L580 61"/>
+              <path class="sk-line" style="--i:4" d="M585 60 Q591 54 597 60"/>
             </g>
           </svg>
           <div class="apec-title-wrap">
@@ -1066,7 +1117,7 @@
                 <path d="M0 7 Q160 15 320 7" fill="none" stroke="url(#ribbonGrad)" stroke-width="3" stroke-linecap="round"/>
               </svg>
             </div>
-            <span class="ver-tag">v1.85 正式版</span>
+            <span class="ver-tag">v1.86 正式版</span>
           </div>
         </div>
         <div class="apec-sub-row">
