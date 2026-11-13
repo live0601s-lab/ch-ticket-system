@@ -718,7 +718,9 @@
   .item-lib-results .tb-item-table { width: 100%; border-collapse: collapse; }
   .item-lib-results .tb-item-table th, .item-lib-results .tb-item-table td { padding: 4px 8px; border-bottom: 1px solid var(--row-border); text-align: left; white-space: nowrap; }
   .item-lib-results .tb-item-table th { background: var(--thead-bg); color: var(--thead-text); font-weight: 700; font-size: 11px; }
-  .item-lib-results .tb-item-hit td { cursor: pointer; }
+  .item-lib-results .tb-item-hit td { cursor: pointer; background: transparent; }
+  /* 速查表格只高亮当前单个单元格：关闭全局整行 hover 底色，非悬停态显式透明，避免移到旁边后前一格残留行底色 */
+  .item-lib-results tbody tr:hover { background: transparent; }
   .item-lib-results .tb-item-hit td:hover { background: var(--row-hover); }
   /* 速查表格单元格悬浮高亮：三主题分别给醒目底色，避免深/浅底下与卡片同色看不出 */
   body:not(.theme-moon):not(.theme-blue) .item-lib-results .tb-item-hit td:hover { background: rgba(139,92,246,.20); }
