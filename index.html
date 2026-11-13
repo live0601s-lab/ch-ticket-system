@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%230052D9'/%3E%3Crect x='8' y='8' width='16' height='4.5' rx='2.2' fill='%23fff'/%3E%3Crect x='13.75' y='8' width='4.5' height='16' rx='2.2' fill='%23fff'/%3E%3C/svg%3E">
-<title>超核一站式服务系统 v1.84 正式版</title>
+<title>超核一站式服务系统 v1.85 正式版</title>
 <style>
   :root {
     --bg: #000000;
@@ -326,13 +326,14 @@
   @keyframes titleCharIn {
     to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
   }
-  /* 彩带波浪弧线并入天际线 SVG（.apec-skyline 内 ribbon path），贯穿左右压在楼群底部 */
-  /* 霓虹灯带：渐变颜色沿弧线无缝循环流转，叠加缓慢呼吸明暗 */
-  .ribbon-body { animation: ribbonBreath 4s ease-in-out infinite; }
-  @keyframes ribbonBreath { 0%,100% { opacity: .85; } 50% { opacity: 1; } }
+  /* 标题与下方静态彩带：左列为标题文字+彩带（彩带对齐文字正下方），版本胶囊独立在右 */
+  .apec-title-wrap { position: relative; z-index: 2; display: inline-flex; align-items: center; flex: 0 1 auto; }
+  .title-and-ribbon { display: flex; flex-direction: column; align-items: flex-start; }
+  .apec-ribbon { display: block; width: 100%; height: 14px; margin-top: 3px; }
   /* 浅色主题（月光白 / 腾讯蓝）不渲染 APEC 胶囊、天际线与彩带 */
   body.theme-moon .apec-pill, body.theme-blue .apec-pill,
-  body.theme-moon .apec-skyline, body.theme-blue .apec-skyline { display: none; }
+  body.theme-moon .apec-skyline, body.theme-blue .apec-skyline,
+  body.theme-moon .apec-ribbon, body.theme-blue .apec-ribbon { display: none; }
   /* 浅色主题头部去掉白色圆角卡片背景，标题直接铺在页面背景上（回归朴素头部） */
   body.theme-moon .apec-hero, body.theme-blue .apec-hero {
     background: transparent; box-shadow: none; border-radius: 0; padding: 2px 2px; margin-bottom: 18px;
@@ -939,7 +940,7 @@
 /* ===== 版本自检 + 埋点统计（v1.64） ===== */
 (function () {
   // 当前版本号：与页面右上角版本标签保持一致，发版时同步更新
-  var APP_VERSION = 'v1.84';
+  var APP_VERSION = 'v1.85';
 
   // 埋点配置：endpoint 留空且 enabled=false 时不上报；已接入 Neon collect 接口
   window.__TRACK__ = window.__TRACK__ || {
@@ -1034,31 +1035,6 @@
         <a class="apec-pill" href="https://www.apec2026.cn/node_106.html" target="_blank" rel="noopener">APEC 2026 · 中国深圳</a>
         <div class="apec-title-row">
           <svg class="apec-skyline" viewBox="0 0 600 78" preserveAspectRatio="none" aria-hidden="true">
-            <defs>
-              <linearGradient id="ribbonGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#FF8A3D"/><stop offset=".28" stop-color="#F04E45"/>
-                <stop offset=".52" stop-color="#8B5CF6"/><stop offset=".76" stop-color="#3D7BFF"/>
-                <stop offset="1" stop-color="#22C7C7"/>
-              </linearGradient>
-              <linearGradient id="ribbonFlowGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1200" y2="0">
-                <stop offset="0%" stop-color="#FF8A3D"/>
-                <stop offset="10%" stop-color="#F04E45"/>
-                <stop offset="20%" stop-color="#8B5CF6"/>
-                <stop offset="30%" stop-color="#3D7BFF"/>
-                <stop offset="40%" stop-color="#22C7C7"/>
-                <stop offset="50%" stop-color="#FF8A3D"/>
-                <stop offset="60%" stop-color="#F04E45"/>
-                <stop offset="70%" stop-color="#8B5CF6"/>
-                <stop offset="80%" stop-color="#3D7BFF"/>
-                <stop offset="90%" stop-color="#22C7C7"/>
-                <stop offset="100%" stop-color="#FF8A3D"/>
-                <animateTransform attributeName="gradientTransform" type="translate" from="0 0" to="-600 0" dur="4s" repeatCount="indefinite"/>
-              </linearGradient>
-              <filter id="ribbonGlow" x="-60%" y="-60%" width="220%" height="220%">
-                <feGaussianBlur stdDeviation="2.6" result="ribbonBlur"/>
-                <feMerge><feMergeNode in="ribbonBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-            </defs>
             <g fill="none" stroke="#cbd5e1" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
               <!-- 左侧楼群（复刻参考图3左组）：弧顶小屋 + 弧顶扁塔 + 尖顶高楼 -->
               <path class="sk-line" style="--i:0" d="M16 64 L16 55 Q31 47 46 55 L46 64"/>
@@ -1075,10 +1051,23 @@
               <path class="sk-line" style="--i:1" d="M538 56 Q554 36 570 56"/>
               <path class="sk-line" style="--i:1" d="M538 64 L570 64"/>
             </g>
-            <path d="M -12 63 Q150 70 300 73 Q450 70 612 63" fill="none" stroke="url(#ribbonGrad)" stroke-width="6" stroke-linecap="round" opacity=".2"/>
-            <path class="ribbon-body" d="M -12 63 Q150 70 300 73 Q450 70 612 63" fill="none" stroke="url(#ribbonFlowGrad)" stroke-width="3" stroke-linecap="round" filter="url(#ribbonGlow)"/>
           </svg>
-          <h1 class="apec-title"><svg class="t-logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="7" fill="#0052D9"/><rect x="8" y="8" width="16" height="4.5" rx="2.2" fill="#fff"/><rect x="13.75" y="8" width="4.5" height="16" rx="2.2" fill="#fff"/></svg>超核一站式服务系统 <span class="ver-tag">v1.84 正式版</span></h1>
+          <div class="apec-title-wrap">
+            <div class="title-and-ribbon">
+              <h1 class="apec-title"><svg class="t-logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="7" fill="#0052D9"/><rect x="8" y="8" width="16" height="4.5" rx="2.2" fill="#fff"/><rect x="13.75" y="8" width="4.5" height="16" rx="2.2" fill="#fff"/></svg>超核一站式服务系统</h1>
+              <svg class="apec-ribbon" viewBox="0 0 320 18" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="ribbonGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#FF8A3D"/><stop offset=".28" stop-color="#F04E45"/>
+                    <stop offset=".52" stop-color="#8B5CF6"/><stop offset=".76" stop-color="#3D7BFF"/>
+                    <stop offset="1" stop-color="#22C7C7"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0 7 Q160 15 320 7" fill="none" stroke="url(#ribbonGrad)" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="ver-tag">v1.85 正式版</span>
+          </div>
         </div>
         <div class="apec-sub-row">
           <p class="apec-sub">以更轻松的方式解决工单，让工作更简单</p>
