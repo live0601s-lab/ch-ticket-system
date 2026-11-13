@@ -2808,10 +2808,13 @@ function fmtReportDate(dateStr) {
   return m[1] + '-' + mm + '-' + dd;
 }
 
-/* 单条举报记录 → 导出文本行：3|举报对象ID|2|2|0|原因|昵称|0|1|11|3|日期|日期|超核玩家举报作弊行为 */
+/* 单条举报记录 → 导出文本行（对齐图1「待处理玩家」表 C→P 共14列，竖线分隔）：
+   渠道3|被举报对象ID|平台2|联系方式2|角色ID0|0|0|0|举报类型(外挂作弊1/封号投诉7)|大R反馈11|优先级2|日期|日期|1超核玩家反馈 */
 function buildReportExportLine(it) {
   var date = fmtReportDate(it.date);
-  return '3|' + (it.targetId || '') + '|2|2|0|' + (it.reason || '') + '|' + (it.nickname || '') + '|0|1|11|3|' + date + '|' + date + '|超核玩家举报作弊行为';
+  var typeText = String(it.type || '');
+  var typeCode = (/封号|投诉/.test(typeText)) ? '7' : '1';
+  return '3|' + (it.targetId || '') + '|2|2|0|0|0|0|' + typeCode + '|11|2|' + date + '|' + date + '|1超核玩家反馈';
 }
 
 /* 由原始文本生成完整导出内容 */
