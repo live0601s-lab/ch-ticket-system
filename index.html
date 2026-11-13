@@ -320,8 +320,8 @@
   body.theme-blue .apec-title .t-logo { display: inline-block; }
   .apec-title .title-char {
     display: inline-block; opacity: 0; transform: translateY(10px) scale(.94); filter: blur(5px);
-    animation: titleCharIn .55s cubic-bezier(.22,.61,.36,1) forwards;
-    animation-delay: calc(.18s + var(--i) * 70ms);
+    animation: titleCharIn .6s cubic-bezier(.22,.61,.36,1) forwards;
+    animation-delay: calc(.18s + var(--i) * 80ms);
   }
   @keyframes titleCharIn {
     to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
@@ -330,6 +330,13 @@
   .apec-title-wrap { position: relative; z-index: 2; display: inline-flex; align-items: center; flex: 0 1 auto; }
   .title-and-ribbon { position: relative; display: flex; flex-direction: column; align-items: flex-start; }
   .apec-ribbon { display: block; width: 100%; height: 14px; margin-top: 3px; }
+  /* 彩带入场：跟随标题之后从左到右逐步展开 */
+  .apec-ribbon path {
+    stroke-dasharray: 340; stroke-dashoffset: 340;
+    animation: ribbonDraw .8s cubic-bezier(.4,0,.2,1) forwards;
+    animation-delay: .6s;
+  }
+  @keyframes ribbonDraw { to { stroke-dashoffset: 0; } }
   /* 浅色主题（月光白 / 腾讯蓝）不渲染 APEC 胶囊、天际线与彩带 */
   body.theme-moon .apec-pill, body.theme-blue .apec-pill,
   body.theme-moon .apec-skyline, body.theme-blue .apec-skyline,
@@ -713,6 +720,10 @@
   .item-lib-results .tb-item-table th { background: var(--thead-bg); color: var(--thead-text); font-weight: 700; font-size: 11px; }
   .item-lib-results .tb-item-hit td { cursor: pointer; }
   .item-lib-results .tb-item-hit td:hover { background: var(--row-hover); }
+  /* 速查表格单元格悬浮高亮：三主题分别给醒目底色，避免深/浅底下与卡片同色看不出 */
+  body:not(.theme-moon):not(.theme-blue) .item-lib-results .tb-item-hit td:hover { background: rgba(139,92,246,.20); }
+  body.theme-moon .item-lib-results .tb-item-hit td:hover { background: #dbe7ff; }
+  body.theme-blue .item-lib-results .tb-item-hit td:hover { background: rgba(43,108,255,.28); }
   .item-lib-results .tb-item-empty { padding: 20px; text-align: center; color: var(--text-muted); }
   .item-lib-card.fullscreen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; border-radius: 0; padding: 16px; height: auto !important; }
   .item-lib-card.fullscreen .item-lib-results { font-size: 13px; }
@@ -4776,6 +4787,11 @@ function openTicketBizForm(id) {
   }
   const bizOp2 = document.getElementById('tbBizOp2');
   if (bizOp2) bizOp2.style.display = 'none';
+  // v1.65：仅商业化活动(biz)保留转区；仓库道具删除(deposit_del)隐藏转区按钮与目标大区
+  const transferBtn = document.getElementById('tbTransferBtn');
+  const transferBox = document.getElementById('tbRegionTransfer');
+  if (transferBtn) transferBtn.style.display = isBiz ? '' : 'none';
+  if (!isBiz && transferBox) { transferBox.style.display = 'none'; const r2 = document.getElementById('tbRegion2'); if (r2) r2.value = ''; }
   // v1.64：恢复"新增操作二"按钮显示（上次点过新增后按钮被隐藏，重开新单需还原）
   const addOp2Btn = document.querySelector('#tbBizOpHeader button');
   if (addOp2Btn) addOp2Btn.style.display = '';
@@ -4815,7 +4831,7 @@ function openTicketBizForm(id) {
   if (draft) {
     if (draft.account) document.getElementById('tbAccount').value = draft.account;
     if (draft.region) document.getElementById('tbRegion').value = draft.region;
-    if (draft.region2) {
+    if (isBiz && draft.region2) {
       document.getElementById('tbRegion2').value = draft.region2;
       document.getElementById('tbRegionTransfer').style.display = 'block';
       document.getElementById('tbTransferBtn').textContent = '取消';
@@ -5394,11 +5410,17 @@ function editTicketBizRecord(id) {
   ticketBizRecId = rec.ticketId || null;
   document.getElementById('tbAccount').value = rec.account || '';
   document.getElementById('tbRegion').value = rec.region || '';
-  // 恢复转区状态
-  if (rec.region2) {
+  // 恢复转区状态：仅商业化活动(biz)保留转区；仓库道具删除隐藏转区按钮与目标大区
+  const isRecBiz = rec.ticketType === 'biz';
+  const editTransferBtn = document.getElementById('tbTransferBtn');
+  if (editTransferBtn) editTransferBtn.style.display = isRecBiz ? '' : 'none';
+  if (isRecBiz && rec.region2) {
     document.getElementById('tbRegion2').value = rec.region2;
     document.getElementById('tbRegionTransfer').style.display = 'block';
     document.getElementById('tbTransferBtn').textContent = '取消';
+  } else {
+    document.getElementById('tbRegionTransfer').style.display = 'none';
+    document.getElementById('tbRegion2').value = '';
   }
   document.getElementById('tbDesc').value = rec.desc || '';
   selectedPrivileges = (rec.privileges || []).slice();
