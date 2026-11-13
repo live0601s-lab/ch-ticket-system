@@ -208,6 +208,16 @@
     });
   }
 
+  /* 业务类型代号 → 中文名（与前端 TICKET_TYPE_MAP 保持一致） */
+  var TICKET_TYPE_LABELS = {
+    'deposit_del': '提单-仓库道具删除',
+    'biz': '提单-商业化活动'
+  };
+  function typeLabel(v) {
+    if (v == null || v === '') return '-';
+    return TICKET_TYPE_LABELS[v] || String(v);
+  }
+
   function statCard(label, value, meta) {
     return '<div class="stat-card"><div class="label">' + esc(label) + '</div>' +
       '<div class="value">' + esc(value) + '</div>' +
@@ -264,7 +274,7 @@
     if (!events || !events.length) { body.innerHTML = '<tr><td colspan="4" class="empty">暂无操作事件</td></tr>'; return; }
     body.innerHTML = events.map(function (r) {
       return '<tr><td>' + esc(fmtTime(r.createdAt)) + '</td><td>' + esc(r.userName || '-') +
-        '</td><td>' + esc(r.ticketType || '-') + '</td><td class="detail-cell">' + esc(fmtDetail(r.detail)) + '</td></tr>';
+        '</td><td>' + esc(typeLabel(r.ticketType)) + '</td><td class="detail-cell">' + esc(fmtDetail(r.detail)) + '</td></tr>';
     }).join('');
   }
   function actionTag(a) {
@@ -276,7 +286,7 @@
     if (!tickets || !tickets.length) { body.innerHTML = '<tr><td colspan="5" class="empty">暂无提单流水</td></tr>'; return; }
     body.innerHTML = tickets.map(function (r) {
       return '<tr><td>' + esc(fmtTime(r.createdAt)) + '</td><td>' + actionTag(r.action) +
-        '</td><td>' + esc(r.ticketType || '-') + '</td><td>' + esc(r.ticketRef || '-') +
+        '</td><td>' + esc(typeLabel(r.ticketType)) + '</td><td>' + esc(r.ticketRef || '-') +
         '</td><td class="detail-cell">' + esc(fmtDetail(r.detail)) + '</td></tr>';
     }).join('');
   }

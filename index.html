@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='7' fill='%230052D9'/%3E%3Crect x='8' y='8' width='16' height='4.5' rx='2.2' fill='%23fff'/%3E%3Crect x='13.75' y='8' width='4.5' height='16' rx='2.2' fill='%23fff'/%3E%3C/svg%3E">
-<title>超核一站式服务系统 v1.88 正式版</title>
+<title>超核一站式服务系统 v1.65 正式版</title>
 <style>
   :root {
     --bg: #000000;
@@ -206,16 +206,16 @@
   /* ===== 顶部用户头像下拉（参考图4/图5） ===== */
   /* 数据迁移下拉 */
   .mig-menu { position: relative; }
-  .mig-drop { position: absolute; right: 0; top: calc(100% + 8px); min-width: 288px; background: #111827; border: 1px solid rgba(255,255,255,.12); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; z-index: 60; display: none; }
+  .mig-drop { position: absolute; right: 0; top: calc(100% + 8px); min-width: 288px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; z-index: 60; display: none; }
   body.theme-moon .mig-drop { background: #fff; border-color: var(--border); }
   .mig-drop.show { display: block; }
-  .mig-item { display: flex; gap: 12px; padding: 13px 16px; color: #e2e8f0; cursor: pointer; }
+  .mig-item { display: flex; gap: 12px; padding: 13px 16px; color: var(--text); cursor: pointer; }
   body.theme-moon .mig-item { color: #1e293b; }
-  .mig-item:hover { background: rgba(255,255,255,.08); }
+  .mig-item:hover { background: var(--row-hover); }
   body.theme-moon .mig-item:hover { background: #f1f5f9; }
   .mig-item svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; }
   .mig-title { font-size: 14px; font-weight: 600; }
-  .mig-desc { font-size: 12px; color: #94a3b8; margin-top: 3px; line-height: 1.5; }
+  .mig-desc { font-size: 12px; color: var(--text-muted); margin-top: 3px; line-height: 1.5; }
   body.theme-moon .mig-desc { color: #64748b; }
   .mig-chev { transition: transform .15s; }
   .mig-menu.open .mig-chev { transform: rotate(180deg); }
@@ -226,14 +226,14 @@
   .user-chip .avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--apec-purple); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
   .user-chip .uname { font-size: 14px; font-weight: 600; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .user-chip .chev { width: 14px; height: 14px; opacity: .7; }
-  .user-drop { position: absolute; right: 0; top: calc(100% + 8px); min-width: 224px; background: #111827; border: 1px solid rgba(255,255,255,.12); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; z-index: 60; display: none; }
+  .user-drop { position: absolute; right: 0; top: calc(100% + 8px); min-width: 224px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; z-index: 60; display: none; }
   .user-drop.show { display: block; }
   .user-drop .ud-head { display: flex; align-items: center; gap: 10px; padding: 14px 16px; }
   .user-drop .ud-head .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--apec-blue); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
-  .user-drop .ud-head .ud-name { color: #fff; font-weight: 700; font-size: 15px; }
-  .user-drop .ud-head .ud-sub { color: #94a3b8; font-size: 12px; margin-top: 2px; }
-  .user-drop .ud-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; color: #e2e8f0; font-size: 14px; cursor: pointer; }
-  .user-drop .ud-item:hover { background: rgba(255,255,255,.08); }
+  .user-drop .ud-head .ud-name { color: var(--text); font-weight: 700; font-size: 15px; }
+  .user-drop .ud-head .ud-sub { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
+  .user-drop .ud-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; color: var(--text); font-size: 14px; cursor: pointer; }
+  .user-drop .ud-item:hover { background: var(--row-hover); }
   .user-drop .ud-item svg { width: 18px; height: 18px; flex-shrink: 0; }
   /* 主题切换按钮 */
   .theme-toggle-btn.btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 38px; padding: 0 13px; background: var(--log-btn-bg); border: 1.5px solid var(--log-btn-border); color: var(--log-btn-text); border-radius: 10px; cursor: pointer; transition: all .15s; }
@@ -809,6 +809,8 @@
   .tb-img-cat { text-align:center; }
   .tb-img-cat-box { position:relative; width:100%; aspect-ratio:4/3; border:2px dashed #cbd5e1; border-radius:8px; background:#f8fafc; cursor:pointer; overflow:hidden; display:flex; align-items:center; justify-content:center; transition:all .15s; }
   .tb-img-cat-box:hover { border-color:#2B6CFF; background:#E8F0FE; }
+  body:not(.theme-moon):not(.theme-blue) .tb-img-cat-box { background: transparent; }
+  body:not(.theme-moon):not(.theme-blue) .tb-img-cat-box:hover { border-color:#8B5CF6; background: rgba(139,92,246,.10); }
   .tb-img-cat-box.has-img { border-style:solid; border-color:#059669; padding:0; }
   .tb-img-cat-box.has-img img { width:100%; height:100%; object-fit:cover; }
   .tb-img-cat-hint { font-size:11px; color:#94a3b8; }
@@ -951,7 +953,7 @@
 /* ===== 版本自检 + 埋点统计（v1.64） ===== */
 (function () {
   // 当前版本号：与页面右上角版本标签保持一致，发版时同步更新
-  var APP_VERSION = 'v1.88';
+  var APP_VERSION = 'v1.65';
 
   // 埋点配置：endpoint 留空且 enabled=false 时不上报；已接入 Neon collect 接口
   window.__TRACK__ = window.__TRACK__ || {
@@ -1114,7 +1116,7 @@
                 <path d="M0 7 Q160 15 320 7" fill="none" stroke="url(#ribbonGrad)" stroke-width="3" stroke-linecap="round"/>
               </svg>
             </div>
-            <span class="ver-tag">v1.88 正式版</span>
+            <span class="ver-tag">v1.65 正式版</span>
           </div>
         </div>
         <div class="apec-sub-row">
