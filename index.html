@@ -7,6 +7,7 @@
 <title>超核一站式服务系统 v1.65 正式版</title>
 <style>
   :root {
+    color-scheme: dark;
     --bg: #000000;
     --bg-soft: #161618;
     --card: #1c1c1e;
@@ -59,6 +60,7 @@
   }
   /* 月光白主题 */
   body.theme-moon {
+    color-scheme: light;
     --app-bg: linear-gradient(135deg, #f8fafc 0%, #eef2f7 50%, #f8fafc 100%);
     --card: #ffffff;
     --text: #0f172a;
@@ -96,40 +98,41 @@
     --user-chip-text: #1e293b;
     --shadow: 0 10px 30px rgba(15, 23, 42, .08);
   }
-  /* 腾讯蓝主题（深蓝商务） */
+  /* 腾讯蓝主题（藏青底 + 钢蓝卡片，背景与业务卡片分层） */
   body.theme-blue {
-    --app-bg: linear-gradient(135deg, #0A1F44 0%, #13366F 50%, #0A1F44 100%);
-    --card: #14315F;
+    color-scheme: dark;
+    --app-bg: linear-gradient(135deg, #050F22 0%, #0C2144 50%, #050F22 100%);
+    --card: #1B3A63;
     --text: #EAF2FF;
     --text-muted: #A9C2E8;
-    --border: #2E548E;
+    --border: #35609A;
     --primary: #2B6CFF;
     --primary-dark: #1A4FD1;
     --header-title: #F0F6FF;
-    --input-bg: #0F2A55;
-    --readonly-bg: #122E5C;
+    --input-bg: #102845;
+    --readonly-bg: #173356;
     --readonly-text: #A9C2E8;
-    --thead-bg: #1B3D73;
+    --thead-bg: #20446F;
     --thead-text: #D6E6FF;
     --row-border: #24467A;
-    --row-hover: #1A3A6B;
-    --chip-bg: #173763;
-    --panel-bg: #122E5C;
-    --code-bg: #122E5C;
-    --row-soft: #173763;
-    --nav-bg: #0D2750;
+    --row-hover: #21466F;
+    --chip-bg: #18355A;
+    --panel-bg: #152F52;
+    --code-bg: #152F52;
+    --row-soft: #18355A;
+    --nav-bg: #071830;
     --nav-btn-text: #C6D9F5;
     --nav-btn-hover: #FFFFFF;
-    --hero-bg: linear-gradient(135deg, #13366F 0%, #0A1F44 100%);
+    --hero-bg: linear-gradient(135deg, #0C2144 0%, #050F22 100%);
     --hero-title: #F0F6FF;
     --hero-sub: #A9C2E8;
-    --user-chip-bg: #173763;
-    --user-chip-border: #2E548E;
+    --user-chip-bg: #18355A;
+    --user-chip-border: #35609A;
     --user-chip-text: #EAF2FF;
-    --log-btn-bg: #14315F;
-    --log-btn-border: #2E548E;
+    --log-btn-bg: #1B3A63;
+    --log-btn-border: #35609A;
     --log-btn-text: #D6E6FF;
-    --log-btn-hover-bg: #1B3D73;
+    --log-btn-hover-bg: #20446F;
     --log-btn-hover-border: #3E6AA8;
     --shadow: 0 10px 30px rgba(4, 18, 44, .5);
   }
@@ -389,7 +392,7 @@
     transition: border-color .15s, box-shadow .15s; width: 100%;
   }
   .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-    outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 82, 217, .18); background: var(--input-bg);
+    outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent); background: var(--input-bg);
   }
   .form-group input[readonly] { background: var(--readonly-bg); color: var(--readonly-text); font-weight: 700; }
   select option { background: var(--card); color: var(--text); }
@@ -599,7 +602,7 @@
     transition: border-color .15s, box-shadow .15s;
   }
   .toolbar .search-box:focus {
-    outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 82, 217, .18); background: var(--input-bg);
+    outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent); background: var(--input-bg);
   }
   .toolbar .search-box::placeholder { color: var(--placeholder); }
   /* 导出沉默数据复选框 */
@@ -615,7 +618,7 @@
   .cheat-check.del .cheat-del:hover { color: #b91c1c; }
   .cheat-add-row { display: flex; gap: 8px; margin-top: 8px; }
   .cheat-add-row input { flex: 1; min-width: 0; border: 1.5px solid var(--border); border-radius: 8px; padding: 6px 10px; font-size: 13px; font-family: inherit; background: var(--input-bg); color: var(--text); }
-  .cheat-add-row input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(43,108,255,.15); }
+  .cheat-add-row input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent); }
   .cheat-filter-tag { font-size: 13px; color: var(--text-muted); font-weight: 600; }
   /* 导出状态徽章 */
   .badge-unexported { background: #16a34a; }
@@ -624,9 +627,9 @@
 .tb-filter-bar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin:0 0 12px; }
 .tb-filter-bar .tb-filters { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
 .tb-filter-bar select { padding:5px 10px; border:1.5px solid var(--border); border-radius:8px; font-size:13px; background:var(--input-bg); color:var(--text); outline:none; cursor:pointer; max-width:250px; }
-.tb-filter-bar select:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(43,108,255,.12); }
+.tb-filter-bar select:focus { border-color:var(--primary); box-shadow:0 0 0 3px color-mix(in srgb, var(--primary) 12%, transparent); }
 .tb-filter-bar .tb-kw-input { width:230px; padding:7px 10px; border:1.5px solid var(--border); border-radius:8px; font-size:13px; background:var(--input-bg); color:var(--text); outline:none; transition:border-color .15s; }
-.tb-filter-bar .tb-kw-input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(43,108,255,.12); }
+.tb-filter-bar .tb-kw-input:focus { border-color:var(--primary); box-shadow:0 0 0 3px color-mix(in srgb, var(--primary) 12%, transparent); }
 .tb-filter-bar .tb-kw-input::placeholder { color: var(--placeholder); }
 .tb-filter-bar .tb-count { font-size:12.5px; color:var(--text-muted); white-space:nowrap; }
   .tb-record-card { border: 1.5px solid var(--border); border-radius: 10px; padding: 9px 11px; margin-bottom: 8px; background: var(--card-bg); }
@@ -636,7 +639,7 @@
   .tb-ticketno { display:inline-flex; align-items:center; gap:5px; margin-left:10px; vertical-align:middle; }
   .tb-ticketno-label { font-size:12px; font-weight:600; color:var(--text-muted); white-space:nowrap; }
   .tb-ticketno-input { width:168px; padding:2px 8px; border:1.5px solid var(--border); border-radius:6px; font-size:12px; font-weight:400; background:var(--input-bg); color:var(--text); outline:none; transition:border-color .15s; }
-  .tb-ticketno-input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(43,108,255,.12); }
+  .tb-ticketno-input:focus { border-color:var(--primary); box-shadow:0 0 0 3px color-mix(in srgb, var(--primary) 12%, transparent); }
   .tb-ticketno-input::placeholder { color:var(--placeholder); }
   .tb-ticketno-colon { font-size:12px; font-weight:600; color:var(--text-muted); }
   .tb-ticketno-val { font-size:13px; font-weight:700; color:var(--primary); cursor:pointer; border-bottom:1px dashed rgba(43,108,255,.45); padding:0 1px; }
@@ -815,7 +818,7 @@
   .tb-detail-section { font-size: 12px; font-weight: 700; color: var(--primary); margin: 16px 0 8px; padding-left: 10px; border-left: 3px solid var(--primary); grid-column: 1 / -1; }
   .tb-detail-section:first-child { margin-top: 0; }
   .tb-detail-input { width: 100%; max-width: 320px; box-sizing: border-box; border: 1px solid var(--border); border-radius: 6px; padding: 7px 11px; font-size: 13.5px; font-family: inherit; background: var(--input-bg); color: var(--text); }
-  .tb-detail-input:focus { outline: none; border-color: #2B6CFF; box-shadow: 0 0 0 2px rgba(43,108,255,.12); }
+  .tb-detail-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 12%, transparent); }
   textarea.tb-detail-input { resize: vertical; min-height: 60px; line-height: 1.6; max-width: 100%; }
   .tb-detail-rows { background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: Consolas, Menlo, monospace; font-size: 12.5px; white-space: pre-wrap; word-break: break-all; line-height: 1.7; }
   .tb-detail-files { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; grid-column: 1 / -1; }
@@ -914,7 +917,7 @@
 .rm-pager .pager-left { display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-muted); }
 #tbPager .pager-left { justify-content: flex-start; }
 .rm-pager select { padding:5px 10px; border:1.5px solid var(--border); border-radius:8px; font-size:13px; background:var(--input-bg); color:var(--text); outline:none; cursor:pointer; }
-.rm-pager select:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(43,108,255,.12); }
+.rm-pager select:focus { border-color:var(--primary); box-shadow:0 0 0 3px color-mix(in srgb, var(--primary) 12%, transparent); }
 .pager-right { display:flex; gap:6px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
 #tbPager .pager-right { flex-direction: column; align-items: flex-start; gap: 8px; }
 #tbPager .pager-nums { display:flex; gap:6px; flex-wrap:wrap; align-items:center; justify-content:flex-start; }
@@ -2176,6 +2179,7 @@ function applyTheme(theme) {
   var btn = document.getElementById('themeToggleBtn');
   if (btn) btn.title = '当前主题：' + THEME_LABELS[theme] + '，点击切换';
   try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
+  renderWecomSelect();
 }
 function selectTheme(theme) {
   applyTheme(theme);
@@ -2467,16 +2471,25 @@ function getWecomNames() {
 function saveWecomNames(names) {
   localStorage.setItem(WECOM_KEY, JSON.stringify(names));
 }
+function themedWecomColor(color) {
+  if (!color) return DEFAULT_WECOM.color;
+  const isApec = !document.body.classList.contains('theme-moon') && !document.body.classList.contains('theme-blue');
+  if (isApec) {
+    const blueish = ['#2B6CFF', '#0052D9', '#1A4FD1', '#3D7BFF', '#1E3A8A'];
+    if (blueish.indexOf(String(color).toUpperCase()) >= 0) return '#8B5CF6';
+  }
+  return color;
+}
 function wecomColor(name) {
   const hit = getWecomNames().find(x => x.name === name);
-  return hit ? hit.color : DEFAULT_WECOM.color;
+  return themedWecomColor(hit ? hit.color : DEFAULT_WECOM.color);
 }
 function renderWecomSelect(selected) {
   const sel = document.getElementById('wecomName');
   if (!sel) return;
   const names = getWecomNames();
   sel.innerHTML = names.map(x =>
-    `<option value="${escapeHtml(x.name)}" style="color:${escapeHtml(x.color)};">● ${escapeHtml(x.name)}</option>`
+    `<option value="${escapeHtml(x.name)}" style="color:${escapeHtml(themedWecomColor(x.color))};">● ${escapeHtml(x.name)}</option>`
   ).join('');
   if (selected) {
     sel.value = selected;
@@ -2545,7 +2558,7 @@ function renderWecomManageList() {
   }
   box.innerHTML = names.map(function (x, i) {
     return '<div class="wecom-manage-row">' +
-      '<span class="wecom-dot" style="background:' + escapeHtml(x.color) + ';"></span>' +
+      '<span class="wecom-dot" style="background:' + escapeHtml(themedWecomColor(x.color)) + ';"></span>' +
       '<span class="name">' + escapeHtml(x.name) + '</span>' +
       '<button type="button" class="btn btn-danger btn-xs del-btn" onclick="removeWecomName(' + i + ')">删除</button>' +
       '</div>';
