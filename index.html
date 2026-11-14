@@ -396,6 +396,19 @@
   }
   .form-group input[readonly] { background: var(--readonly-bg); color: var(--readonly-text); font-weight: 700; }
   select option { background: var(--card); color: var(--text); }
+  /* 通用自定义下拉：接管原生 select，选项背景/高亮跟随主题主色 */
+  .cs-wrap { position: relative; width: 100%; }
+  .cs-wrap > select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; margin: 0; }
+  .cs-trigger { display: flex; justify-content: space-between; align-items: center; gap: 8px; border: 1.5px solid var(--border); border-radius: 8px; padding: 9px 12px; font-size: 14px; font-family: inherit; background: var(--input-bg); color: var(--text); cursor: pointer; min-height: 40px; box-sizing: border-box; transition: border-color .15s, box-shadow .15s; }
+  .cs-wrap.open .cs-trigger { border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent); }
+  .cs-trigger .cs-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cs-trigger .cs-arrow { color: var(--text-muted); flex-shrink: 0; font-size: 12px; }
+  .cs-list { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--card); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 24px rgba(15,23,42,.22); max-height: 240px; overflow-y: auto; z-index: 60; display: none; }
+  .cs-wrap.open .cs-list { display: block; }
+  .cs-opt { padding: 8px 12px; font-size: 13.5px; color: var(--text); cursor: pointer; display: flex; align-items: center; gap: 6px; }
+  .cs-opt:hover { background: var(--row-hover); }
+  .cs-opt.cs-active { background: var(--primary); color: #fff; }
+  .cs-opt.cs-active > * { color: #fff; }
   .form-group textarea { resize: vertical; min-height: 72px; }
   /* v1.58：RM 批量举报超大文本框 */
   .report-section .rm-batch-text { min-height: 140px; max-height: 200px; font-family: Consolas, "Courier New", monospace; font-size: 14px; line-height: 1.7; white-space: pre-wrap; }
@@ -2167,10 +2180,88 @@ function onGameSelectChange() {
   if (tag && currentBiz !== 'RM' && currentBiz !== 'TICKET_ONLY' && currentBiz !== 'MARVIS') tag.textContent = document.getElementById('gameSelect').value;
 }
 /* ================= 主题：腾讯蓝 / 月光白 / APEC 2026 限定 ================= */
+/* ===== 通用自定义下拉：接管原生 select，选项背景/高亮跟随主题主色 ===== */
+function closeAllCustomSelects(except) {
+  document.querySelectorAll('.cs-wrap.open').forEach(function (w) { if (w !== except) w.classList.remove('open'); });
+}
+function initCustomSelect(sel) {
+  if (!sel || sel.dataset.csInit) return;
+  sel.dataset.csInit = '1';
+  sel.setAttribute('tabindex', '-1');
+  var wrap = document.createElement('div');
+  wrap.className = 'cs-wrap';
+  // 承接原 select 的布局内联样式（flex/宽度/高度/最大宽度）
+  if (sel.style.flex) { wrap.style.flex = sel.style.flex; sel.style.flex = ''; }
+  if (sel.style.flexGrow) { wrap.style.flexGrow = sel.style.flexGrow; }
+  if (sel.style.maxWidth) { wrap.style.maxWidth = sel.style.maxWidth; sel.style.maxWidth = ''; }
+  if (sel.style.width) { wrap.style.width = sel.style.width; sel.style.width = ''; }
+  sel.parentNode.insertBefore(wrap, sel);
+  wrap.appendChild(sel);
+
+  var trigger = document.createElement('div');
+  trigger.className = 'cs-trigger';
+  if (sel.style.height) { trigger.style.height = sel.style.height; trigger.style.minHeight = sel.style.height; sel.style.height = ''; }
+  var label = document.createElement('span'); label.className = 'cs-label';
+  var arrow = document.createElement('span'); arrow.className = 'cs-arrow'; arrow.textContent = '▾';
+  trigger.appendChild(label); trigger.appendChild(arrow);
+  var list = document.createElement('div'); list.className = 'cs-list';
+  wrap.appendChild(trigger); wrap.appendChild(list);
+
+  function syncLabel() {
+    var opt = sel.options[sel.selectedIndex];
+    label.textContent = opt ? opt.textContent : '';
+    label.style.color = (opt && opt.style.color) ? themedWecomColor(opt.style.color) : '';
+  }
+  function renderList() {
+    list.innerHTML = '';
+    Array.prototype.forEach.call(sel.options, function (opt) {
+      var item = document.createElement('div');
+      var active = opt.value === sel.value;
+      item.className = 'cs-opt' + (active ? ' cs-active' : '');
+      item.textContent = opt.textContent;
+      if (active) { item.style.color = '#fff'; }
+      else if (opt.style.color) { item.style.color = themedWecomColor(opt.style.color); }
+      item.addEventListener('mousedown', function (e) {
+        e.preventDefault();
+        sel.value = opt.value;
+        syncLabel(); renderList();
+        closeAllCustomSelects();
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+      list.appendChild(item);
+    });
+  }
+  // 业务代码直接 .value= 赋值后，可调用该方法同步自定义显示（优先挂载，避免后续步骤异常导致缺失）
+  sel._csSync = function () { syncLabel(); renderList(); };
+  trigger.addEventListener('click', function (e) {
+    e.stopPropagation();
+    var open = wrap.classList.contains('open');
+    closeAllCustomSelects();
+    if (!open) { renderList(); wrap.classList.add('open'); }
+  });
+  document.addEventListener('click', function (e) { if (!wrap.contains(e.target)) closeAllCustomSelects(); });
+  sel.addEventListener('change', function () { syncLabel(); renderList(); });
+  // 动态重建 option（企微/特权/筛选等）时自动刷新
+  try {
+    if (window.MutationObserver) {
+      new MutationObserver(function () { syncLabel(); renderList(); }).observe(sel, { childList: true });
+    }
+  } catch (e) {}
+  syncLabel();
+}
+function initAllCustomSelects() { document.querySelectorAll('select').forEach(initCustomSelect); }
+/* 刷新指定范围（元素/文档）内所有自定义下拉的显示与选中态 */
+function refreshCustomSelects(scope) {
+  var root = scope || document;
+  root.querySelectorAll('select').forEach(function (sel) { if (sel._csSync) sel._csSync(); });
+}
+
 var THEME_KEY = 'chThemePref';
+var currentTheme = 'apec';
 var THEME_LABELS = { blue: '腾讯蓝', moon: '月光白', apec: 'APEC CHINA 2026限定' };
 function applyTheme(theme) {
   if (theme !== 'moon' && theme !== 'blue') theme = 'apec';
+  currentTheme = theme;
   document.body.classList.remove('theme-moon', 'theme-blue');
   if (theme === 'moon') document.body.classList.add('theme-moon');
   else if (theme === 'blue') document.body.classList.add('theme-blue');
@@ -2473,10 +2564,19 @@ function saveWecomNames(names) {
 }
 function themedWecomColor(color) {
   if (!color) return DEFAULT_WECOM.color;
-  const isApec = !document.body.classList.contains('theme-moon') && !document.body.classList.contains('theme-blue');
+  function normalizeHex(c) {
+    c = String(c).trim();
+    var m = c.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+    if (m) {
+      function h(n) { return ('0' + parseInt(n, 10).toString(16)).slice(-2); }
+      return ('#' + h(m[1]) + h(m[2]) + h(m[3])).toUpperCase();
+    }
+    return c.toUpperCase();
+  }
+  const isApec = currentTheme !== 'moon' && currentTheme !== 'blue';
   if (isApec) {
     const blueish = ['#2B6CFF', '#0052D9', '#1A4FD1', '#3D7BFF', '#1E3A8A'];
-    if (blueish.indexOf(String(color).toUpperCase()) >= 0) return '#8B5CF6';
+    if (blueish.indexOf(normalizeHex(color)) >= 0) return '#8B5CF6';
   }
   return color;
 }
@@ -2489,7 +2589,7 @@ function renderWecomSelect(selected) {
   if (!sel) return;
   const names = getWecomNames();
   sel.innerHTML = names.map(x =>
-    `<option value="${escapeHtml(x.name)}" style="color:${escapeHtml(themedWecomColor(x.color))};">● ${escapeHtml(x.name)}</option>`
+    `<option value="${escapeHtml(x.name)}" style="color:${escapeHtml(x.color)};">● ${escapeHtml(x.name)}</option>`
   ).join('');
   if (selected) {
     sel.value = selected;
@@ -3994,6 +4094,7 @@ function editTicket(id) {
   document.getElementById('editPrivilege').value = rec.ticketPrivilege || '';
   renderCategoryPrivilegeOptions();
   syncCategoryPrivilegeVisibility();
+  refreshCustomSelects(document.getElementById('editModal'));
   document.getElementById('editModal').classList.add('show');
 }
 function closeEditModal() {
@@ -4814,7 +4915,7 @@ function openTicketBizForm(id) {
     bizHeader.style.display = isBiz ? 'flex' : 'none';
     if (isBiz) {
       const sel = document.getElementById('tbBizOpType');
-      if (sel) sel.value = cfg.defaultOp || '回收道具';
+      if (sel) { sel.value = cfg.defaultOp || '回收道具'; if (sel._csSync) sel._csSync(); }
     }
   }
   const bizOp2 = document.getElementById('tbBizOp2');
@@ -4892,7 +4993,7 @@ function openTicketBizForm(id) {
       }
       if (draft.op2Name) {
         const sel = document.getElementById('tbBizOp2Type');
-        if (sel) sel.value = draft.op2Name;
+        if (sel) { sel.value = draft.op2Name; if (sel._csSync) sel._csSync(); }
       }
       document.getElementById('tbBizOp2').style.display = 'block';
       const btn = document.querySelector('#tbBizOpHeader button');
@@ -5478,7 +5579,7 @@ function editTicketBizRecord(id) {
     }
     if (rec.op2Name) {
       const sel = document.getElementById('tbBizOp2Type');
-      if (sel) sel.value = rec.op2Name;
+      if (sel) { sel.value = rec.op2Name; if (sel._csSync) sel._csSync(); }
     }
     document.getElementById('tbBizOp2').style.display = 'block';
     const btn = document.querySelector('#tbBizOpHeader button');
@@ -6531,7 +6632,7 @@ function renderPrivilegeSelected() {
   const all = getPrivileges();
   const box = document.getElementById('tbPrivilegeSelected');
   const sel = document.getElementById('tbPrivilegeSelect');
-  if (sel) sel.value = selectedPrivileges.length ? selectedPrivileges[0] : '';
+  if (sel) { sel.value = selectedPrivileges.length ? selectedPrivileges[0] : ''; if (sel._csSync) sel._csSync(); }
   if (selectedPrivileges.length === 0) { box.innerHTML = '<span class="tp-empty">未选择特权</span>'; return; }
   box.innerHTML = selectedPrivileges.map(function (id) {
     const p = all.find(function (x) { return x.id === id; });
@@ -8306,6 +8407,8 @@ document.addEventListener('DOMContentLoaded', function () {
   renderRmCheatFilters();
   renderTable();
   renderRmTable();
+  // 接管原生 select 为自定义下拉，选项背景/高亮跟随主题主色
+  initAllCustomSelects();
   calcDays();
   migrateLegacyTicketBizMedia();
   // 每分钟基于当前电脑本地时间刷新剩余天数与高亮状态
