@@ -476,6 +476,9 @@
   }
   .report-section.active { display: block; animation: fadeIn .25s ease; }
   .report-section .section-title { color: #b91c1c; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  /* 举报区块为固定浅粉底，次要按钮统一白底深字，避免深主题下浅色文字落在浅底上对比不足 */
+  .report-section .btn-outline { background: #fff; border-color: #fca5a5; color: #1f2937; }
+  .report-section .btn-outline:hover { background: #fff; border-color: #f87171; color: #b91c1c; }
   .report-output {
     margin-top: 16px; border: 1px solid #fecaca; border-radius: 10px; background: #fff;
     padding: 16px; display: none; max-height: 420px; overflow: auto;
@@ -1295,7 +1298,10 @@
       </div>
       <div class="form-actions" style="justify-content: space-between;">
         <button type="button" class="btn btn-success" onclick="saveRmReport()">保存举报信息</button>
-        <button type="button" class="btn btn-outline" onclick="exportRmBatchText()">导出举报内容（txt）</button>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <button type="button" class="btn btn-outline" onclick="clearRmBatchText()">清空举报信息</button>
+          <button type="button" class="btn btn-outline" onclick="exportRmBatchText()">导出举报内容（txt）</button>
+        </div>
       </div>
       </div>
     </div>
@@ -2827,6 +2833,14 @@ function fmtReportFileName() {
   const d = new Date();
   const pad = n => ('0' + n).slice(-2);
   return d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + '-' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + '-CF举报信息';
+}
+
+function clearRmBatchText() {
+  const ta = document.getElementById('rmBatchText');
+  if (!ta) return;
+  if (ta.value.trim() && !confirm('确定清空已粘贴的举报内容吗？')) return;
+  ta.value = '';
+  ta.focus();
 }
 
 function saveRmReport() {
